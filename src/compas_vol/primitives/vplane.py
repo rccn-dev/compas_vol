@@ -1,84 +1,70 @@
 from compas.geometry import Plane
 from compas.geometry import distance_point_plane_signed
 
+from compas_vol.base import VolObject
 
-class VolPlane(object):
-    """A volumetric plane is defined by a base plane from `compas.geometry`.
+
+class VolPlane(VolObject):
+    """A volumetric half-space, defined by a :class:`compas.geometry.Plane`.
+
+    Points on the side the normal points to are outside (positive distance).
 
     Parameters
     ----------
-    cone: :class:`compas.geometry.Plane`
+    plane : :class:`compas.geometry.Plane`
         The base plane.
 
     Examples
     --------
     >>> from compas.geometry import Plane
-    >>> plane = Plane([1,3,4], [0.1,0.2,1])
-    >>> vplane = VolPlane(plane)
+    >>> from compas_vol.primitives import VolPlane
+    >>> vplane = VolPlane(Plane([0, 0, 0], [0, 0, 1]))
+    >>> round(vplane.get_distance([3, 4, 5]), 6)
+    5.0
     """
 
-    def __init__(self, plane):
+    def __init__(self, plane, name=None):
+        super().__init__(name=name)
+        self._plane = None
         self.plane = plane
 
+    # ==========================================================================
+    # data
+    # ==========================================================================
+
     @property
-    def data(self):
-        return self.plane.to_data()
-
-    def to_data(self):
-        return self.data
-
-    @data.setter
-    def data(self, data):
-        self.plane = Plane.from_data(data)
+    def __data__(self):
+        return {"plane": self.plane.__data__}
 
     @classmethod
-    def from_data(cls, data):
-        plane = Plane.from_data(data)
-        vplane = cls(plane)
-        return vplane
+    def __from_data__(cls, data):
+        return cls(Plane.__from_data__(data["plane"]))
+
+    # ==========================================================================
+    # descriptors
+    # ==========================================================================
+
+    @property
+    def plane(self):
+        return self._plane
+
+    @plane.setter
+    def plane(self, plane):
+        if not isinstance(plane, Plane):
+            plane = Plane(*plane)
+        self._plane = plane
 
     def __repr__(self):
-        return 'VolPlane({})'.format(str(self.plane))
+        return "VolPlane({!r})".format(self.plane)
+
+    # ==========================================================================
+    # distance functions
+    # ==========================================================================
 
     def get_distance(self, point):
-        """
-        single point distance function
-        """
         return distance_point_plane_signed(point, self.plane)
 
     def get_distance_numpy(self, x, y, z):
-        """
-        vectorized distance function
-        """
-        import numpy as np
-
-        base, normal = self.plane
-        x = x-base.x
-        y = y-base.y
-        z = z-base.z
-        d = np.dot(np.array([x, y, z]), normal)
-        return d
-
-
-# if __name__ == "__main__":
-#     import matplotlib.pyplot as plt
-#     import numpy as np
-
-#     p = VolPlane(Plane((0, 2, 0), (1, 1, 1)))
-
-#     x, y, z = np.ogrid[-20:20:40j, -15:15:30j, -10:10:20j]
-#     print(x.shape, y.shape, z.shape)
-#     d = p.get_distance_numpy(x, y, z)
-#     print(d.shape)
-#     plt.imshow(d[:, :, 10], cmap='RdBu')
-#     plt.show()
-
-#     # for y in range(-15, 15):
-#     #     s = ''
-#     #     for x in range(-30, 30):
-#     #         d = p.get_distance(Point(x * 0.5, 0, -y))
-#     #         if d < 0:
-#     #             s += 'x'
-#     #         else:
-#     #             s += '.'
-#     #     print(s)
+        base = self.plane.point
+        nx, ny, nz = self.plane.normal
+        return (x - base.x) * nx + (y - base.y) * ny + (z - base.z) * nz

@@ -1,56 +1,63 @@
-class VolPolyhedron(object):
-    """
-    Class for convex polyhedra delimited by a list of planes.
+from compas_vol.base import VolObject
+from compas_vol.base import broadcast_distances
+
+from .vplane import VolPlane
+
+
+class VolPolyhedron(VolObject):
+    """A convex polyhedron, delimited by a list of planes.
+
+    The solid is the intersection of the half-spaces defined by the planes, so
+    every normal must point away from the interior.
 
     Parameters
     ----------
-    planes : list of :class:`compas_vol.primitives.VolPlane`
-        The list of delimiting planes.
+    planes : list[:class:`compas_vol.primitives.VolPlane`]
+        The delimiting planes.
+
+    Examples
+    --------
+    >>> import math
+    >>> from compas.geometry import Plane
+    >>> from compas_vol.primitives import VolPlane, VolPolyhedron
+    >>> planes = []
+    >>> for i in range(7):
+    ...     a = math.pi * 2 * i / 7
+    ...     x, y = math.cos(a), math.sin(a)
+    ...     planes.append(VolPlane(Plane((9 * x, 9 * y, 0), (x, y, 0))))
+    >>> vh = VolPolyhedron(planes)
+    >>> round(vh.get_distance([0, 0, 0]), 6)
+    -9.0
     """
 
-    def __init__(self, planes):
-        self.planes = planes or []
-        # print(self.planes[-1].plane)
+    def __init__(self, planes=None, name=None):
+        super().__init__(name=name)
+        self.planes = list(planes) if planes else []
+
+    # ==========================================================================
+    # data
+    # ==========================================================================
+
+    @property
+    def __data__(self):
+        return {"planes": [p.__data__ for p in self.planes]}
+
+    @classmethod
+    def __from_data__(cls, data):
+        return cls([VolPlane.__from_data__(d) for d in data["planes"]])
+
+    def __repr__(self):
+        return "VolPolyhedron([{}])".format(", ".join(repr(p) for p in self.planes))
+
+    # ==========================================================================
+    # distance functions
+    # ==========================================================================
 
     def get_distance(self, point):
-        """
-        single point distance function
-        intersection of all the delimiting planes
-        """
-        distances = [p.get_distance(point) for p in self.planes]
-        return max(distances)
+        return max(p.get_distance(point) for p in self.planes)
 
     def get_distance_numpy(self, x, y, z):
-        """
-        vectorized distance function
-        """
         import numpy as np
 
-        distances = ([p.get_distance_numpy(x, y, z) for p in self.planes])
-        return np.maximum.reduce((distances))
-
-
-# if __name__ == "__main__":
-#     import math
-
-#     a = math.pi*2 / 7
-#     planes = []
-#     for i in range(7):
-#         x = math.cos(i*a)
-#         y = math.sin(i*a)
-#         p = Plane((9*x, 9*y, 0), (x, y, 0))
-#         vp = VolPlane(p)
-#         planes.append(vp)
-#     planes.append(VolPlane(Plane((0, 0, 4), (0, 0, 1))))
-#     planes.append(VolPlane(Plane((0, 0, -4), (0, 0, -1))))
-#     vh = VolPolyhedron(planes)
-
-#     for y in range(-15, 15):
-#         s = ''
-#         for x in range(-30, 30):
-#             d = vh.get_distance((x * 0.5, -y, 0))
-#             if d < 0:
-#                 s += 'x'
-#             else:
-#                 s += '.'
-#         print(s)
+        distances = [p.get_distance_numpy(x, y, z) for p in self.planes]
+        return np.maximum.reduce(broadcast_distances(distances, x, y, z))

@@ -3,7 +3,7 @@ Getting Started
 ********************************************************************************
 
 .. toctree::
-    :maxdepth: 1
-    :glob:
+   :maxdepth: 1
 
-    gettingstarted/installation
+   gettingstarted/installation
+   gettingstarted/firststeps

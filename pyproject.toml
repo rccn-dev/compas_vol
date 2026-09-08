@@ -1,0 +1,110 @@
+[project]
+name = "compas-vol"
+version = "0.2.0"
+description = "Volumetric modelling with signed distance functions, for COMPAS 2"
+readme = "README.md"
+authors = [
+    { name = "Mathias Bernhard", email = "mathbern@design.upenn.edu" },
+]
+maintainers = [
+    { name = "ChiaChing-Yen", email = "ccyen@umich.edu" },
+]
+license = "MIT"
+# MIT requires the copyright notice to ship with the distribution, and this
+# fork carries upstream's notice as well as its own. AUTHORS.md is included
+# because LICENSE refers to it.
+license-files = ["LICENSE", "AUTHORS.md"]
+keywords = [
+    "architecture",
+    "volumetric modelling",
+    "signed distance fields",
+    "function representation",
+    "3d printing",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3.13",
+]
+requires-python = ">=3.13"
+dependencies = [
+    "compas>=2.15.1",
+    "numpy>=2.0",
+]
+
+[project.optional-dependencies]
+# Marching-cubes iso-surfacing, and the Blur modification.
+meshing = [
+    "scikit-image>=0.26",
+    "scipy>=1.18",
+]
+# Standalone OpenGL viewer. Pulls in PySide6, which is large.
+viewer = [
+    "compas-viewer>=2.0.2",
+]
+# Everything the scripts in examples/ need, including matplotlib for the
+# field slice inspector.
+examples = [
+    "compas-vol[meshing,viewer]",
+    "matplotlib>=3.9",
+]
+all = [
+    "compas-vol[meshing,viewer,examples]",
+]
+
+[project.urls]
+Homepage = "https://github.com/rccn-dev/compas_vol"
+Repository = "https://github.com/rccn-dev/compas_vol"
+Documentation = "https://rccn-dev.github.io/compas_vol/"
+Issues = "https://github.com/rccn-dev/compas_vol/issues"
+"Original project" = "https://github.com/dbt-ethz/compas_vol"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "compas_vol"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "ruff>=0.14",
+]
+docs = [
+    "sphinx>=8",
+    "sphinx-compas-theme>=0.15.18",
+]
+
+[tool.pytest.ini_options]
+# `--pyargs compas_vol` runs the doctests against the *installed* package, so
+# the suite works the same for an editable and a wheel install. Collecting
+# "src/compas_vol" by path only works when the install is editable.
+testpaths = ["tests", "compas_vol"]
+addopts = "--doctest-modules --pyargs"
+filterwarnings = [
+    # scikit-image's marching cubes still assigns to ndarray.shape, which
+    # NumPy 2.5 deprecates. Nothing we can act on from here.
+    "ignore:Setting the shape on a NumPy array has been deprecated:DeprecationWarning",
+]
+
+[tool.ruff]
+# .editorconfig allows 180, but nothing in the package currently exceeds 110.
+# 120 leaves room without inviting lines that are hard to read next to a
+# docstring's math.
+line-length = 120
+target-version = "py313"
+extend-exclude = ["docs/_build"]
+
+[tool.ruff.lint]
+# E/W (pycodestyle), F (pyflakes) and NPY (NumPy-2 correctness) all pass clean
+# today, so CI is meaningful from the first run. NPY earns its place here in
+# particular: NumPy-2 incompatibilities are a large part of what this fork fixed.
+#
+# Deliberately not enabled: UP (pyupgrade) would rewrite the package's ~70
+# `"...".format()` calls into f-strings, and I (isort) disagrees with the
+# existing import order in ~80 places. Both are mechanical but neither is a
+# correctness question, so they are left for a separate, intentional pass
+# rather than mixed into unrelated PRs.
+select = ["E", "W", "F", "NPY"]

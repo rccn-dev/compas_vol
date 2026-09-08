@@ -1,24 +1,23 @@
-#imports
-import numpy as np
-import meshplot as mp
-from skimage.measure import marching_cubes
+"""A triply periodic minimal surface evaluated in cylindrical coordinates."""
+
+from compas.geometry import Cylinder
+
+from compas_vol.combinations import Intersection
+from compas_vol.combinations import Subtraction
 from compas_vol.microstructures import TPMSPolar
+from compas_vol.primitives import VolCylinder
 
-#workspace initialization
-x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
-#voxel dimensions
-gx = 28/112
-gy = 24/96
-gz = 20/80
+tpms = TPMSPolar(tpmstype="Gyroid", wavelength=4.0, thickness=0.6, polar=8)
 
-#VM object
-tpmsPol = TPMSPolar(1, 0.4, 1.2, 10.0)
+outer = VolCylinder(Cylinder(12, 16))
+inner = VolCylinder(Cylinder(4, 20))
+tube = Subtraction(outer, inner)
 
-#sampling
-dm = tpmsPol.get_distance_numpy(x, y, z)
+shape = Intersection(tpms, tube)
 
-#generate isosurface
-v, f, n, l = marching_cubes(dm, 0, spacing=(gx, gy, gz))
+if __name__ == "__main__":
+    from compas_viewer import Viewer
 
-#display mesh
-mp.plot(v, f, c=np.array([0,0.57,0.82]), shading={"flat":False, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})
+    viewer = Viewer()
+    viewer.scene.add(shape, bounds=((-14, 14), (-14, 14), (-9, 9)), resolution=(112, 112, 72))
+    viewer.show()

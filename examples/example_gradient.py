@@ -1,20 +1,39 @@
-import numpy as np
-import matplotlib.pyplot as plt
+"""Colour a meshed surface by the direction of its gradient."""
 
-from compas_vol.primitives import VolSphere
+from compas.colors import Color
+from compas.geometry import Box
+from compas.geometry import Point
+from compas.geometry import Sphere
+
 from compas_vol.analysis import Gradient
-from compas.geometry import Point, Sphere
+from compas_vol.combinations import Union
+from compas_vol.meshing import generate_mesh
+from compas_vol.primitives import VolBox
+from compas_vol.primitives import VolSphere
 
-s = Sphere(Point(1, 2, 3), 4)
-vs = VolSphere(s)
+vs = VolSphere(Sphere(9, point=Point(5, 6, 0)))
+vb = VolBox(Box(20, 15, 10), 2.5)
+u = Union(vs, vb)
 
-g = Gradient(vs)
-print(vs.get_distance(Point(4, 5, 6)))
-print(g.get_gradient(Point(5, 2, 3)))
+grad = Gradient(u, 0.01)
 
-x, y, z = np.ogrid[-10:10:20j, -10:10:20j, -10:10:20j]
-d = g.get_gradient_numpy(x, y, z)
+if __name__ == "__main__":
+    from compas_viewer import Viewer
 
-plt.quiver(x, y, d[:, :, 0, 1], d[:, :, 0, 2])
-plt.axis('equal')
-plt.show()
+    mesh = generate_mesh(u, bounds=20.0, resolution=100)
+
+    # Map the unit gradient at each vertex to an RGB colour.
+    vertexcolor = {}
+    for vertex in mesh.vertices():
+        v = grad.get_gradient(Point(*mesh.vertex_coordinates(vertex)))
+        vertexcolor[vertex] = Color(*[(c + 1) / 2 for c in (v.x, v.y, v.z)])
+
+    viewer = Viewer()
+    viewer.scene.add(
+        mesh,
+        show_points=False,
+        show_lines=False,
+        vertexcolor=vertexcolor,
+        use_vertexcolors=True,
+    )
+    viewer.show()

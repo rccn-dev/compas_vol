@@ -1,73 +1,102 @@
-from compas.geometry import Frame, Point
-from compas.geometry import matrix_from_frame
-from compas.geometry import matrix_inverse
+from compas.geometry import Frame
 
-class VolEgg (object):
-    """A volumetric egg...
+from compas_vol.base import VolObject
+from compas_vol.base import format_number
+from compas_vol.base import inverse_matrix_from_frame
+from compas_vol.base import transform_numpy
+
+
+class VolEgg(VolObject):
+    """An egg shape: an ellipsoid tapered along its local Z axis.
+
+    Note that this is a scalar field rather than a true signed distance
+    field -- the zero level set is the egg's surface, but the gradient is not
+    unit length, so offsets and shells will not be metrically accurate.
 
     Parameters
     ----------
-    ...
+    radiusA : float
+        The radius in the local XY plane.
+    radiusB : float
+        The radius along the local Z axis.
+    k : float
+        The taper factor. At ``k = 0`` the shape is a plain ellipsoid.
+    frame : :class:`compas.geometry.Frame`, optional
+        The base frame. Defaults to the world XY frame.
 
     Examples
     --------
-    >>>
+    >>> from compas_vol.primitives import VolEgg
+    >>> egg = VolEgg(3, 4, 0.1)
+    >>> round(egg.get_distance([0, 0, 0]), 6)
+    -1.0
     """
 
-    def __init__(self, radiusA=3, radiusB=4, k=0.1, frame=Frame.worldXY()):
+    def __init__(self, radiusA=3, radiusB=4, k=0.1, frame=None, name=None):
+        super().__init__(name=name)
+        self._frame = None
+        self.inversetransform = None
         self.ra = radiusA
         self.rb = radiusB
         self.k = k
-        self.frame = frame
-        self.matrix = matrix_from_frame(self.frame)
-        self.inversedmatrix = matrix_inverse(self.matrix)
+        self.frame = frame or Frame.worldXY()
 
-    
+    # ==========================================================================
+    # data
+    # ==========================================================================
+
+    @property
+    def __data__(self):
+        return {
+            "radiusA": self.ra,
+            "radiusB": self.rb,
+            "k": self.k,
+            "frame": self.frame.__data__,
+        }
+
+    @classmethod
+    def __from_data__(cls, data):
+        return cls(data["radiusA"], data["radiusB"], data["k"], Frame.__from_data__(data["frame"]))
+
+    # ==========================================================================
+    # descriptors
+    # ==========================================================================
+
+    @property
+    def frame(self):
+        return self._frame
+
+    @frame.setter
+    def frame(self, frame):
+        self._frame = frame
+        self.inversetransform = inverse_matrix_from_frame(frame)
+
+    def __repr__(self):
+        return "VolEgg({0},{1},{2},{3!r})".format(
+            format_number(self.ra), format_number(self.rb), format_number(self.k), self.frame
+        )
+
     # ==========================================================================
     # distance functions
     # ==========================================================================
-    
+
     def get_distance(self, point):
-        """
-        single point distance function
+        p = self._as_point(point)
+        p.transform(self.inversetransform)
 
-        Parameters
-        ----------
-        point: :class:`compas.geometry.Point`
-            The point in R<sup>3</sup> space to query for it's distance.
-        Returns
-        -------
-        float
-            The distance from the query point to the surface of the object.
-        """
-        if not isinstance(point, Point):
-            point = Point(*point)
-
-        point.transform(self.inversedmatrix)
-
-        d = ((point.z * point.z) / (self.rb * self.rb)) + ((point.y *point.y) / (self.ra * self.ra)) + ((point.x * point.x) / (self.ra * self.ra)) * (1 + self.k * point.z) - 1
-        return d
-
+        return (
+            (p.z * p.z) / (self.rb * self.rb)
+            + (p.y * p.y) / (self.ra * self.ra)
+            + (p.x * p.x) / (self.ra * self.ra) * (1 + self.k * p.z)
+            - 1
+        )
 
     def get_distance_numpy(self, x, y, z):
-        """
-        vectorized distance function
+        xt, yt, zt = transform_numpy(self.inversetransform, x, y, z)
 
-        Parameters
-        ----------
-        x,y,z: `numpy arrays, np.ogrid[]`
-            The coordinates of all the points in R:sup:`3` space to query for their distances.
-            The shapes are ``x: (nx, 1, 1), y: (1, ny, 1), z: (1, 1, nz)``
-        Returns
-        -------
-        numpy array of floats, shape (nx, ny, nz)
-            The distances from the query points to the surface of the object.
-        """
-
-        import numpy as np
-
-        p = np.array([x, y, z, 1], dtype=object)
-        xt, yt, zt, _ = np.dot(self.inversedmatrix, p)
-
-        d = ((zt * zt) / (self.rb * self.rb)) + ((yt * yt) / (self.ra * self.ra)) + ((xt * xt) / (self.ra * self.ra)) * (1 + self.k * zt) - 1
-        return d
+        return (
+            (zt * zt) / (self.rb * self.rb)
+            + (yt * yt) / (self.ra * self.ra)
+            + (xt * xt) / (self.ra * self.ra) * (1 + self.k * zt)
+            - 1
+        )

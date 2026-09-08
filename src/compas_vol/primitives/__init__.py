@@ -12,25 +12,25 @@ Classes
     :toctree: generated/
     :nosignatures:
 
+    GDF
+    Heart
+    PlatonicSolid
     VolBox
-    VolEgg
-    VolSphere
-    VolCylinder
-    VolTorus
     VolCapsule
     VolCone
-    VolPlane
-    VolExtrusion
-    VolPolyhedron
+    VolCylinder
+    VolEgg
     VolEllipsoid
+    VolExtrusion
+    VolPlane
+    VolPolyhedron
+    VolSphere
+    VolTorus
 
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-#from .gdf import GDF
+from .gdf import GDF
+from .gdf import GDFVECTORS
 from .heart import Heart
 from .platonic import PlatonicSolid
 from .vbox import VolBox
@@ -46,18 +46,19 @@ from .vsphere import VolSphere
 from .vtorus import VolTorus
 
 __all__ = [
- #   'GDF',
-    'Heart',
-    'PlatonicSolid',
-    'VolBox',
-    'VolCapsule',
-    'VolCone',
-    'VolCylinder',
-    'VolEgg',
-    'VolEllipsoid',
-    'VolExtrusion',
-    'VolPlane',
-    'VolPolyhedron',
-    'VolSphere',
-    'VolTorus'
+    "GDF",
+    "GDFVECTORS",
+    "Heart",
+    "PlatonicSolid",
+    "VolBox",
+    "VolCapsule",
+    "VolCone",
+    "VolCylinder",
+    "VolEgg",
+    "VolEllipsoid",
+    "VolExtrusion",
+    "VolPlane",
+    "VolPolyhedron",
+    "VolSphere",
+    "VolTorus",
 ]

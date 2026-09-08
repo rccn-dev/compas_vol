@@ -1,35 +1,22 @@
-#imports
-import numpy as np
-import meshplot as mp
-from skimage.measure import marching_cubes
+"""A periodic strut lattice, trimmed to a box."""
+
+from compas.geometry import Box
 from compas.geometry import Frame
+
+from compas_vol.combinations import Intersection
 from compas_vol.microstructures import Lattice
+from compas_vol.primitives import VolBox
 
-#workspace initialization
-lat = Lattice(7, 5.0, 0.5)
-lat.frame = Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2))
-
-print(lat.typenames, lat.lattice_type)
-
-x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
-#voxel dimensions
-gx = 28/112
-gy = 24/96
-gz = 20/80
-
-#VM object
 lat = Lattice(7, 5.0, 0.5, frame=Frame((1, 0, 0), (1, 0.2, 0.1), (-0.3, 1, 0.2)))
+print(lat.typenames)
+print(lat.lattice_type)
 
-#sampling
-m = lat.get_distance_numpy(x, y, z)
+# Trim the infinite lattice to a finite block.
+shape = Intersection(lat, VolBox(Box(24, 20, 16), 1.0))
 
-#generate isosurface
-v, f, n, l = marching_cubes(m, 0, spacing=(gx, gy, gz))
+if __name__ == "__main__":
+    from compas_viewer import Viewer
 
-#display mesh
-mp.plot(v, f, c=np.array([0, 0.57, 1.0]), shading={"flat":False, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})
-
-#plt.imshow(m[:, :, 21].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-#plt.colorbar()
-#plt.axis('equal')
-#plt.show()
+    viewer = Viewer()
+    viewer.scene.add(shape, bounds=((-14, 14), (-12, 12), (-10, 10)), resolution=(112, 96, 80))
+    viewer.show()

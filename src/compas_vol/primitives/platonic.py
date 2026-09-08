@@ -1,149 +1,176 @@
-from compas.geometry import Point, Vector, Frame
-from compas.geometry import matrix_from_frame
-from compas.geometry import matrix_inverse
-from math import sqrt, tan, pi
+from math import pi
+from math import sqrt
+from math import tan
 
-class PlatonicSolid(object):
-    """A platonic solid, defined by radius and type.
+from compas.geometry import Frame
+
+from compas_vol.base import VolObject
+from compas_vol.base import format_number
+from compas_vol.base import inverse_matrix_from_frame
+from compas_vol.base import transform_numpy
+
+# The normalised (phi, 1, 0) vector shared by the dodecahedron faces.
+_PHI = (1 + sqrt(5)) / 2
+_DODEC = tuple(c / sqrt(_PHI**2 + 1) for c in (_PHI, 1.0, 0.0))
+
+# The equivalent for the icosahedron.
+_ICO_RAW = ((sqrt(5) + 3) / 2, 1.0, 0.0)
+_ICO = tuple(c / sqrt(_ICO_RAW[0] ** 2 + 1) for c in _ICO_RAW)
+_ICO_R = 0.8506507174597755
+_W = sqrt(3) / 3
+
+
+class PlatonicSolid(VolObject):
+    """A platonic solid, defined by a radius and a type.
 
     Parameters
     ----------
     radius : float
         The radius of the solid.
-    type : int
-        The type of solid (tetrahedron, octahedron, dodecahedron, isosahedron)
+    solid_type : int
+        ``0`` tetrahedron, ``1`` octahedron, ``2`` dodecahedron, ``3`` icosahedron.
+        This argument was called ``type`` in COMPAS 1, which shadowed the
+        builtin; positional use is unchanged.
+    frame : :class:`compas.geometry.Frame`, optional
+        The base frame. Defaults to the world XY frame.
 
     Examples
     --------
-    >>> ...
+    >>> from compas_vol.primitives import PlatonicSolid
+    >>> p = PlatonicSolid(10.0, 1)
+    >>> p.get_distance([0, 0, 0]) < 0
+    True
 
     References
     ----------
-    adapted from SDF library by Michael Fogleman [1]_
+    Adapted from the SDF library by Michael Fogleman [1]_
 
-    ..[1] https://github.com/fogleman/sdf/blob/main/sdf/d3.py#L283
+    .. [1] https://github.com/fogleman/sdf/blob/main/sdf/d3.py#L283
     """
 
-    def __init__(self, radius, type=0, frame=None):
+    TYPENAMES = {0: "tetrahedron", 1: "octahedron", 2: "dodecahedron", 3: "icosahedron"}
+
+    def __init__(self, radius, solid_type=0, frame=None, name=None):
+        super().__init__(name=name)
+        self._frame = None
+        self.inversetransform = None
         self.radius = radius
-        self.type = type
+        self.solid_type = solid_type
         self.frame = frame or Frame.worldXY()
-        self.inversetransform = matrix_inverse(matrix_from_frame(self.frame))
         self.sqrt3 = sqrt(3)
-        self.tan30 = tan(pi/6)
-    
+        self.tan30 = tan(pi / 6)
+
+    # ==========================================================================
+    # data
+    # ==========================================================================
+
+    @property
+    def __data__(self):
+        return {
+            "radius": self.radius,
+            "solid_type": self.solid_type,
+            "frame": self.frame.__data__,
+        }
+
+    @classmethod
+    def __from_data__(cls, data):
+        return cls(data["radius"], data["solid_type"], Frame.__from_data__(data["frame"]))
+
+    # ==========================================================================
+    # descriptors
+    # ==========================================================================
+
+    @property
+    def frame(self):
+        return self._frame
+
+    @frame.setter
+    def frame(self, frame):
+        self._frame = frame
+        self.inversetransform = inverse_matrix_from_frame(frame)
+
+    @property
+    def typename(self):
+        return self.TYPENAMES.get(self.solid_type, "unknown")
+
+    def __repr__(self):
+        return "PlatonicSolid({0},{1},{2!r})".format(
+            format_number(self.radius), self.solid_type, self.frame
+        )
+
+    # ==========================================================================
+    # distance functions
+    # ==========================================================================
+
     def get_distance(self, point):
+        p = self._as_point(point)
+        p.transform(self.inversetransform)
+        x, y, z = p.x, p.y, p.z
 
-        if not isinstance(point, Point):
-            point = Point(*point)
-        point.transform(self.inversetransform)
-        x, y, z = point
-        
         # Tetrahedron
-        if self.type == 0:
+        if self.solid_type == 0:
             return (max(abs(x + y) - z, abs(x - y) + z) - self.radius) / self.sqrt3
-        
-        # Octahedron
-        elif self.type == 1:
-            s = abs(x) + abs(y) + abs(z)
-            return (s - self.radius) * self.tan30
-        
-        # Dodecahedron
-        elif self.type == 2:
-            v = Vector((1+sqrt(5))/2, 1, 0)
-            v.unitize()
-            px = abs(x / self.radius)
-            py = abs(y / self.radius)
-            pz = abs(z / self.radius)
-            p = Vector(px, py, pz)
-            a = p.dot(v)
-            b = p.dot(Vector(v.z, v.x, v.y))
-            c = p.dot(Vector(v.y, v.z, v.x))
-            q = (max(max(a, b), c) - v.x) * self.radius
-            return q
-        
-        # Icosahedron
-        elif self.type == 3:
-            r = self.radius * 0.8506507174597755
-            v = Vector((sqrt(5) + 3)/2, 1, 0)
-            v.unitize()
-            w = sqrt(3)/3
-            px = abs(x / r)
-            py = abs(y / r)
-            pz = abs(z / r)
 
-            p = Vector(px, py, pz)
-            a = p.dot(v)
-            b = p.dot(Vector(v.z, v.x, v.y))
-            c = p.dot(Vector(v.y, v.z, v.x))
-            d = p.dot([w,w,w]) - v.x
-            q = max(max(max(a, b), c) - v.x, d) * r
-            return q
-        
-        else:
-            return 0
-        
+        # Octahedron
+        if self.solid_type == 1:
+            return (abs(x) + abs(y) + abs(z) - self.radius) * self.tan30
+
+        # Dodecahedron
+        if self.solid_type == 2:
+            vx, vy, vz = _DODEC
+            px, py, pz = abs(x / self.radius), abs(y / self.radius), abs(z / self.radius)
+            a = px * vx + py * vy + pz * vz
+            b = px * vz + py * vx + pz * vy
+            c = px * vy + py * vz + pz * vx
+            return (max(a, b, c) - vx) * self.radius
+
+        # Icosahedron
+        if self.solid_type == 3:
+            r = self.radius * _ICO_R
+            vx, vy, vz = _ICO
+            px, py, pz = abs(x / r), abs(y / r), abs(z / r)
+            a = px * vx + py * vy + pz * vz
+            b = px * vz + py * vx + pz * vy
+            c = px * vy + py * vz + pz * vx
+            d = (px + py + pz) * _W - vx
+            return max(max(a, b, c) - vx, d) * r
+
+        return 0.0
+
     def get_distance_numpy(self, x, y, z):
         import numpy as np
 
-        p = np.array([x, y, z, 1], dtype=object)
-        xt, yt, zt, _ = np.dot(self.inversetransform, p)
+        xt, yt, zt = transform_numpy(self.inversetransform, x, y, z)
 
-        if self.type == 0:
-            return (np.maximum(np.abs(xt + yt) - zt, np.abs(xt - yt) + zt) - self.radius) / self.sqrt3
-        
-        elif self.type == 1:
-            return ((np.abs(xt) + np.abs(yt) + np.abs(zt)) - self.radius) * self.tan30
-        
-        elif self.type == 2:
-            v = np.array([(1 + np.sqrt(5)/2, 1, 0)])
-            v = np.reshape(np.tile(v / np.linalg.norm(v), xt.size), (*xt.shape, 3))
-            p = np.empty((*xt.shape, 3))
-            p[:,:,:,0], p[:,:,:,1], p[:,:,:,2] = np.abs(xt/self.radius), np.abs(yt/self.radius), np.abs(zt/self.radius)
-            return (np.maximum(np.maximum(np.sum(p * v, axis=3), np.sum(p * np.roll(v, 1, axis=3), axis=3)),
-                    np.sum(p * np.roll(v, 2, axis=3), axis=3)) - v[:,:,:,0]) * self.radius
-        
-        elif self.type == 3:
-            r = self.radius * 0.8506507174597755
-            v = np.array([(sqrt(5) + 3)/2, 1, 0])
-            v = np.reshape(np.tile(v / np.linalg.norm(v), xt.size), (*xt.shape, 3))
-            w = np.full((*xt.shape,3), np.sqrt(3)/3)
-            p = np.empty((*xt.shape, 3))
-            p[:,:,:,0], p[:,:,:,1], p[:,:,:,2] = np.abs(xt/r), np.abs(yt/r), np.abs(zt/r)
-            return np.maximum(np.maximum(np.maximum(np.sum(p * v, axis=3), np.sum(p * np.roll(v, 1, axis=3), axis=3)),
-                   np.sum(p * np.roll(v, 2, axis=3), axis=3)) - v[:,:,:,0], np.sum(p * w, axis=3) - v[:,:,:,0]) * r
-        
-        else:
-            return np.zeros((*xt.shape,))
+        # Tetrahedron
+        if self.solid_type == 0:
+            return (
+                np.maximum(np.abs(xt + yt) - zt, np.abs(xt - yt) + zt) - self.radius
+            ) / self.sqrt3
 
+        # Octahedron
+        if self.solid_type == 1:
+            return (np.abs(xt) + np.abs(yt) + np.abs(zt) - self.radius) * self.tan30
 
-if __name__=="__main__":
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import time
+        # Dodecahedron
+        if self.solid_type == 2:
+            vx, vy, vz = _DODEC
+            px, py, pz = np.abs(xt / self.radius), np.abs(yt / self.radius), np.abs(zt / self.radius)
+            a = px * vx + py * vy + pz * vz
+            b = px * vz + py * vx + pz * vy
+            c = px * vy + py * vz + pz * vx
+            return (np.maximum(np.maximum(a, b), c) - vx) * self.radius
 
-    p = PlatonicSolid(10.0, 0, frame=Frame((1, 2, 3), (1, 0.3, 0.1), (-0.4, 1, 0.3)))
+        # Icosahedron
+        if self.solid_type == 3:
+            r = self.radius * _ICO_R
+            vx, vy, vz = _ICO
+            px, py, pz = np.abs(xt / r), np.abs(yt / r), np.abs(zt / r)
+            a = px * vx + py * vy + pz * vz
+            b = px * vz + py * vx + pz * vy
+            c = px * vy + py * vz + pz * vx
+            d = (px + py + pz) * _W - vx
+            return np.maximum(np.maximum(np.maximum(a, b), c) - vx, d) * r
 
-    x, y, z = np.ogrid[-30:30:60j, -30:30:60j, -30:30:60j]
-    start = time.time()
-    d = p.get_distance_numpy(x, y, z)
-    end = time.time()
-    print(end-start)
-    #m = np.tanh(d[:, :, 30].T)
-    m = d[:, :, 30].T
-    #plt.imshow(m, cmap='Greys', interpolation='nearest')
-    plt.imshow(m)
-    plt.colorbar()
-    plt.axis('equal')
-    plt.show()
-
-    # p = PlatonicSolid(10.0, 3)
-    for y in range(-15, 15):
-        s = ''
-        for x in range(-30, 30):
-            d = p.get_distance((x * 0.5, -y, 0))
-            if d < 0:
-                s += 'x'
-            else:
-                s += '.'
-        print(s)
+        shape = np.broadcast_shapes(np.shape(x), np.shape(y), np.shape(z))
+        return np.zeros(shape)

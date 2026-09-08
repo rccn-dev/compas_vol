@@ -1,30 +1,20 @@
-#imports
-import numpy as np
-import meshplot as mp
-from skimage.measure import marching_cubes
-from compas_vol.primitives import VolSphere, VolBox
+"""Boolean intersection of a sphere and a filleted box."""
+
+from compas.geometry import Box
+from compas.geometry import Point
+from compas.geometry import Sphere
+
 from compas_vol.combinations import Intersection
-from compas.geometry import Box, Frame, Point, Sphere
+from compas_vol.primitives import VolBox
+from compas_vol.primitives import VolSphere
 
-#workspace initialization
-x, y, z = np.ogrid[-30:30:120j, -30:30:120j, -30:30:120j]
-#voxel dimensions
-gx = 60/120
-gy = 60/120
-gz = 60/120
+vs = VolSphere(Sphere(9, point=Point(5, 6, 0)))
+vb = VolBox(Box(20, 15, 10), 2.5)
+i = Intersection(vs, vb)
 
-#CSG tree
-s = Sphere(Point(5, 6, 0), 9)
-b = Box(Frame.worldXY(), 20, 15, 10)
-vs = VolSphere(s)
-vb = VolBox(b, 2.5)
-u = Intersection(vs, vb)
+if __name__ == "__main__":
+    from compas_viewer import Viewer
 
-#sampling
-dm = u.get_distance_numpy(x, y, z)
-
-#generate isosurface
-v, f, n, l = marching_cubes(dm, 0, spacing=(gx, gy, gz))
-
-#display mesh
-mp.plot(v, f, c=np.array([0,0.57,0.82]), shading={"flat":False, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})
+    viewer = Viewer()
+    viewer.scene.add(i, bounds=20.0, resolution=100)
+    viewer.show()

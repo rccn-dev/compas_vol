@@ -9,14 +9,15 @@ compas_vol.analysis
     :toctree: generated/
     :nosignatures:
 
-    Gradient
     Curvature
+    Gradient
 
 """
-from .gradient import Gradient
+
 from .curvature import Curvature
+from .gradient import Gradient
 
 __all__ = [
-    'Gradient',
-    'Curvature'
+    "Curvature",
+    "Gradient",
 ]

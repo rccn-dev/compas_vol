@@ -1,116 +1,124 @@
-from math import pi, sin, cos
-from compas import PRECISION
-from compas.geometry import Point
-from compas.utilities import remap_values
+from math import pi
 
-class TPMSAttractor(object):
-    """
+from compas_vol.base import VolObject
+
+from .tpms import TPMSTYPES
+from .tpms import resolve_tpmstype
+from .tpms import tpms_field
+
+
+class TPMSAttractor(VolObject):
+    """A TPMS whose wavelength is driven by the distance to another object.
+
+    Near the attractor the cells take the first of the two wavelengths, far
+    from it the second, interpolating in between. This grades the density of
+    the microstructure across a part.
+
+    In COMPAS 1 this class was a partial copy of :class:`TPMS` supporting only
+    two surface types, with the attractor logic left commented out as
+    Rhino-specific code. It is implemented here against any volumetric object.
+
+    Parameters
+    ----------
+    attractor : :class:`compas_vol.base.VolObject`
+        The object whose distance field drives the wavelength.
+    tpmstype : int | str
+        The surface type. See :data:`compas_vol.microstructures.TPMSTYPES`.
+    wavelength_range : tuple[float, float]
+        The wavelengths at the near and far ends of ``distance_range``.
+    distance_range : tuple[float, float]
+        The distances from the attractor mapped to ``wavelength_range``.
+        Distances outside this range are clamped.
+
+    Examples
+    --------
+    >>> from compas.geometry import Point, Sphere
+    >>> from compas_vol.primitives import VolSphere
+    >>> from compas_vol.microstructures import TPMSAttractor
+    >>> att = VolSphere(Sphere(5, point=Point(0, 0, 0)))
+    >>> t = TPMSAttractor(att, 'Gyroid', (2.0, 8.0), (0.0, 20.0))
+    >>> isinstance(t.get_distance([3, 4, 5]), float)
+    True
     """
 
-    def __init__(self, tpmstype=0, wavelength=1.0):
-        self.tpmstypes = ['Gyroid', 'SchwartzP']
-        self.tpmstypesl = [s.lower() for s in self.tpmstypes]
+    def __init__(
+        self,
+        attractor=None,
+        tpmstype=0,
+        wavelength_range=(1.0, 5.0),
+        distance_range=(0.0, 10.0),
+        name=None,
+    ):
+        super().__init__(name=name)
         self._tpmstype = None
+        self.attractor = attractor
         self.tpmstype = tpmstype
-        self._wavelength = None
-        self.wavelength = wavelength
-        self._factor = self.wavelength/pi
-
+        self.wavelength_range = tuple(wavelength_range)
+        self.distance_range = tuple(distance_range)
 
     # ==========================================================================
-    # distance function
+    # data
     # ==========================================================================
+
+    @property
+    def __data__(self):
+        return {
+            "attractor": self.attractor,
+            "tpmstype": self.tpmstype,
+            "wavelength_range": list(self.wavelength_range),
+            "distance_range": list(self.distance_range),
+        }
+
+    @classmethod
+    def __from_data__(cls, data):
+        return cls(
+            data["attractor"],
+            data["tpmstype"],
+            tuple(data["wavelength_range"]),
+            tuple(data["distance_range"]),
+        )
+
+    # ==========================================================================
+    # descriptors
+    # ==========================================================================
+
+    @property
+    def tpmstype(self):
+        return self._tpmstype
+
+    @tpmstype.setter
+    def tpmstype(self, tpmstype):
+        self._tpmstype = resolve_tpmstype(tpmstype)
+
+    @property
+    def typename(self):
+        return TPMSTYPES[self.tpmstype]
+
+    def __repr__(self):
+        return "TPMSAttractor({0!r},{1},{2},{3})".format(
+            self.attractor, self.tpmstype, self.wavelength_range, self.distance_range
+        )
+
+    # ==========================================================================
+    # distance functions
+    # ==========================================================================
+
+    def _factor(self, d, np):
+        """Remap an attractor distance to a wavelength/pi factor."""
+        d0, d1 = self.distance_range
+        w0, w1 = self.wavelength_range
+        t = np.clip((d - d0) / (d1 - d0), 0.0, 1.0)
+        return (w0 + t * (w1 - w0)) / pi
 
     def get_distance(self, point):
-        """
-        single point distance function
-        """
-        x, y, z = point
-        px = x/self._factor
-        py = y/self._factor
-        pz = z/self._factor
-
-        d = 0
-        if self.tpmstype == 0:  # 'Gyroid':
-            d = sin(px)*cos(py) + sin(py)*cos(pz) + sin(pz)*cos(px)
-        elif self.tpmstype == 1:  # 'SchwartzP':
-            d = cos(px) + cos(py) + cos(pz)
-        return d
-
-    def get_distance_numpy(self, x, y, z):
-        """
-        vectorized distance function
-        """
         import numpy as np
 
-        px = x/self._factor
-        py = y/self._factor
-        pz = z/self._factor
+        x, y, z = point
+        f = self._factor(self.attractor.get_distance(point), np)
+        return float(tpms_field(self.tpmstype, x / f, y / f, z / f))
 
-        d = 0
-        # Gyroid
-        if self.tpmstype == 0:
-            d = np.sin(px) * np.cos(py) + np.sin(py)*np.cos(pz) + np.sin(pz)*np.cos(px)
-        # SchwartzP
-        elif self.tpmstype == 1:
-            d = np.cos(px) + np.cos(py) + np.cos(pz)
-        return d
+    def get_distance_numpy(self, x, y, z):
+        import numpy as np
 
-
-
-# import Rhino.Geometry as rg
-
-# def remap(val, min, max, minOut, maxOut):
-#     if val > max:
-#         val = max
-#     elif val < min:
-#         val = min
-    
-#     span = max-min
-#     spanOut = maxOut - minOut
-#     thrust = (val-min)/span
-    
-#     return minOut + (thrust*spanOut)
-
-# class Attractor(object):
-#     """
-#     this is the attractor class
-#     """
-#     def __init__(self,obj,dist,targ):
-#         self.obj = obj
-#         self.dist = dist
-#         self.targ = targ
-    
-#     def getFactor(self,x,y,z):
-#         f = 1
-#         newPt = rg.Point3d(x,y,z)
-#         if type(self.obj) is list:
-#             distances = []
-#             factors = []
-#             for o in self.obj:
-#                 if type(o) is rg.Point3d:
-#                     d = rg.Point3d.DistanceTo(o, newPt)
-#                     distances.append(d)
-#                     f = remap(d, self.dist[0], self.dist[1], self.targ[0], self.targ[1])
-#                     factors.append(f)
-#                 elif type(o) is rg.Plane:
-#                     projectedPt = rg.Plane.ClosestPoint(o, newPt)
-#                     d = rg.Point3d.DistanceTo(projectedPt, newPt)
-#                     distances.append(d)
-#                     f = remap(d, self.dist[0], self.dist[1], self.targ[0], self.targ[1])
-#                     factors.append(f)
-            
-#             m = min(distances)
-#             for d,newf in zip(distances, factors):
-#                 if d == m:
-#                     f = newf
-#         else:
-#             if type(self.obj) is rg.Point3d:
-#                 d = rg.Point3d.DistanceTo(self.obj, newPt)
-#                 f = remap(d, self.dist[0], self.dist[1], self.targ[0], self.targ[1])
-#             elif type(self.obj) is rg.Plane:
-#                 projectedPt = rg.Plane.ClosestPoint(self.obj, newPt)
-#                 d = rg.Point3d.DistanceTo(projectedPt, newPt)
-#                 f = remap(d, self.dist[0], self.dist[1], self.targ[0], self.targ[1])
-        
-#         return f
+        f = self._factor(self.attractor.get_distance_numpy(x, y, z), np)
+        return tpms_field(self.tpmstype, x / f, y / f, z / f)

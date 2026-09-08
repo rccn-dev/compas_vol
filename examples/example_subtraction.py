@@ -1,32 +1,20 @@
-#imports
-import numpy as np
-import meshplot as mp
-from skimage.measure import marching_cubes
-from compas_vol.primitives import VolSphere, VolBox
+"""Boolean subtraction of a sphere from a filleted box."""
+
+from compas.geometry import Box
+from compas.geometry import Point
+from compas.geometry import Sphere
+
 from compas_vol.combinations import Subtraction
-from compas.geometry import Box, Frame, Point, Sphere
+from compas_vol.primitives import VolBox
+from compas_vol.primitives import VolSphere
 
-#workspace initialization
-x, y, z = np.ogrid[-30:30:100j, -30:30:100j, -30:30:100j]
-#voxel dimensions
-gx = 60/100
-gy = 60/100
-gz = 60/100
+vs = VolSphere(Sphere(9, point=Point(5, 6, 0)))
+vb = VolBox(Box(20, 15, 10), 2.5)
+s = Subtraction(vb, vs)
 
-#CSG tree
-s = Sphere(Point(5, 6, 0), 9)
-b = Box(Frame.worldXY(), 20, 15, 10)
-vs = VolSphere(s)
-vb = VolBox(b, 2.5)
-u = Subtraction(vs, vb)
+if __name__ == "__main__":
+    from compas_viewer import Viewer
 
-#sampling
-dm = u.get_distance_numpy(x, y, z)
-
-#generate isosurface
-v, f, n, l = marching_cubes(dm, 0, spacing=(gx, gy, gz))
-
-#display mesh
-mp.plot(v, f, c=np.array([0,0.57,0.82]), shading={"flat":False, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})
-
-
+    viewer = Viewer()
+    viewer.scene.add(s, bounds=20.0, resolution=100)
+    viewer.show()

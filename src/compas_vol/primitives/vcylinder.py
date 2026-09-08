@@ -1,82 +1,81 @@
 from compas.geometry import Cylinder
-from compas.geometry import Frame
-from compas.geometry import Point
 from compas.geometry import length_vector_xy
-from compas.geometry import matrix_inverse
-from compas.geometry import matrix_from_frame
+
+from compas_vol.base import VolObject
+from compas_vol.base import inverse_matrix_from_frame
+from compas_vol.base import transform_numpy
 
 
-class VolCylinder(object):
-    """A volumetric cylinder is defined by a base cylinder from `compas.geometry`.
+class VolCylinder(VolObject):
+    """A volumetric cylinder, defined by a :class:`compas.geometry.Cylinder`.
 
     Parameters
     ----------
-    cylinder: :class:`compas.geometry.Cylinder`
+    cylinder : :class:`compas.geometry.Cylinder`
         The base cylinder.
 
     Examples
     --------
-    >>> from compas.geometry import Plane
     >>> from compas.geometry import Cylinder
-    >>> plane = Plane([0, 0, 0], [0, 0, 1])
-    >>> circle = Circle(plane, 5)
-    >>> cylinder = Cylinder(circle, 7)
-    >>> vcylinder = VolCylinder(cylinder)
+    >>> from compas_vol.primitives import VolCylinder
+    >>> vcylinder = VolCylinder(Cylinder(5, 7))
+    >>> round(vcylinder.get_distance([0, 0, 0]), 6)
+    -3.5
     """
 
-    def __init__(self, cylinder):
+    def __init__(self, cylinder, name=None):
+        super().__init__(name=name)
+        self._cylinder = None
+        self.inversetransform = None
         self.cylinder = cylinder
-        frame = Frame.from_plane(self.cylinder.plane)
-        transform = matrix_from_frame(frame)
-        self.inversetransform = matrix_inverse(transform)
+
+    # ==========================================================================
+    # data
+    # ==========================================================================
 
     @property
-    def data(self):
-        return self.cylinder.data
-
-    def to_data(self):
-        return self.data
-
-    @data.setter
-    def data(self, data):
-        self.cylinder = Cylinder.from_data(data)
+    def __data__(self):
+        return {"cylinder": self.cylinder.__data__}
 
     @classmethod
-    def from_data(cls, data):
-        cylinder = Cylinder.from_data(data)
-        vcylinder = cls(cylinder)
-        return vcylinder
+    def __from_data__(cls, data):
+        return cls(Cylinder.__from_data__(data["cylinder"]))
+
+    # ==========================================================================
+    # descriptors
+    # ==========================================================================
+
+    @property
+    def cylinder(self):
+        return self._cylinder
+
+    @cylinder.setter
+    def cylinder(self, cylinder):
+        if not isinstance(cylinder, Cylinder):
+            raise TypeError("Expected a compas.geometry.Cylinder, got {}".format(type(cylinder).__name__))
+        self._cylinder = cylinder
+        # COMPAS 2 shapes carry their own frame, so there is no need to rebuild
+        # one from a plane the way COMPAS 1 required.
+        self.inversetransform = inverse_matrix_from_frame(cylinder.frame)
 
     def __repr__(self):
-        return 'VolCylinder({})'.format(str(self.cylinder))
+        return "VolCylinder({!r})".format(self.cylinder)
 
     # ==========================================================================
     # distance functions
     # ==========================================================================
 
     def get_distance(self, point):
-        """
-        single point distance function
-        """
-        if not isinstance(point, Point):
-            point = Point(*point)
+        p = self._as_point(point)
+        p.transform(self.inversetransform)
 
-        point.transform(self.inversetransform)
-
-        dxy = length_vector_xy(point)  # distance_point_point_xy(self.cylinder.center, point)
-        d = dxy - self.cylinder.radius
-        d = max(d, abs(point.z) - self.cylinder.height / 2.0)
-        return d
+        d = length_vector_xy(p) - self.cylinder.radius
+        return max(d, abs(p.z) - self.cylinder.height / 2.0)
 
     def get_distance_numpy(self, x, y, z):
-        """
-        vectorized distance function
-        """
         import numpy as np
 
-        p = np.array([x, y, z, 1], dtype=object)
-        xt, yt, zt, _ = np.dot(self.inversetransform, p)
+        xt, yt, zt = transform_numpy(self.inversetransform, x, y, z)
 
         d = np.sqrt(xt * xt + yt * yt) - self.cylinder.radius
-        out = np.maximum(d, np.abs(zt) - self.cylinder.height / 2.0)
-        return out
+        return np.maximum(d, np.abs(zt) - self.cylinder.height / 2.0)

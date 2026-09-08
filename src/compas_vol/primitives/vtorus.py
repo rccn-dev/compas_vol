@@ -1,15 +1,15 @@
 from math import sqrt
 
-from compas.geometry import Frame
-from compas.geometry import Point
 from compas.geometry import Torus
 from compas.geometry import length_vector_xy
-from compas.geometry import matrix_inverse
-from compas.geometry import matrix_from_frame
+
+from compas_vol.base import VolObject
+from compas_vol.base import inverse_matrix_from_frame
+from compas_vol.base import transform_numpy
 
 
-class VolTorus(object):
-    """A volumetric torus is defined by a base torus from `compas.geometry`.
+class VolTorus(VolObject):
+    """A volumetric torus, defined by a :class:`compas.geometry.Torus`.
 
     Parameters
     ----------
@@ -18,88 +18,66 @@ class VolTorus(object):
 
     Examples
     --------
-    >>> from compas.geometry import Plane
     >>> from compas.geometry import Torus
     >>> from compas_vol.primitives import VolTorus
-    >>> ctorus = Torus(Plane.worldXY(), 5., 2.)
-    >>> vtorus = VolTorus(ct)
+    >>> vtorus = VolTorus(Torus(5.0, 2.0))
+    >>> round(vtorus.get_distance([5, 0, 0]), 6)
+    -2.0
     """
 
-    def __init__(self, torus):
+    def __init__(self, torus, name=None):
+        super().__init__(name=name)
+        self._torus = None
+        self.inversetransform = None
         self.torus = torus
-        frame = Frame.from_plane(self.torus.plane)
-        transform = matrix_from_frame(frame)
-        self.inversetransform = matrix_inverse(transform)
+
+    # ==========================================================================
+    # data
+    # ==========================================================================
 
     @property
-    def data(self):
-        return self.torus.to_data()
-
-    def to_data(self):
-        return self.data
-
-    @data.setter
-    def data(self, data):
-        self.torus = Torus.from_data(data)
+    def __data__(self):
+        return {"torus": self.torus.__data__}
 
     @classmethod
-    def from_data(cls, data):
-        torus = Torus.from_data(data)
-        vtorus = cls(torus)
-        return vtorus
+    def __from_data__(cls, data):
+        return cls(Torus.__from_data__(data["torus"]))
+
+    # ==========================================================================
+    # descriptors
+    # ==========================================================================
+
+    @property
+    def torus(self):
+        return self._torus
+
+    @torus.setter
+    def torus(self, torus):
+        if not isinstance(torus, Torus):
+            raise TypeError("Expected a compas.geometry.Torus, got {}".format(type(torus).__name__))
+        self._torus = torus
+        self.inversetransform = inverse_matrix_from_frame(torus.frame)
 
     def __repr__(self):
-        return 'VolTorus({})'.format(str(self.torus))
+        return "VolTorus({!r})".format(self.torus)
+
+    # ==========================================================================
+    # distance functions
+    # ==========================================================================
 
     def get_distance(self, point):
-        """
-        single point distance function
-        """
-        if not isinstance(point, Point):
-            point = Point(*point)
+        p = self._as_point(point)
+        p.transform(self.inversetransform)
 
-        point.transform(self.inversetransform)
-
-        dxy = length_vector_xy(point)  # distance_point_point_xy(self.torus.center, point)
-        d2 = sqrt((dxy - self.torus.radius_axis)**2 + point.z**2)
+        dxy = length_vector_xy(p)
+        d2 = sqrt((dxy - self.torus.radius_axis) ** 2 + p.z**2)
         return d2 - self.torus.radius_pipe
 
     def get_distance_numpy(self, x, y, z):
-        """
-        vectorized distance function
-        """
         import numpy as np
 
-        p = np.array([x, y, z, 1])
-        xt, yt, zt, _ = np.dot(self.inversetransform, p)
+        xt, yt, zt = transform_numpy(self.inversetransform, x, y, z)
 
-        # d = np.sqrt((xt - self.torus.center.x)**2 +
-        #             (yt - self.torus.center.y)**2) - self.torus.radius_axis
-        # d2 = np.sqrt(d**2 + (zt - self.torus.center.z)**2)
         d = np.sqrt(xt**2 + yt**2) - self.torus.radius_axis
         d2 = np.sqrt(d**2 + zt**2)
         return d2 - self.torus.radius_pipe
-
-
-# if __name__ == "__main__":
-#     from compas.geometry import Plane
-#     import matplotlib.pyplot as plt
-#     import numpy as np
-
-#     o = VolTorus(Torus(Plane((2, 3, 0), (0.3, 0.2, 1)), 7.0, 4.0))
-#     print(o)
-
-#     x, y, z = np.ogrid[-13:13:60j, -13:13:60j, -13:13:60j]
-#     d = o.get_distance_numpy(x, y, z)
-#     plt.imshow(d[:, :, 30], cmap='RdBu')
-#     plt.show()
-
-#     for y in range(-15, 15):
-#         s = ''
-#         for x in range(-30, 30):
-#             d = o.get_distance(Point(x * 0.5, -y, 0))
-#             if d < 0:
-#                 s += 'x'
-#             else:
-#                 s += '.'
-#         print(s)

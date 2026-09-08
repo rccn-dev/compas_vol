@@ -1,41 +1,67 @@
-from compas.geometry import *  # noqa: F401 F403
-from compas_vol.primitives import *  # noqa: F401 F403
-from compas_vol.modifications import *  # noqa: F401 F403
-from compas_vol.combinations import *  # noqa: F401 F403
-from compas_vol.microstructures import *  # noqa: F401 F403
+"""Transport helpers for evaluating volumetric objects in another process.
 
-import numpy as np
-from skimage.measure import marching_cubes_lewiner
+The COMPAS 1 version shipped an object as its ``repr`` string and rebuilt it
+with ``eval``, which executes whatever it is handed. COMPAS 2's data model
+serialises every :class:`compas_vol.base.VolObject` to JSON, so the object can
+be moved without granting the sender code execution.
+"""
 
+from compas.data import json_dumps
+from compas.data import json_loads
 
-__all__ = [
-    'get_vfs_from_tree'
-]
-
-
-def get_vfs_from_tree(tree, bounds, res):
-    obj = eval(tree)
-    bx = bounds[0]
-    by = bounds[1]
-    bz = bounds[2]
-
-    # nx = (bx[1]-bx[0])/res
-
-    x, y, z = np.ogrid[bx[0]:bx[1]:bx[2]*1j, by[0]:by[1]:by[2]*1j, bz[0]:bz[1]:bz[2]*1j]
-    dm = obj.get_distance_numpy(x, y, z)
-
-    sx = (bx[1]-bx[0])/(bx[2]-1)
-    sy = (by[1]-by[0])/(by[2]-1)
-    sz = (bz[1]-bz[0])/(bz[2]-1)
-
-    verts, faces, norms, vals = marching_cubes_lewiner(dm, 0.0, spacing=(sx, sy, sz))
-    return (verts, faces)
+__all__ = ["dumps_tree", "loads_tree", "get_vfs_from_tree"]
 
 
-# if __name__ == "__main__":
-#     s = VolSphere(Sphere((1, 2, 3), 4))
-#     b = VolBox(Box(Frame.worldXY(), 2,3,4), 0.7)
-#     u = Union(s,b)
-#     print(u)
-#     n = eval(str(u))
-#     print(n.get_distance((5,4,3)))
+def dumps_tree(obj):
+    """Serialise a volumetric object tree to a JSON string.
+
+    Parameters
+    ----------
+    obj : :class:`compas_vol.base.VolObject`
+        The object to serialise, including all of its children.
+
+    Returns
+    -------
+    str
+    """
+    return json_dumps(obj)
+
+
+def loads_tree(data):
+    """Rebuild a volumetric object tree from a JSON string.
+
+    Parameters
+    ----------
+    data : str
+        A JSON string produced by :func:`dumps_tree`.
+
+    Returns
+    -------
+    :class:`compas_vol.base.VolObject`
+    """
+    return json_loads(data)
+
+
+def get_vfs_from_tree(tree, bounds, resolution=None):
+    """Mesh a serialised object tree, for use over COMPAS RPC.
+
+    Parameters
+    ----------
+    tree : str | :class:`compas_vol.base.VolObject`
+        A JSON string from :func:`dumps_tree`, or the object itself.
+    bounds : sequence
+        Either the COMPAS 1 form ``[(xmin, xmax, nx), ...]``, or anything
+        :func:`compas_vol.meshing.normalize_bounds` accepts.
+    resolution : int | tuple[int, int, int], optional
+        Required unless the resolution is embedded in ``bounds``.
+
+    Returns
+    -------
+    tuple[list, list]
+        Vertices and faces, as plain lists so they survive an RPC round trip.
+    """
+    from compas_vol.utilities.utils import get_iso_vfs
+
+    obj = loads_tree(tree) if isinstance(tree, str) else tree
+    verts, faces = get_iso_vfs(obj, bounds, resolution)
+    return verts.tolist(), faces.tolist()

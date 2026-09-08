@@ -1,24 +1,21 @@
-#imports
-import numpy as np
-import meshplot as mp
-from skimage.measure import marching_cubes
+"""A triply periodic minimal surface, thickened and trimmed to a box."""
+
+from compas.geometry import Box
+
+from compas_vol.combinations import Intersection
 from compas_vol.microstructures import TPMS
+from compas_vol.modifications import Shell
+from compas_vol.primitives import VolBox
 
-#workspace initialization
-x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
-#voxel dimensions
-gx = 28/112
-gy = 24/96
-gz = 20/80
+tpms = TPMS(tpmstype="SchwartzP", wavelength=5.0)
+print(tpms.typename)
 
-#VM object
-b = TPMS(tpmstype='schwartzP', wavelength=5)
+# The raw TPMS field is a surface; give it a thickness and trim it.
+solid = Intersection(Shell(tpms, 0.4, 0.5), VolBox(Box(24, 20, 16), 1.0))
 
-#sampling
-dm = b.get_distance_numpy(x, y, z)
+if __name__ == "__main__":
+    from compas_viewer import Viewer
 
-#generate isosurface
-v, f, n, l = marching_cubes(dm, 0, spacing=(gx, gy, gz))
-
-#display mesh
-mp.plot(v, f, c=np.array([0,0.57,0.82]), shading={"flat":False, "roughness":0.4, "metalness":0.01, "reflectivity":1.0})
+    viewer = Viewer()
+    viewer.scene.add(solid, bounds=((-14, 14), (-12, 12), (-10, 10)), resolution=(112, 96, 80))
+    viewer.show()

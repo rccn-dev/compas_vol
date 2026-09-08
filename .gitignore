@@ -116,3 +116,6 @@ Icon
 docs/api/generated
 
 .vscode
+
+# Meshes written by the example scripts (see examples/vol_mesh_examples/_common.py)
+examples/**/*.stl

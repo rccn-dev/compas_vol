@@ -9,41 +9,49 @@ compas_vol.combinations
     :toctree: generated/
     :nosignatures:
 
-    Union
+    Addition
     Blend
+    Division
     Intersection
-    Subtraction
-    SmoothUnion
-    SmoothUnionList
+    Morph
+    Multiplication
     SmoothIntersection
     SmoothSubtraction
-    Morph
+    SmoothUnion
+    SmoothUnionList
+    Subtraction
+    Union
 
 """
-from .union import Union
+
+from .addition import Addition
+from .blend import LINEAR
+from .blend import QUADRATIC
 from .blend import Blend
+from .division import Division
 from .intersection import Intersection
-from .subtraction import Subtraction
-from .smoothunion import SmoothUnion
-from .smoothunionlist import SmoothUnionList
+from .morph import Morph
+from .multiplication import Multiplication
 from .smoothintersection import SmoothIntersection
 from .smoothsubtraction import SmoothSubtraction
-from .morph import Morph
-from .addition import Addition
-from .multiplication import Multiplication
-from .division import Division
+from .smoothunion import SmoothUnion
+from .smoothunionlist import SmoothUnionList
+from .subtraction import Subtraction
+from .union import Union
 
 __all__ = [
-    'Union',
-    'Blend',
-    'Intersection',
-    'Subtraction',
-    'SmoothUnion',
-    'SmoothUnionList'
-    'SmoothIntersection',
-    'SmoothSubtraction',
-    'Morph',
-    'Addition',
-    'Multiplication',
-    'Division'
+    "LINEAR",
+    "QUADRATIC",
+    "Addition",
+    "Blend",
+    "Division",
+    "Intersection",
+    "Morph",
+    "Multiplication",
+    "SmoothIntersection",
+    "SmoothSubtraction",
+    "SmoothUnion",
+    "SmoothUnionList",
+    "Subtraction",
+    "Union",
 ]

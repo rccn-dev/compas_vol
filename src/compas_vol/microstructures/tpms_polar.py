@@ -1,33 +1,69 @@
-import math
-from compas_vol.microstructures import TPMS
-from compas import PRECISION
+from math import pi
+
+from compas_vol.base import VolObject
+from compas_vol.base import format_number
+
+from .tpms import TPMSTYPES
+from .tpms import resolve_tpmstype
+from .tpms import tpms_field
 
 
-class TPMSPolar(object):
-    """
-    --> To fill in
-    --------
+class TPMSPolar(VolObject):
+    """A triply periodic minimal surface evaluated in cylindrical coordinates.
+
+    The cartesian ``(x, y)`` plane is replaced by ``(radius, angle)``, so the
+    cells wrap around the Z axis instead of tiling a square grid.
+
+    The COMPAS 1 version was unusable: it called ``math.arctan2`` (a NumPy
+    name), its ``wavelength`` property read an attribute that was never
+    assigned, and the ``waveLength`` constructor argument was never applied to
+    the coordinates at all.
+
+    Parameters
+    ----------
+    tpmstype : int | str
+        The surface type, as an index into :data:`compas_vol.microstructures.TPMSTYPES`
+        or as a name.
+    wavelength : float
+        The wavelength along the radial and Z directions.
+    thickness : float
+        The thickness of the surface.
+    polar : float
+        The number of angular repetitions around the Z axis.
+
     Examples
     --------
-    >>> from compas_vol.microstructure import TPMSPolar
-    --> To fill in
-
+    >>> from compas_vol.microstructures import TPMSPolar
+    >>> t = TPMSPolar('Gyroid', 5.0, 0.1, 6)
+    >>> isinstance(t.get_distance([3, 4, 0]), float)
+    True
     """
 
-    def __init__(self, TPMStype=0, waveLength=1.0, thickness=0.1, polar=1.0):
-        self.TPMStype = TPMStype
-        self.tpmstypes = ['Gyroid', 'SchwartzP', 'Diamond', 'Neovius', 'Lidinoid', 'FischerKoch']
-        self.tpmstypesl = [s.lower() for s in self.tpmstypes]
+    def __init__(self, tpmstype=0, wavelength=1.0, thickness=0.1, polar=6.0, name=None):
+        super().__init__(name=name)
         self._tpmstype = None
-        self.waveLength = waveLength
-        self._waveLength = None
+        self._wavelength = None
+        self.tpmstype = tpmstype
+        self.wavelength = wavelength
         self.thickness = thickness
         self.polar = polar
-        self.tpms = self.createTPMSFunction(self.TPMStype, self.waveLength)
 
-    def createTPMSFunction(self, type, waveLength):
-        tpms = TPMS(type, waveLength)
-        return tpms
+    # ==========================================================================
+    # data
+    # ==========================================================================
+
+    @property
+    def __data__(self):
+        return {
+            "tpmstype": self.tpmstype,
+            "wavelength": self.wavelength,
+            "thickness": self.thickness,
+            "polar": self.polar,
+        }
+
+    @classmethod
+    def __from_data__(cls, data):
+        return cls(data["tpmstype"], data["wavelength"], data["thickness"], data["polar"])
 
     # ==========================================================================
     # descriptors
@@ -39,103 +75,52 @@ class TPMSPolar(object):
 
     @tpmstype.setter
     def tpmstype(self, tpmstype):
-        if type(tpmstype) == str:
-            if tpmstype.lower() in self.tpmstypesl:
-                self._tpmstype = self.tpmstypesl.index(tpmstype.lower())
-            else:
-                self._tpmstype = 0
-        elif type(tpmstype) == int:
-            self._tpmstype = max(0, min(tpmstype, len(self.tpmstypes) - 1))
+        self._tpmstype = resolve_tpmstype(tpmstype)
+
+    @property
+    def typename(self):
+        return TPMSTYPES[self.tpmstype]
 
     @property
     def wavelength(self):
-        """float: The wavelength of the TPMS."""
         return self._wavelength
 
     @wavelength.setter
     def wavelength(self, wavelength):
         self._wavelength = float(wavelength)
-        # self._factor = self.wavelength/pi
+        self._factor = self._wavelength / pi
 
     def __repr__(self):
-        return 'TPMS({0},{1:.{2}f})'.format(self.TPMStype, self.wavelength, PRECISION[:1])
+        return "TPMSPolar({0},{1},{2},{3})".format(
+            self.tpmstype,
+            format_number(self.wavelength),
+            format_number(self.thickness),
+            format_number(self.polar),
+        )
 
     # ==========================================================================
-    # distance function
+    # distance functions
     # ==========================================================================
+
+    def _polar_coords(self, x, y, z, np):
+        f = self._factor
+        px = np.sqrt(x**2 + y**2) / f
+        py = np.arctan2(y, x) * self.polar
+        pz = z / f
+        return px, py, pz
 
     def get_distance(self, point):
-        """
-        single point distance function
-        """
-        x, y, z = point
-
-        px = math.sqrt(x**2 + y**2)
-        py = math.arctan2(y, x)*self.polar
-        pz = z
-
-        d = 0
-        if self.TPMStype == 0:  # 'Gyroid':
-            d = math.sin(px)*math.cos(py) + math.sin(py)*math.cos(pz) + math.sin(pz)*math.cos(px)
-        elif self.TPMStype == 1:  # 'SchwartzP':
-            d = math.cos(px) + math.cos(py) + math.cos(pz)
-        elif self.TPMStype == 2:  # 'Diamond':
-            d = (
-                math.sin(px) * math.sin(py) * math.sin(pz) +
-                math.sin(px) * math.cos(py) * math.cos(pz) +
-                math.cos(px) * math.sin(py) * math.cos(pz) +
-                math.cos(px) * math.cos(py) * math.sin(pz)
-            )
-        elif self.TPMStype == 3:  # 'Neovius':
-            d = (3 * math.cos(px) + math.cos(py) + math.cos(pz) +
-                 4 * math.cos(px) * math.cos(py) * math.cos(pz))
-        elif self.TPMStype == 4:  # 'Lidinoid':
-            d = (0.5 * (math.sin(2*px) * math.cos(py) * math.sin(pz) +
-                 math.sin(2*py) * math.cos(py) * math.sin(px) +
-                 math.sin(2*pz) * math.cos(px) * math.sin(pz)) -
-                 0.5 * (math.cos(2*px) * math.cos(2*py) +
-                 math.cos(2*py) * math.cos(2*pz) +
-                 math.cos(2*pz) * math.cos(2*px)) + 0.15)
-        elif self.TPMStype == 5:  # 'FischerKoch':
-            d = (math.cos(2*px) * math.sin(py) * math.cos(pz) +
-                 math.cos(2*py) * math.sin(pz) * math.cos(px) +
-                 math.cos(2*pz) * math.sin(px) * math.cos(py))
-        return d
-
-    def get_distance_numpy(self, x, y, z):
-        """
-        vectorized distance function
-        """
         import numpy as np
 
-        px = np.sqrt(x**2 + y**2)
-        py = np.arctan2(y, x)*self.polar
-        pz = z
+        x, y, z = point
+        px, py, pz = self._polar_coords(x, y, z, np)
+        return float(tpms_field(self.tpmstype, px, py, pz)) - self.thickness / 2.0
 
-        d = 0
-        if self.TPMStype == 0:  # 'Gyroid':
-            d = np.sin(px)*np.cos(py) + np.sin(py)*np.cos(pz) + np.sin(pz)*np.cos(px)
-        elif self.TPMStype == 1:  # 'SchwartzP':
-            d = np.cos(px) + np.cos(py) + np.cos(pz)
-        elif self.TPMStype == 2:  # 'Diamond':
-            d = (
-                np.sin(px) * np.sin(py) * np.sin(pz) +
-                np.sin(px) * np.cos(py) * np.cos(pz) +
-                np.cos(px) * np.sin(py) * np.cos(pz) +
-                np.cos(px) * np.cos(py) * np.sin(pz)
-            )
-        elif self.TPMStype == 3:  # 'Neovius':
-            d = (3 * np.cos(px) + np.cos(py) + np.cos(pz) +
-                 4 * np.cos(px) * np.cos(py) * np.cos(pz))
-        elif self.TPMStype == 4:  # 'Lidinoid':
-            d = (0.5 * (np.sin(2*px) * np.cos(py) * np.sin(pz) +
-                 np.sin(2*py) * np.cos(py) * np.sin(px) +
-                 np.sin(2*pz) * np.cos(px) * np.sin(pz)) -
-                 0.5 * (np.cos(2*px) * np.cos(2*py) +
-                 np.cos(2*py) * np.cos(2*pz) +
-                 np.cos(2*pz) * np.cos(2*px)) + 0.15)
-        elif self.TPMStype == 5:  # 'FischerKoch':
-            d = (np.cos(2*px) * np.sin(py) * np.cos(pz) +
-                 np.cos(2*py) * np.sin(pz) * np.cos(px) +
-                 np.cos(2*pz) * np.sin(px) * np.cos(py))
-        return d - self.thickness/2.0
+    def get_distance_numpy(self, x, y, z):
+        import numpy as np
+
+        # ogrid components must be broadcast before arctan2 sees them.
+        shape = np.broadcast_shapes(np.shape(x), np.shape(y), np.shape(z))
+        bx, by, bz = (np.broadcast_to(c, shape) for c in (x, y, z))
+        px, py, pz = self._polar_coords(bx, by, bz, np)
+        return tpms_field(self.tpmstype, px, py, pz) - self.thickness / 2.0

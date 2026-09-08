@@ -1,111 +1,77 @@
-from compas.geometry import Point
 from compas.geometry import closest_point_on_segment
-from compas import PRECISION
+
+from compas_vol.base import VolObject
+from compas_vol.base import format_number
 
 
-class VolCapsule(object):
-    """A volumetric capsule is defined by a line segment and a radius.
+class VolCapsule(VolObject):
+    """A volumetric capsule, defined by a line segment and a radius.
 
     Parameters
     ----------
-    segment: list or tuple of two points
+    segment : tuple[point, point]
         Start and end point of the line segment.
-    radius: float
+    radius : float
         The radius of the capsule.
 
     Examples
     --------
-    >>> sp = (1, 2, -3)
-    >>> ep = (5, 4, 3)
-    >>> segment = (sp, ep)
-    >>> capsule = VolCapsule(segment, 3.0)
+    >>> from compas_vol.primitives import VolCapsule
+    >>> capsule = VolCapsule(((1, 2, -3), (5, 4, 3)), 3.0)
+    >>> round(capsule.get_distance([1, 2, -3]), 6)
+    -3.0
     """
 
-    def __init__(self, segment, radius):
+    def __init__(self, segment, radius, name=None):
+        super().__init__(name=name)
         self.segment = segment
         self.radius = radius
 
+    # ==========================================================================
+    # data
+    # ==========================================================================
+
     @property
-    def data(self):
-        return {'segment': self.segment,
-                'radius': self.radius}
-
-    def to_data(self):
-        return self.data
-
-    @data.setter
-    def data(self, data):
-        self.segment = data['segment']
-        self.radius = data['radius']
+    def __data__(self):
+        return {
+            "segment": [list(self.segment[0]), list(self.segment[1])],
+            "radius": self.radius,
+        }
 
     @classmethod
-    def from_data(cls, data):
-        segment = data['segment']
-        radius = data['radius']
-        vcapsule = cls(segment, radius)
-        return vcapsule
+    def __from_data__(cls, data):
+        return cls(tuple(tuple(p) for p in data["segment"]), data["radius"])
 
     def __repr__(self):
-        segment = 'hallo'
-        return 'VolSegment({0},{1:.{2}f})'.format(segment, self.radius, PRECISION[:1])
+        a, b = self.segment
+        return "VolCapsule(({0}, {1}), {2})".format(tuple(a), tuple(b), format_number(self.radius))
+
+    # ==========================================================================
+    # distance functions
+    # ==========================================================================
 
     def get_distance(self, point):
-        """
-        single point distance function
-        """
-        if not isinstance(point, Point):
-            point = Point(*point)
-        p = closest_point_on_segment(point, self.segment)
-        return point.distance_to_point(p) - self.radius
+        p = self._as_point(point)
+        closest = closest_point_on_segment(p, self.segment)
+        return p.distance_to_point(closest) - self.radius
 
     def get_distance_numpy(self, x, y, z):
-        """
-        vectorized distance function
-        """
         import numpy as np
 
-        A = np.array([*self.segment[0]])
-        B = np.array([*self.segment[1]])
+        ax, ay, az = (float(c) for c in self.segment[0])
+        bx, by, bz = (float(c) for c in self.segment[1])
 
-        pnt_vecs = np.array([x - A[0], y - A[1], z - A[2]])
-        line_vec = B - A
-        line_len = np.sqrt(np.sum(line_vec**2))
-        line_unitvec = line_vec/line_len
-        pnt_vec_scaled = pnt_vecs * 1/line_len
-        t = np.dot(line_unitvec, pnt_vec_scaled)
-        t = np.where(t < 0, 0, t)
-        t = np.where(t > 1, 1, t)
-        nearest = t[:, :, :, np.newaxis] * line_vec
-        ptmg = np.meshgrid(pnt_vecs[1], pnt_vecs[0], pnt_vecs[2])
-        pts = np.stack((ptmg), axis=-1)
-        dist = np.linalg.norm(nearest - pts, axis=-1)
-        return dist - self.radius
-        # return norm(cross(B-A, pnt-A), axis=-1)/norm(B-A) - self.radius
+        # Vector from the segment start to every query point.
+        px = x - ax
+        py = y - ay
+        pz = z - az
 
+        # The segment direction, and the parameter of the closest point on it.
+        ex, ey, ez = bx - ax, by - ay, bz - az
+        ee = ex * ex + ey * ey + ez * ez
+        h = np.clip((px * ex + py * ey + pz * ez) / ee, 0.0, 1.0)
 
-# if __name__ == "__main__":
-#     import numpy as np
-#     import matplotlib.pyplot as plt
-
-#     s = ((-9, -6, 0), (6, 9, 0))
-#     capsule = VolCapsule(s, 5.0)
-#     print(capsule)
-
-#     x, y, z = np.ogrid[-14:14:112j, -12:12:96j, -10:10:80j]
-
-#     m = capsule.get_distance_numpy(x, y, z)
-#     print(m.shape)
-#     plt.imshow(m[:, :, 25].T, cmap='RdBu')  # transpose because numpy indexing is 1)row 2) column instead of x y
-#     plt.colorbar()
-#     plt.axis('equal')
-#     plt.show()
-
-#     for y in range(-15, 15):
-#         s = ''
-#         for x in range(-30, 30):
-#             d = capsule.get_distance((x * 0.5, -y, 0))
-#             if d < 0:
-#                 s += 'x'
-#             else:
-#                 s += '.'
-#         print(s)
+        dx = px - ex * h
+        dy = py - ey * h
+        dz = pz - ez * h
+        return np.sqrt(dx * dx + dy * dy + dz * dz) - self.radius

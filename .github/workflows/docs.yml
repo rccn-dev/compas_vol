@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
   pull_request:
     branches:
       - main
@@ -15,48 +13,27 @@ jobs:
     name: build and deploy docs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: compas-dev/compas-actions.docs@v1.0.0
-        id: docs
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          dest: deploy
-          build_to_subfolder: true
+          enable-cache: true
 
-      - name: Deploy docs
-        if: success() && steps.docs.outputs.commit_type != 'pull'
-        uses: crazy-max/ghaction-github-pages@v2
-        with:
-          target_branch: gh-pages
-          build_dir: deploy
-          keep_history: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
-    outputs:
-      commit_type: ${{ steps.docs.outputs.commit_type }}
-      current_patch: ${{ steps.docs.outputs.current_patch }}
-  
-  docVersions:
-    needs: build
-    if: needs.build.outputs.commit_type == 'tag'
-    name: update doc versions
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: gh-pages
+      - name: Set up Python
+        run: uv python install 3.13
 
-      - uses: compas-dev/compas-actions.docversions@v1.0.0
-        with:
-          current_patch: ${{ needs.build.outputs.current_patch }}
+      - name: Install
+        run: uv sync --extra meshing --group docs
+
+      # -W turns warnings into errors, so a broken reference fails the build
+      # rather than silently shipping.
+      - name: Build docs
+        run: uv run sphinx-build -b html -W docs docs/_build/html
 
       - name: Deploy docs
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v2
+        if: success() && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          target_branch: gh-pages
-          build_dir: ./
-          keep_history: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/html
