@@ -1,0 +1,19 @@
+{
+    "name": "Volumetric Sphere",
+    "nickname": "VolSph",
+    "category": "COMPAS Vol",
+    "subcategory": "Primitives",
+    "description": "A sphere as a signed distance field.",
+    "exposure": 2,
+    "instanceGuid": "c39b7d5a-4c91-4a85-9a09-f57cad9913c3",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "point", "description": "Centre. Defaults to the world origin.", "typeHintID": "point"},
+            {"name": "radius", "description": "Radius, in model units.", "typeHintID": "float"}
+        ],
+        "outputParameters": [
+            {"name": "vol", "description": "A volumetric object, to combine or to mesh."}
+        ]
+    }
+}

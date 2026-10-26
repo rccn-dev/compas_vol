@@ -1,5 +1,6 @@
 import math
 
+import numpy as np
 import pytest
 from compas.geometry import Box
 from compas.geometry import Cone
@@ -31,12 +32,16 @@ from compas_vol.microstructures import Lattice
 from compas_vol.microstructures import LatticePolar
 from compas_vol.microstructures import TPMSAttractor
 from compas_vol.microstructures import TPMSPolar
+from compas_vol.microstructures import TPMSSolid
 from compas_vol.microstructures import Voronoi
 from compas_vol.modifications import Factor
 from compas_vol.modifications import MultiShell
 from compas_vol.modifications import Overlay
+from compas_vol.modifications import Offset
+from compas_vol.modifications import Remap
 from compas_vol.modifications import Shell
 from compas_vol.modifications import Sine
+from compas_vol.modifications import Conform
 from compas_vol.modifications import Twist
 from compas_vol.modifications import VolTransformation
 from compas_vol.primitives import GDF
@@ -49,6 +54,7 @@ from compas_vol.primitives import VolCylinder
 from compas_vol.primitives import VolEgg
 from compas_vol.primitives import VolEllipsoid
 from compas_vol.primitives import VolExtrusion
+from compas_vol.primitives import VolGrid
 from compas_vol.primitives import VolPlane
 from compas_vol.primitives import VolPolyhedron
 from compas_vol.primitives import VolSphere
@@ -100,6 +106,18 @@ def build_objects():
         "PlatonicSolid-icosa": PlatonicSolid(10.0, 3, frame=SKEW_FRAME),
         "GDF": GDF(10.0, "icosahedron", frame=SKEW_FRAME),
         "GDF-blended": GDF(10.0, "octahedron", exponent=4.0),
+        # A sampled field, so the shared checks cover the bridge that every
+        # process result comes back through.
+        "VolGrid": VolGrid(
+            np.sqrt(
+                (np.linspace(-20, 20, 24)[:, None, None]) ** 2
+                + (np.linspace(-20, 20, 24)[None, :, None]) ** 2
+                + (np.linspace(-20, 20, 24)[None, None, :]) ** 2
+            )
+            - 9.0,
+            (-20, -20, -20),
+            (40 / 23, 40 / 23, 40 / 23),
+        ),
         # combinations
         "Union": Union(vs, vb),
         "Union-list": Union([vs, vb, vp]),
@@ -122,16 +140,28 @@ def build_objects():
         "Factor": Factor(vb, 2.0),
         "Sine": Sine(vb, 0.5),
         "Twist": Twist(vb, Frame((0, 0, 0), (1, 0, 0), (0, 0, 1)), 0.05),
+        "Conform": Conform(TPMSSolid("Gyroid", 6.0, 1.2), vs, axis=2, scale=1.5, offset=0.4),
         "VolTransformation": VolTransformation(vb, SKEW_FRAME),
+        "Offset": Offset(vb, 1.5),
+        "Offset-driven": Offset(vs, Remap(vp, (-10.0, 10.0), (-1.0, 2.0))),
+        "Remap-linear": Remap(vs, (-5.0, 20.0), (2.0, 0.5)),
+        "Remap-smooth": Remap(vp, (-10.0, 10.0), (0.0, 1.0), "smooth"),
         # microstructures
         "Lattice": Lattice(5, 5.0, 0.3, frame=SKEW_FRAME),
         "LatticePolar": LatticePolar(5, 5.0, 0.3, 6, frame=SKEW_FRAME),
         "TPMS-gyroid": TPMS("Gyroid", 5.0),
-        "TPMS-schwartzp": TPMS("SchwartzP", 5.0),
+        "TPMS-schwarzp": TPMS("SchwarzP", 5.0),
         "TPMS-diamond": TPMS("Diamond", 5.0),
         "TPMS-neovius": TPMS("Neovius", 5.0),
         "TPMS-lidinoid": TPMS("Lidinoid", 5.0),
         "TPMS-fischerkoch": TPMS("FischerKoch", 5.0),
+        "TPMS-iwp": TPMS("IWP", 5.0),
+        "TPMSSolid-sheet": TPMSSolid("Gyroid", 8.0, 1.2),
+        "TPMSSolid-network": TPMSSolid("SchwarzP", 8.0, mode="network", offset=0.5, frame=SKEW_FRAME),
+        "TPMSSolid-network-inverted": TPMSSolid("IWP", 8.0, mode="network", invert=True),
+        "TPMSSolid-graded": TPMSSolid(
+            "Diamond", 8.0, Remap(vs, (0.0, 20.0), (2.0, 0.6)), offset=Remap(vp, (-9, 9), (-0.5, 0.5))
+        ),
         "TPMSPolar": TPMSPolar("Gyroid", 5.0, 0.1, 6),
         "TPMSAttractor": TPMSAttractor(vs, "Gyroid", (2.0, 8.0), (0.0, 20.0)),
         "Voronoi": Voronoi(

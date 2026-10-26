@@ -1,0 +1,24 @@
+{
+    "name": "Volumetric Inspect",
+    "nickname": "VolCheck",
+    "category": "COMPAS Vol",
+    "subcategory": "Fabrication",
+    "description": "Check a volumetric object for the things that stop a model printing.",
+    "exposure": 8,
+    "instanceGuid": "038a7364-5986-407c-ba10-ca5b37c3cd6e",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The object to check."},
+            {"name": "bounds", "description": "The box to sample over, as for the Mesh component.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 96.", "typeHintID": "int"},
+            {"name": "angle", "description": "Overhang threshold from vertical, in degrees. Defaults to 45.", "typeHintID": "float"},
+            {"name": "min_wall", "description": "Thinnest printable wall, in model units. Defaults to 1.6.", "typeHintID": "float"}
+        ],
+        "outputParameters": [
+            {"name": "report", "description": "The findings, as text."},
+            {"name": "ok", "description": "True when nothing was found that would stop the print."},
+            {"name": "pieces", "description": "Separate solids. More than one and this is not a single part."}
+        ]
+    }
+}

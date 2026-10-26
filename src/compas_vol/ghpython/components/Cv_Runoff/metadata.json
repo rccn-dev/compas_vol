@@ -1,0 +1,26 @@
+{
+    "name": "Volumetric Runoff",
+    "nickname": "VolRain",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "Rain: water gathers downhill over the top of the model and cuts gullies.",
+    "exposure": 2,
+    "instanceGuid": "22406358-092d-4c16-a016-6aedcc9474af",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The starting solid. A process result runs on its own grid when bounds is unwired."},
+            {"name": "bounds", "description": "The box to sample vol over. Leave unwired to run on a process result's own grid.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64. Sets the finest feature: below two voxels, nothing survives.", "typeHintID": "int"},
+            {"name": "depth", "description": "Millimetres cut where the flow is heaviest. Defaults to 6.", "typeHintID": "float"},
+            {"name": "decay", "description": "How far the cut reaches below the surface, in mm. Defaults to 10.", "typeHintID": "float"},
+            {"name": "smooth", "description": "Blur on the flow, in voxels. Higher gives fewer, broader channels. Defaults to 0.9.", "typeHintID": "float"},
+            {"name": "concentration", "description": "Lower spreads the cutting; higher gathers it into a few deep gullies. Defaults to 0.4.", "typeHintID": "float"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

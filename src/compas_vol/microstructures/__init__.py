@@ -14,6 +14,7 @@ compas_vol.microstructures
     TPMS
     TPMSAttractor
     TPMSPolar
+    TPMSSolid
     Voronoi
 
 """
@@ -26,16 +27,20 @@ from .tpms import TPMS
 from .tpms import tpms_field
 from .tpms_attractor import TPMSAttractor
 from .tpms_polar import TPMSPolar
+from .tpms_solid import TPMSMODES
+from .tpms_solid import TPMSSolid
 from .voronoi import Voronoi
 
 __all__ = [
     "LATTICE_TYPENAMES",
+    "TPMSMODES",
     "TPMSTYPES",
     "Lattice",
     "LatticePolar",
     "TPMS",
     "TPMSAttractor",
     "TPMSPolar",
+    "TPMSSolid",
     "Voronoi",
     "tpms_field",
 ]

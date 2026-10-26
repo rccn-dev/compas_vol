@@ -1,6 +1,6 @@
 [project]
 name = "compas-vol"
-version = "0.2.0"
+version = "0.3.0"
 description = "Volumetric modelling with signed distance functions, for COMPAS 2"
 readme = "README.md"
 authors = [
@@ -25,9 +25,17 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-requires-python = ">=3.13"
+# 3.9 is not a nostalgic floor: it is the CPython that Rhino 8 embeds
+# (3.9.10, in ~/.rhinocode/py39-rh8), and it is what COMPAS itself supports.
+# Holding it is what lets the same source run headless, in compas_viewer and
+# inside a Grasshopper component. See docs/contexts.rst.
+requires-python = ">=3.9"
 dependencies = [
     "compas>=2.15.1",
     "numpy>=2.0",
@@ -35,9 +43,18 @@ dependencies = [
 
 [project.optional-dependencies]
 # Marching-cubes iso-surfacing, and the Blur modification.
+# Lower bounds are the oldest releases the suite passes on, which are also the
+# newest that publish 3.9 wheels: newer ones resolve fine on newer Pythons.
 meshing = [
-    "scikit-image>=0.26",
-    "scipy>=1.18",
+    "scikit-image>=0.24",
+    "scipy>=1.13",
+]
+# Erosion, growth and phase separation on sampled fields. scikit-fmm does the
+# redistancing every process depends on; it is the only compiled dependency
+# here, which is why it is optional.
+processes = [
+    "scikit-fmm>=2025.1.29",
+    "scipy>=1.13",
 ]
 # Standalone OpenGL viewer. Pulls in PySide6, which is large.
 viewer = [
@@ -46,11 +63,11 @@ viewer = [
 # Everything the scripts in examples/ need, including matplotlib for the
 # field slice inspector.
 examples = [
-    "compas-vol[meshing,viewer]",
+    "compas-vol[meshing,processes,viewer]",
     "matplotlib>=3.9",
 ]
 all = [
-    "compas-vol[meshing,viewer,examples]",
+    "compas-vol[meshing,processes,viewer,examples]",
 ]
 
 [project.urls]
@@ -61,7 +78,7 @@ Issues = "https://github.com/rccn-dev/compas_vol/issues"
 "Original project" = "https://github.com/dbt-ethz/compas_vol"
 
 [build-system]
-requires = ["uv_build>=0.12.1,<0.13.0"]
+requires = ["uv_build>=0.12.1,<0.14.0"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
@@ -71,10 +88,14 @@ module-name = "compas_vol"
 dev = [
     "pytest>=8",
     "ruff>=0.14",
+    "compas-vol[processes]",
 ]
+# The library runs on 3.9 (Rhino 8), but nothing says the documentation has to
+# be *built* there, and Sphinx 8 needs 3.11. The marker keeps `uv sync` from
+# having to satisfy the docs toolchain on the runtime floor.
 docs = [
-    "sphinx>=8",
-    "sphinx-compas-theme>=0.15.18",
+    "sphinx>=8; python_version >= '3.11'",
+    "sphinx-compas-theme>=0.15.18; python_version >= '3.11'",
 ]
 
 [tool.pytest.ini_options]
@@ -82,7 +103,11 @@ docs = [
 # the suite works the same for an editable and a wheel install. Collecting
 # "src/compas_vol" by path only works when the install is editable.
 testpaths = ["tests", "compas_vol"]
-addopts = "--doctest-modules --pyargs"
+# The Grasshopper component sources are data, not modules: they all define a
+# class called `code`, they import `ghpythonlib`, and they reference `ghenv`,
+# none of which exists outside Rhino. tests/test_ghpython.py checks them
+# instead, by parsing rather than importing.
+addopts = "--doctest-modules --pyargs --ignore-glob=*/ghpython/components/*"
 filterwarnings = [
     # scikit-image's marching cubes still assigns to ndarray.shape, which
     # NumPy 2.5 deprecates. Nothing we can act on from here.
@@ -92,10 +117,16 @@ filterwarnings = [
 [tool.ruff]
 # .editorconfig allows 180, but nothing in the package currently exceeds 110.
 # 120 leaves room without inviting lines that are hard to read next to a
-# docstring's math.
+# docstring's math. target-version is the 3.9 floor, so the linter rejects
+# syntax Rhino 8's interpreter cannot parse.
 line-length = 120
-target-version = "py313"
+target-version = "py39"
 extend-exclude = ["docs/_build"]
+
+# Grasshopper injects `ghenv` into a running component the way a builtin is
+# injected; there is no import that would declare it. Naming it here keeps F821
+# meaningful everywhere else rather than silencing the rule for the components.
+builtins = ["ghenv"]
 
 [tool.ruff.lint]
 # E/W (pycodestyle), F (pyflakes) and NPY (NumPy-2 correctness) all pass clean

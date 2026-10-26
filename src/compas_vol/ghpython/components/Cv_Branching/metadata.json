@@ -1,0 +1,28 @@
+{
+    "name": "Volumetric Branching",
+    "nickname": "VolBranch",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "A branching network grown by space colonization, drawn as a solid.",
+    "exposure": 4,
+    "instanceGuid": "86b6c2bc-c7b1-4317-a9ea-a1609fc4d593",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "bounds", "description": "The box to fill. Required: there is no starting shape.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64.", "typeHintID": "int"},
+            {"name": "root", "description": "Where growth starts. Defaults to the middle of the floor of the box.", "typeHintID": "point"},
+            {"name": "attractors", "description": "Points competing to be reached; more is denser. Defaults to 800.", "typeHintID": "int"},
+            {"name": "step", "description": "Length of one growth step, in mm. Defaults to 3.5.", "typeHintID": "float"},
+            {"name": "influence", "description": "How far a tip can be pulled from, in mm. Defaults to 22.", "typeHintID": "float"},
+            {"name": "thin", "description": "Radius of the finest twig, in mm. Defaults to 1.5.", "typeHintID": "float"},
+            {"name": "thick", "description": "Radius of the trunk, in mm. Defaults to 5.", "typeHintID": "float"},
+            {"name": "seed", "description": "Which variation. Change it for another result with the same character.", "typeHintID": "int"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

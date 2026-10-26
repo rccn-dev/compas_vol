@@ -1,0 +1,20 @@
+{
+    "name": "Volumetric Cylinder",
+    "nickname": "VolCyl",
+    "category": "COMPAS Vol",
+    "subcategory": "Primitives",
+    "description": "A cylinder as a signed distance field.",
+    "exposure": 2,
+    "instanceGuid": "a885ee29-27e1-4325-870f-a04a63c7d519",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "plane", "description": "The cylinder's frame, at its mid-height. Defaults to world XY.", "typeHintID": "plane"},
+            {"name": "radius", "description": "Radius, in model units.", "typeHintID": "float"},
+            {"name": "height", "description": "Total height, in model units.", "typeHintID": "float"}
+        ],
+        "outputParameters": [
+            {"name": "vol", "description": "A volumetric object, to combine or to mesh."}
+        ]
+    }
+}

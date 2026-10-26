@@ -1,0 +1,26 @@
+{
+    "name": "Volumetric Reaction Diffusion",
+    "nickname": "VolRD",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "Gray-Scott reaction-diffusion, set solid: spots, worms and labyrinths.",
+    "exposure": 8,
+    "instanceGuid": "3a61f80d-61a9-4178-9219-ee7838d6465d",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "bounds", "description": "The box to fill. Required: there is no starting shape.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64.", "typeHintID": "int"},
+            {"name": "feed", "description": "Feed rate. Defaults to 0.037.", "typeHintID": "float"},
+            {"name": "kill", "description": "Kill rate. Defaults to 0.06.", "typeHintID": "float"},
+            {"name": "steps", "description": "Defaults to 1500.", "typeHintID": "int"},
+            {"name": "level", "description": "Concentration taken as the surface. Defaults to 0.25.", "typeHintID": "float"},
+            {"name": "seed", "description": "Which variation. Change it for another result with the same character.", "typeHintID": "int"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

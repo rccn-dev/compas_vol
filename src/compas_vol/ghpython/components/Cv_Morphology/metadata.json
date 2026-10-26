@@ -1,0 +1,24 @@
+{
+    "name": "Volumetric Morphology",
+    "nickname": "VolMinFeat",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "Enforce a minimum feature size: remove what is too thin, or fill what is too narrow.",
+    "exposure": 16,
+    "instanceGuid": "e782b1d2-c5ba-4b03-8196-400ac0d509c8",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The starting solid. A process result runs on its own grid when bounds is unwired."},
+            {"name": "bounds", "description": "The box to sample vol over. Leave unwired to run on a process result's own grid.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64. Sets the finest feature: below two voxels, nothing survives.", "typeHintID": "int"},
+            {"name": "operation", "description": "open or close. Defaults to open.", "typeHintID": "str"},
+            {"name": "radius", "description": "Half the thinnest feature to keep, or the widest gap to fill, in mm. Defaults to 1.", "typeHintID": "float"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

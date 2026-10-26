@@ -1,0 +1,25 @@
+{
+    "name": "Volumetric Abrasion",
+    "nickname": "VolAbrade",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "Weathering that rounds: what sticks out wears first.",
+    "exposure": 2,
+    "instanceGuid": "962af85f-0a5f-46ea-adac-f368facd3190",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The starting solid. A process result runs on its own grid when bounds is unwired."},
+            {"name": "bounds", "description": "The box to sample vol over. Leave unwired to run on a process result's own grid.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64. Sets the finest feature: below two voxels, nothing survives.", "typeHintID": "int"},
+            {"name": "depth", "description": "Millimetres removed from a flat face. Edges lose more. Defaults to 4.", "typeHintID": "float"},
+            {"name": "length", "description": "Roughly the radius the sharpest edge ends up with, in mm. Defaults to 9.", "typeHintID": "float"},
+            {"name": "edge_bias", "description": "How much faster an edge wears than a face. 0 wears evenly. Defaults to 2.", "typeHintID": "float"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

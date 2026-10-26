@@ -119,7 +119,40 @@ def test_tpms_polar_wavelength_property_is_readable():
 
 def test_tpms_type_by_name_and_index_agree():
     assert TPMS("Gyroid", 5.0).tpmstype == TPMS(0, 5.0).tpmstype
-    assert TPMS("schwartzp", 5.0).typename == "SchwartzP"
+    assert TPMS("schwarzp", 5.0).typename == "SchwarzP"
+
+
+def test_tpms_old_schwartz_spelling_still_resolves():
+    """The type was misspelled "SchwartzP"; scripts using it keep working."""
+    assert TPMS("SchwartzP", 5.0).tpmstype == TPMS("SchwarzP", 5.0).tpmstype == 1
+
+
+@pytest.mark.parametrize("bad", ["Gyroyd", "Schwarz", 7, -1])
+def test_tpms_unknown_type_raises(bad):
+    """An unknown name used to fall back to the gyroid without a word."""
+    with pytest.raises(ValueError):
+        TPMS(bad, 5.0)
+
+
+@pytest.mark.parametrize("tpmstype", ["Gyroid", "SchwarzP", "Diamond", "Neovius", "Lidinoid", "FischerKoch", "IWP"])
+def test_tpms_formulas_have_cyclic_symmetry(tpmstype):
+    """Every surface here is invariant under x -> y -> z -> x.
+
+    Upstream's Neovius read ``3 cos x + cos y + cos z`` instead of
+    ``3 (cos x + cos y + cos z)``, and its Lidinoid had two index typos. Both
+    broke this symmetry, so they were not the surfaces they were named after.
+    """
+    rng = np.random.default_rng(0)
+    x, y, z = rng.uniform(-10, 10, (3, 500))
+    t = TPMS(tpmstype, np.pi)  # wavelength pi -> unscaled coordinates
+    np.testing.assert_allclose(t.get_distance_numpy(x, y, z), t.get_distance_numpy(y, z, x), atol=1e-12)
+
+
+def test_neovius_matches_reference_formula():
+    t = TPMS("Neovius", np.pi)
+    x, y, z = 0.3, 1.1, -0.7
+    expected = 3 * (np.cos(x) + np.cos(y) + np.cos(z)) + 4 * np.cos(x) * np.cos(y) * np.cos(z)
+    assert t.get_distance((x, y, z)) == pytest.approx(expected)
 
 
 def test_voronoi_module_imports_without_numpy_core():
@@ -177,3 +210,79 @@ def test_heart_single_point_honours_its_frame():
     h = Heart(30, frame=Frame((5, 0, 0), (1, 0, 0), (0, 1, 0)))
     x, y, z = np.ogrid[5:5:1j, 0:0:1j, 0:0:1j]
     assert h.get_distance((5, 0, 0)) == pytest.approx(float(h.get_distance_numpy(x, y, z).ravel()[0]))
+
+
+def test_shell_node_centres_the_wall_on_the_surface():
+    """The Shell component promised a centred wall but built Shell's default.
+
+    ``Shell(side=0)`` offsets the whole wall outward, so a 2 mm shell of a
+    10 mm sphere ran from r=5 to r=7 instead of 4 to 6.
+    """
+    from compas_vol import nodes
+
+    wall = nodes.shell(nodes.sphere(None, 5.0), 2.0)
+    assert wall.get_distance([5, 0, 0]) == pytest.approx(-1.0)
+    assert wall.get_distance([4, 0, 0]) == pytest.approx(0.0)
+    assert wall.get_distance([6, 0, 0]) == pytest.approx(0.0)
+
+
+# ==============================================================================
+# Defects found in this fork
+# ==============================================================================
+
+
+def test_piece_export_is_closed_at_its_cut_faces(tmp_path):
+    """A piece fills its box to the cut, so sampling exactly the box left the cut open."""
+    pytest.importorskip("skimage", reason="needs the meshing extra")
+    import struct
+
+    from compas_vol.assembly import segment
+
+    assembly = segment(VolBox(Box(300.0, 100.0, 100.0), 0.0), bounds=(-160, -60, -60, 160, 60, 60),
+                       piece=(110.0, 200.0, 200.0))
+    path = assembly[1].export_stl(str(tmp_path / "piece.stl"), resolution=40)
+    with open(path, "rb") as f:
+        f.read(80)
+        count = struct.unpack("<I", f.read(4))[0]
+        data = np.frombuffer(f.read(count * 50), dtype=np.dtype([("n", "<f4", 3), ("v", "<f4", (3, 3)), ("a", "<u2")]))
+    _, index = np.unique(data["v"].reshape(-1, 3), axis=0, return_inverse=True)
+    corners = index.reshape(-1, 3)
+    edges = np.sort(np.concatenate([corners[:, [0, 1]], corners[:, [1, 2]], corners[:, [2, 0]]]), axis=1)
+    _, counts = np.unique(edges, axis=0, return_counts=True)
+    assert (counts == 2).all()
+
+
+def test_iso_surface_has_no_degenerate_triangles_on_a_grid_plane():
+    """A face exactly on a grid plane used to give zero-area triangles."""
+    pytest.importorskip("skimage", reason="needs the meshing extra")
+    from compas_vol.meshing import iso_surface
+
+    x, y, z = np.ogrid[-4:4:9j, -4:4:9j, -4:4:9j]
+    slab = np.maximum(np.abs(z) - 2.0, np.maximum(np.abs(x), np.abs(y)) - 3.0)   # faces on z = +-2, samples there
+    vertices, faces = iso_surface(np.broadcast_to(slab, (9, 9, 9)), (-4, -4, -4), (1, 1, 1))
+    area = np.linalg.norm(np.cross(vertices[faces[:, 1]] - vertices[faces[:, 0]],
+                                   vertices[faces[:, 2]] - vertices[faces[:, 0]]), axis=1)
+    assert area.min() > 1e-6
+
+
+def test_pitting_resistance_means_resistance():
+    """1 resisted in differential and pitted fastest in pitting; now both resist."""
+    pytest.importorskip("skfmm", reason="needs the processes extra")
+    from compas_vol.processes import Field, pitting
+
+    field = Field.from_object(VolSphere(Sphere(10, point=Point(0, 0, 0))), bounds=15.0, resolution=31)
+    resistant = pitting(field, resistance=np.ones(field.shape), depth=3.0, steps=4)
+    weak = pitting(field, resistance=-np.ones(field.shape), depth=3.0, steps=4)
+    assert resistant.solid_fraction() == pytest.approx(field.solid_fraction(), abs=1e-3)
+    assert weak.solid_fraction() < field.solid_fraction() - 0.01
+
+
+def test_transformed_coordinates_do_not_broadcast_over_axes_they_ignore():
+    """An axis-aligned frame left a plan shape evaluated once per voxel instead of once per plan point."""
+    from compas_vol.base import transform_numpy
+
+    x, y, z = np.ogrid[0:1:5j, 0:1:6j, 0:1:7j]
+    identity = [[1, 0, 0, 2], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
+    xt, yt, zt = transform_numpy(identity, x, y, z)
+    assert (xt.shape, yt.shape, zt.shape) == ((5, 1, 1), (1, 6, 1), (1, 1, 7))
+    assert np.allclose(xt, x + 2)

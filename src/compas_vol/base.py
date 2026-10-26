@@ -8,6 +8,7 @@ from compas.tolerance import TOL
 
 __all__ = [
     "VolObject",
+    "reduce_distances",
     "inverse_matrix_from_frame",
     "transform_numpy",
     "format_number",
@@ -40,6 +41,41 @@ def broadcast_distances(distances, x, y, z):
 
     shape = np.broadcast_shapes(np.shape(x), np.shape(y), np.shape(z))
     return [np.broadcast_to(d, shape) for d in distances]
+
+
+def reduce_distances(operation, objects, x, y, z):
+    """Combine the fields of several objects, one at a time.
+
+    Evaluating every child into its own array and reducing the list afterwards
+    needs memory for all of them at once: a union of a few hundred spheres over
+    a few million samples runs into gigabytes, and inside threaded sampling
+    that is multiplied again by the thread count. Accumulating keeps two arrays
+    alive instead of N. ``min`` and ``max`` do not care in what order they see
+    their arguments, so the result is identical either way.
+
+    Parameters
+    ----------
+    operation : callable
+        ``numpy.minimum`` for a union, ``numpy.maximum`` for an intersection.
+    objects : sequence[:class:`VolObject`]
+        The children to combine.
+    x, y, z : :class:`numpy.ndarray`
+        Coordinate arrays.
+
+    Returns
+    -------
+    :class:`numpy.ndarray`
+    """
+    import numpy as np
+
+    if not objects:
+        raise ValueError("Nothing to combine: this object has no children.")
+
+    shape = np.broadcast_shapes(np.shape(x), np.shape(y), np.shape(z))
+    combined = np.broadcast_to(objects[0].get_distance_numpy(x, y, z), shape).astype(float, copy=True)
+    for child in objects[1:]:
+        operation(combined, np.broadcast_to(child.get_distance_numpy(x, y, z), shape), out=combined)
+    return combined
 
 
 def format_number(number, precision=None):
@@ -77,13 +113,29 @@ def transform_numpy(matrix, x, y, z):
     Returns
     -------
     tuple[:class:`numpy.ndarray`, :class:`numpy.ndarray`, :class:`numpy.ndarray`]
-        The transformed coordinates, broadcast to a common shape.
+        The transformed coordinates. Each is broadcast only over the inputs
+        it depends on: with an axis-aligned frame and ``ogrid`` inputs, the
+        transformed ``x`` stays ``(nx, 1, 1)``. A plan shape -- an extrusion,
+        say -- then costs one evaluation per plan point instead of one per
+        voxel, which over a slab 30 voxels deep is 30 times less work.
+        Callers that need a common shape take ``np.broadcast_shapes``.
     """
+    import numpy as np
+
     m = matrix
-    xt = m[0][0] * x + m[0][1] * y + m[0][2] * z + m[0][3]
-    yt = m[1][0] * x + m[1][1] * y + m[1][2] * z + m[1][3]
-    zt = m[2][0] * x + m[2][1] * y + m[2][2] * z + m[2][3]
-    return xt, yt, zt
+    coordinates = (x, y, z)
+
+    def row(i):
+        # Terms with a zero coefficient are left out rather than multiplied
+        # by zero, which would broadcast the result over an axis it does not
+        # depend on.
+        value = m[i][3]
+        for coefficient, coordinate in zip(m[i][:3], coordinates):
+            if coefficient != 0:
+                value = value + coefficient * coordinate
+        return np.asarray(value, dtype=float)
+
+    return row(0), row(1), row(2)
 
 
 class VolObject(Data):

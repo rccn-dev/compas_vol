@@ -22,6 +22,7 @@ Classes
     VolEgg
     VolEllipsoid
     VolExtrusion
+    VolGrid
     VolPlane
     VolPolyhedron
     VolSphere
@@ -40,6 +41,7 @@ from .vcylinder import VolCylinder
 from .vegg import VolEgg
 from .vellipsoid import VolEllipsoid
 from .vextrusion import VolExtrusion
+from .vgrid import VolGrid
 from .vplane import VolPlane
 from .vpolyhedron import VolPolyhedron
 from .vsphere import VolSphere
@@ -57,6 +59,7 @@ __all__ = [
     "VolEgg",
     "VolEllipsoid",
     "VolExtrusion",
+    "VolGrid",
     "VolPlane",
     "VolPolyhedron",
     "VolSphere",

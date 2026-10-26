@@ -1,0 +1,24 @@
+{
+    "name": "Volumetric Info",
+    "nickname": "VolInfo",
+    "category": "COMPAS Vol",
+    "subcategory": "Utilities",
+    "description": "Report what compas_vol can do inside this Rhino, and what is missing.",
+    "exposure": 8,
+    "instanceGuid": "05455ce2-b877-40f8-bc0c-3fd3423fc814",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {
+                "name": "refresh",
+                "description": "Toggle to re-check after installing something.",
+                "typeHintID": "bool"
+            }
+        ],
+        "outputParameters": [
+            {"name": "report", "description": "Version, context and one line per optional dependency."},
+            {"name": "context", "description": "\"rhino\" here, \"viewer\" or \"headless\" outside."},
+            {"name": "ready", "description": "True when meshing is available."}
+        ]
+    }
+}

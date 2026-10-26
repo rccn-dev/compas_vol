@@ -1,18 +1,24 @@
-"""Iso-surfacing and the octree."""
+"""Iso-surfacing, STL export and the octree."""
 
 import importlib.util
+import os
 
 import numpy as np
 import pytest
 from compas.datastructures import Mesh
 from compas.geometry import Box
+from compas.geometry import Plane
 from compas.geometry import Point
 from compas.geometry import Sphere
 
 from compas_vol.meshing import Octree
+from compas_vol.meshing import export_stl
 from compas_vol.meshing import generate_mesh
+from compas_vol.meshing import generate_vertices_and_faces
 from compas_vol.meshing import normalize_bounds
 from compas_vol.meshing import sample
+from compas_vol.meshing import write_stl
+from compas_vol.primitives import VolPlane
 from compas_vol.primitives import VolSphere
 from compas_vol.utilities import dumps_tree
 from compas_vol.utilities import get_iso_mesh
@@ -148,3 +154,71 @@ class TestOctree:
         node.level = 3
         assert node.level == 3
         assert isinstance(node.level, int)
+
+
+class TestThreadedSampling:
+    """Sampling in parallel slabs must give exactly the serial result."""
+
+    def test_threads_match_serial(self, volobject):
+        serial, origin_a, spacing_a = sample(volobject, 12.0, 24, workers=1)
+        threaded, origin_b, spacing_b = sample(volobject, 12.0, 24, workers=4)
+        np.testing.assert_array_equal(serial, threaded)
+        assert origin_a == origin_b and spacing_a == spacing_b
+
+    def test_anisotropic_resolution_and_bounds(self):
+        field, origin, spacing = sample(VolSphere(Sphere(5)), (-6, -7, -8, 6, 7, 8), (9, 11, 13), workers=3)
+        assert field.shape == (9, 11, 13)
+        assert origin == (-6, -7, -8)
+        assert spacing == pytest.approx((12 / 8, 14 / 10, 16 / 12))
+
+    def test_more_workers_than_rows(self):
+        field, _, _ = sample(VolSphere(Sphere(5)), 8.0, (3, 4, 5), workers=16)
+        assert field.shape == (3, 4, 5)
+
+    def test_result_is_writable(self):
+        """Callers post-process the field; it must not be a broadcast view."""
+        field, _, _ = sample(VolPlane(Plane((0, 0, 0), (0, 0, 1))), 8.0, 8)
+        field[0, 0, 0] = 42.0
+        assert field[0, 0, 0] == 42.0
+
+
+@requires_meshing
+class TestStl:
+    def test_written_stl_reads_back_identically(self, tmp_path):
+        obj = VolSphere(Sphere(5, point=Point(0, 0, 0)))
+        path = export_stl(obj, str(tmp_path / "ball.stl"), 8.0, 32)
+
+        verts, faces = generate_vertices_and_faces(obj, 8.0, 32)
+        assert os.path.getsize(path) == 84 + 50 * len(faces)
+
+        reloaded = Mesh.from_stl(path, precision=5)
+        assert reloaded.number_of_faces() == len(faces)
+        assert reloaded.is_valid()
+        # Every edge used twice: a closed surface survived the round trip.
+        assert not list(reloaded.edges_on_boundary())
+
+    def test_facet_normals_point_out_of_the_solid(self, tmp_path):
+        """A flipped normal reads as an inside-out solid in a slicer."""
+        path = export_stl(VolSphere(Sphere(5, point=Point(0, 0, 0))), str(tmp_path / "ball.stl"), 8.0, 24)
+        with open(path, "rb") as f:
+            f.seek(80)
+            count = int(np.frombuffer(f.read(4), dtype="<u4")[0])
+            facets = np.frombuffer(f.read(50 * count), dtype=np.dtype([("n", "<3f4"), ("v", "<3,3f4"), ("a", "<u2")]))
+        centroids = facets["v"].mean(axis=1)
+        radial = centroids / np.linalg.norm(centroids, axis=1, keepdims=True)
+        assert np.einsum("ij,ij->i", facets["n"], radial).min() > 0
+
+    def test_matches_compas_geometry(self, tmp_path):
+        obj = VolSphere(Sphere(5, point=Point(1, 2, 3)))
+        ours = Mesh.from_stl(export_stl(obj, str(tmp_path / "a.stl"), 9.0, 20), precision=5)
+        theirs = generate_mesh(obj, 9.0, 20)
+        assert ours.number_of_faces() == theirs.number_of_faces()
+        np.testing.assert_allclose(ours.centroid(), theirs.centroid(), atol=1e-4)
+
+    def test_rejects_non_triangles(self, tmp_path):
+        with pytest.raises(ValueError):
+            write_stl(str(tmp_path / "quad.stl"), [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0]], [[0, 1, 2, 3]])
+
+    def test_degenerate_triangle_gets_a_zero_normal(self, tmp_path):
+        path = write_stl(str(tmp_path / "flat.stl"), [[0, 0, 0], [1, 0, 0], [2, 0, 0]], [[0, 1, 2]])
+        assert os.path.getsize(path) == 84 + 50

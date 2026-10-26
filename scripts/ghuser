@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+#
+# Build the Grasshopper components with ghuser-builder (git.rccn.dev/libs/ghuser-builder).
+#
+#   scripts/ghuser dev            # Mac + Rhino 8, no Docker: build, link into Grasshopper, check, reload
+#   scripts/ghuser dev status     # what Grasshopper will load, and anything wrong with it
+#   scripts/ghuser dev uninstall  # remove the link from Grasshopper
+#   scripts/ghuser                # Docker, the CI toolchain:  dist/ghuser/ (+ .yak with --yak NAME)
+#
+# dev is the everyday loop and the whole of it: nothing to copy or link by
+# hand. It builds into build/ghuser-dev, links that folder into Grasshopper's
+# User Object folder as compas_vol-dev (moving any older copy of the same
+# components to a backup), checks the `# r:` requirements and the compas_vol
+# import in Rhino's own Python, and, if Rhino is running, drops compas_vol from
+# its module cache and lists components on the canvas that carry older code.
+#
+# Each component gets `# env: <this checkout>/src`, so Rhino imports compas_vol
+# straight from the working copy: edit the library and recompute -- after
+# `scripts/ghuser dev` with Rhino open, not even a restart. Rebuild when a
+# code.py or metadata.json changes; new components appear after restarting
+# Grasshopper. No canvas icons in dev builds (a macOS limitation, see
+# ghuser-builder/local/ghuser_dev.py). Options pass through:
+#   scripts/ghuser dev --requirements   # install missing `# r:` packages into Rhino, visibly
+#   scripts/ghuser dev --no-reload      # leave a running Rhino alone
+#
+# Without `dev`, everything after the command passes through to ghuser-build in
+# the same image CI uses. If the registry is unreachable, the image is built
+# from the ghuser-builder checkout instead. Install a release from its .yak.
+#
+# Environment:
+#   GHUSER_BUILDER         ghuser-builder checkout (default: ../ghuser-builder, then ../../ghuser-builder)
+#   GHUSER_BUILDER_IMAGE   image to run (default: the registry's 1.0.0)
+
+set -euo pipefail
+
+root=$(cd "$(dirname "$0")/.." && pwd)
+components=src/compas_vol/ghpython/components
+cd "$root"
+
+# The checkout next to this repository wins; one further up is a fallback. With
+# two on disk it is easy to build with the wrong one and not know it, so say
+# which is used, and warn when there is a choice.
+builder=${GHUSER_BUILDER:-}
+if [ -z "$builder" ]; then
+    found=()
+    for candidate in ../ghuser-builder ../../ghuser-builder; do
+        [ -d "$candidate/tools" ] && found+=("$(cd "$candidate" && pwd)")
+    done
+    if [ ${#found[@]} -gt 0 ]; then
+        builder=${found[0]}
+        if [ ${#found[@]} -gt 1 ] && [ "${found[0]}" != "${found[1]}" ]; then
+            echo "ghuser: two ghuser-builder checkouts; using ${found[0]}, not ${found[1]} (set GHUSER_BUILDER to choose)" >&2
+        fi
+    fi
+fi
+if [ -n "$builder" ]; then
+    echo "ghuser: ghuser-builder $builder ($(git -C "$builder" describe --always --dirty 2>/dev/null || echo 'not a git checkout'))" >&2
+fi
+
+if [ "${1:-}" = dev ]; then
+    shift
+    [ -n "$builder" ] || { echo "ghuser: no ghuser-builder checkout; git clone https://git.rccn.dev/libs/ghuser-builder.git next to rcs26, or set GHUSER_BUILDER" >&2; exit 2; }
+    case "${1:-}" in
+        status|uninstall) exec uv run --quiet "$builder/local/ghuser_dev.py" "$1" build/ghuser-dev "${@:2}" ;;
+    esac
+    exec uv run --quiet "$builder/local/ghuser_dev.py" deploy "$components" build/ghuser-dev --env src "$@"
+fi
+
+image=${GHUSER_BUILDER_IMAGE:-git.rccn.dev:5050/libs/ghuser-builder:1.0.0}
+if ! docker image inspect "$image" >/dev/null 2>&1 && ! docker pull "$image" >/dev/null 2>&1; then
+    [ -n "$builder" ] || { echo "ghuser: cannot pull $image and no ghuser-builder checkout to build it from" >&2; exit 2; }
+    image=ghuser-builder:local
+    echo "==> registry unreachable; building $image from $builder"
+    docker build -q -t "$image" "$builder" >/dev/null
+fi
+
+# Releases are versioned by tag in CI; locally, use the package version so the
+# Info component says which library the components were built against.
+version=${GHUSER_VERSION:-$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml | head -1)}
+
+exec docker run --rm \
+    -v "$root:/work" -w /work \
+    -u "$(id -u):$(id -g)" -e HOME=/tmp \
+    -e GHUSER_PREFIX -e GHUSER_YAK_NAME -e GHUSER_YAK_INCLUDE \
+    "$image" ghuser-build --version "$version" "$@" "$components" dist

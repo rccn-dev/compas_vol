@@ -1,3 +1,6 @@
+from compas_vol.runtime import require
+
+
 class Blur(object):
     """Gaussian blur of a sampled distance matrix.
 
@@ -39,6 +42,6 @@ class Blur(object):
             The blurred matrix, same shape as the input.
         """
         # ``scipy.ndimage.filters`` was a deprecated shim removed in SciPy 1.15.
-        from scipy.ndimage import gaussian_filter
+        gaussian_filter = require("scipy.ndimage").gaussian_filter
 
         return gaussian_filter(self.distance_matrix, sigma=self.radius)

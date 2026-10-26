@@ -1,0 +1,27 @@
+{
+    "name": "Volumetric Strata",
+    "nickname": "VolStrata",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "Bedding: hard and soft layers weathering into ledges and overhangs.",
+    "exposure": 2,
+    "instanceGuid": "398c779c-d406-4385-8e37-03bf921ca5b4",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The starting solid. A process result runs on its own grid when bounds is unwired."},
+            {"name": "bounds", "description": "The box to sample vol over. Leave unwired to run on a process result's own grid.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64. Sets the finest feature: below two voxels, nothing survives.", "typeHintID": "int"},
+            {"name": "thickness", "description": "Bed thickness, in mm. Defaults to 10.", "typeHintID": "float"},
+            {"name": "normal", "description": "Perpendicular to the beds; tilt it to dip them. Defaults to slightly off vertical.", "typeHintID": "vector"},
+            {"name": "depth", "description": "Millimetres removed from the softest beds. Defaults to 5.", "typeHintID": "float"},
+            {"name": "wobble", "description": "How far the beds wander, in mm. 0 keeps them flat. Defaults to 3.", "typeHintID": "float"},
+            {"name": "seed", "description": "Which variation. Change it for another result with the same character.", "typeHintID": "int"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

@@ -5,7 +5,8 @@ First Steps
 Building a shape
 ================
 
-Volumetric objects wrap COMPAS geometry and compose with each other:
+Volumetric objects wrap COMPAS geometry and compose with each other. Nothing
+is evaluated until it is asked for:
 
 .. code-block:: python
 
@@ -18,44 +19,39 @@ Volumetric objects wrap COMPAS geometry and compose with each other:
         VolSphere(Sphere(9, point=Point(5, 6, 0))),
     )
 
-Nothing has been evaluated yet. ``shape`` is a function; it describes the
-geometry without sampling it.
-
 Evaluating the field
 ====================
 
 .. code-block:: python
 
-    shape.get_distance((0, 0, 0))     # -> float, signed distance at one point
-
-For anything more than a handful of points, use the vectorized form, which
-evaluates a whole grid at once:
-
-.. code-block:: python
-
     import numpy as np
 
+    shape.get_distance((0, 0, 0))                        # one point
     x, y, z = np.ogrid[-20:20:100j, -20:20:100j, -20:20:100j]
-    field = shape.get_distance_numpy(x, y, z)
+    field = shape.get_distance_numpy(x, y, z)            # a whole grid
 
-Meshing
-=======
+Meshing and export
+==================
 
 .. code-block:: python
 
-    from compas_vol.meshing import generate_mesh
+    from compas_vol.meshing import export_stl, generate_mesh, iso_surface, sample
 
-    mesh = generate_mesh(shape, bounds=20.0, resolution=100)   # -> compas Mesh
+    mesh = generate_mesh(shape, bounds=20.0, resolution=100)     # a COMPAS Mesh
+    export_stl(shape, "part.stl", bounds=20.0, resolution=200)   # straight to a file
 
-``bounds`` accepts a :class:`compas.geometry.Box`, a scalar ``s`` for the cube
-``[-s, s]``, a 6-sequence ``(xmin, ymin, zmin, xmax, ymax, zmax)``, or three
-``(min, max)`` pairs.
+    values, origin, spacing = sample(shape, bounds=20.0, resolution=64)
+    vertices, faces = iso_surface(values, origin, spacing)       # a grid you already have
+
+``bounds`` is a :class:`compas.geometry.Box`, a scalar ``s`` for the cube
+``[-s, s]``, ``(xmin, ymin, zmin, xmax, ymax, zmax)``, or three ``(min, max)``
+pairs. Use :func:`~compas_vol.meshing.export_stl` for files: building a COMPAS
+mesh of a few million triangles costs more than sampling and meshing together.
 
 Viewing
 =======
 
-Volumetric objects are registered COMPAS 2 scene objects, so they go into a
-scene next to any other geometry:
+Volumetric objects are COMPAS scene objects:
 
 .. code-block:: python
 
@@ -65,21 +61,14 @@ scene next to any other geometry:
     viewer.scene.add(shape, bounds=20.0, resolution=100, opacity=0.5)
     viewer.show()
 
-An implicit surface has to be sampled before it can be drawn, so the sampling
-parameters ride along on the ``scene.add`` call, exactly as ``u`` and ``v`` do
-for a :class:`compas.geometry.Sphere`.
+``bounds`` is required, because a field has no extent of its own: a TPMS is
+infinite, and an intersection cannot report one.
 
-Unlike ``u``/``v``, **there is no sensible default for** ``bounds``, and it is
-required. A :class:`~compas_vol.microstructures.TPMS` or
-:class:`~compas_vol.microstructures.Lattice` is infinite, and an
-:class:`~compas_vol.combinations.Intersection` cannot report an extent, so the
-caller has to say where to look. Omitting it raises with an explanatory message.
+Saving
+======
 
-Serialization
-=============
-
-Every volumetric object is a :class:`compas.data.Data` subclass, so whole CSG
-trees round-trip through COMPAS JSON, children included:
+Every object is a :class:`compas.data.Data`, so a whole tree round-trips
+through COMPAS JSON:
 
 .. code-block:: python
 
@@ -87,9 +76,5 @@ trees round-trip through COMPAS JSON, children included:
 
     restored = json_loads(json_dumps(shape))
 
-Where next
-==========
-
-* :doc:`../examples` — runnable scripts, from single operations to graded
-  microstructures.
-* :doc:`../api` — the full API reference.
+Next: :doc:`../examples`, or :doc:`../processes` for geometry made by
+erosion and growth.

@@ -2,78 +2,104 @@
 Examples
 ********************************************************************************
 
-All examples live in the ``examples/`` directory of the repository and are
-runnable as-is::
+The examples are in ``examples/``, one idea per script, in reading order. Each
+opens the COMPAS viewer on its result, then a slice through the field::
 
     $ uv sync --extra examples
+    $ uv run python examples/02_booleans.py
 
-Single operations
-=================
 
-``examples/*.py`` are short ports of the original scripts, one idea each —
-extrusion, the four booleans, smooth booleans, morph, lattice, TPMS, Voronoi,
-gradient and octree::
-
-    $ uv run --extra all python examples/example_tpms.py
-
-Modelling studies
-=================
-
-``examples/vol_mesh_examples/`` holds fuller studies. Each opens the viewer with
-the meshed result; closing it opens an interactive slice through the signed
-distance field, where a slider moves the cutting plane — blue is inside, red is
-outside, and the black contour is the surface that gets meshed::
-
-    $ uv run python examples/vol_mesh_examples/8_morphing_microstructure.py
+Modelling
+=========
 
 .. list-table::
-   :header-rows: 1
-   :widths: 32 48 20
+   :widths: 34 66
 
-   * - Script
-     - What it shows
-     - Theme
-   * - ``template.py``
-     - the full pipeline written out step by step, no helpers
-     - reference
-   * - ``1_extrusion.py``
-     - a star polygon extruded along a tilted frame
-     - primitives
-   * - ``2_intersection.py``
-     - sphere ∩ filleted box
-     - CSG
-   * - ``3_union.py``
-     - sphere ∪ box, with the hard seam a union leaves
-     - CSG
-   * - ``4_smooth_union.py``
-     - the same pair blended
-     - CSG
-   * - ``5_lattice.py``
-     - a periodic strut lattice trimmed to a cube
-     - microstructure
-   * - ``6_tpms.py``
-     - a TPMS shell with thickness graded by a plane
-     - microstructure
-   * - ``7_graded_tpms.py``
-     - **cell size** driven by distance to an attractor
-     - graded
-   * - ``8_morphing_microstructure.py``
-     - **cell type** morphing gyroid → Schwartz-P across the part
-     - graded
-   * - ``9_twisted_lattice.py``
-     - a lattice sheared into a helix by warping the domain
-     - non-linear
-   * - ``10_graded_shell.py``
-     - wall density graded radially, ~25% at the core to ~12% at the rim
-     - graded
-   * - ``11_graded_voronoi.py``
-     - aperiodic cells with a seed-density gradient
-     - stochastic
-   * - ``12_field_math.py``
-     - arithmetic on fields, producing surfaces CSG cannot
-     - non-linear
+   * - ``01_extrusion.py``
+     - a polygon extruded along a tilted frame
+   * - ``02_booleans.py``
+     - union, intersection and difference, hard and smooth
+   * - ``03_blending.py``
+     - morph, blend and offset
+   * - ``04_field_math.py``
+     - arithmetic on fields
+   * - ``05_twisted_lattice.py``
+     - domain warping: a lattice twisted into a helix
+   * - ``06_gradient.py``
+     - the gradient of a field, as colour
+   * - ``07_octree.py``
+     - adaptive refinement around the surface
 
-The first six are ordinary constructive modelling. The last six are the ones
-worth reading if you already know CSG: none of them is a boolean of two finished
-shapes, and each varies a property continuously through space rather than tiling
-one unit cell.
+
+Microstructures
+===============
+
+.. list-table::
+   :widths: 34 66
+
+   * - ``08_lattice.py``
+     - a strut lattice trimmed to a cube
+   * - ``09_polar.py``
+     - a lattice and a TPMS wrapped around an axis
+   * - ``10_tpms.py``
+     - a graded TPMS shell, with the low-level ``TPMS``, ``Shell``, ``Overlay``
+   * - ``11_tpms_catalogue.py``
+     - every TPMS type with ``TPMSSolid``, dimensioned in millimetres
+   * - ``12_sheet_vs_network.py``
+     - one surface, three solids, with volume fractions
+
+Start TPMS design with ``11``.
+
+
+Grading
+=======
+
+.. list-table::
+   :widths: 34 66
+
+   * - ``13_graded_tpms.py``
+     - cell size driven by an attractor
+   * - ``14_morphing_microstructure.py``
+     - cell type morphing from gyroid to Schwarz P
+   * - ``15_graded_shell.py``
+     - wall density graded radially
+   * - ``16_graded_voronoi.py``
+     - an aperiodic Voronoi foam with graded cells
+   * - ``17_attractor_graded_wall.py``
+     - wall thickness in millimetres, driven through ``Remap``
+   * - ``18_cell_size_grading.py``
+     - warping versus blending to grade cell size
+   * - ``19_porous_rock.py``
+     - massing, skin, graded interior and niches in one field
+
+
+Processes
+=========
+
+Need the ``processes`` extra; they take seconds to minutes.
+
+.. list-table::
+   :widths: 34 66
+
+   * - ``20_weathered_rock.py``
+     - strata, jointing, pitting and abrasion in sequence
+   * - ``21_spinodal_foam.py``
+     - a bicontinuous foam by phase separation
+   * - ``22_coral_growth.py``
+     - differential growth, folding and uniform
+   * - ``23_constraints.py``
+     - weathering that leaves a rib intact
+   * - ``24_process_to_print.py``
+     - a weathered mass, skinned, filled, exported
+
+
+Assembly
+========
+
+.. list-table::
+   :widths: 34 66
+
+   * - ``25_pavilion_assembly.py``
+     - a 6 m canopy cut into pinned pieces
+   * - ``26_piece_by_piece.py``
+     - a processed model built one piece at a time

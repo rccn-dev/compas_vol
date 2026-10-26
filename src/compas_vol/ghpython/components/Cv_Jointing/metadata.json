@@ -1,0 +1,27 @@
+{
+    "name": "Volumetric Jointing",
+    "nickname": "VolJoint",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "Joints: the mass breaks into blocks, the seams opening from the outside in.",
+    "exposure": 2,
+    "instanceGuid": "ceb3e9d2-85fa-4f57-8bf8-d156683baad9",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The starting solid. A process result runs on its own grid when bounds is unwired."},
+            {"name": "bounds", "description": "The box to sample vol over. Leave unwired to run on a process result's own grid.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64. Sets the finest feature: below two voxels, nothing survives.", "typeHintID": "int"},
+            {"name": "count", "description": "Number of blocks, when points is not wired. Defaults to 25.", "typeHintID": "int"},
+            {"name": "opening", "description": "Seam width at the surface, in mm. Defaults to 2.5.", "typeHintID": "float"},
+            {"name": "reach", "description": "How far in the seams stay open, in mm. Defaults to 12.", "typeHintID": "float"},
+            {"name": "seed", "description": "Which variation. Change it for another result with the same character.", "typeHintID": "int"},
+            {"name": "points", "description": "Block centres, to place the joints by hand.", "typeHintID": "point", "scriptParamAccess": "list"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

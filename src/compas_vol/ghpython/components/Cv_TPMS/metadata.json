@@ -1,0 +1,22 @@
+{
+    "name": "Volumetric TPMS",
+    "nickname": "VolTPMS",
+    "category": "COMPAS Vol",
+    "subcategory": "Microstructures",
+    "description": "A triply periodic minimal surface, thickened into a printable solid.",
+    "exposure": 4,
+    "instanceGuid": "bd9f0dd3-3ca1-492a-a69d-58c715f68989",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "type", "description": "Gyroid, SchwarzP, Diamond, Neovius, Lidinoid, FischerKoch or IWP. Defaults to Gyroid.", "typeHintID": "str"},
+            {"name": "cell", "description": "Cell size, the true period of the pattern.", "typeHintID": "float"},
+            {"name": "thickness", "description": "Wall thickness, in model units.", "typeHintID": "float"},
+            {"name": "mode", "description": "\"sheet\" thickens the surface; \"network\" fills one channel. Defaults to sheet.", "typeHintID": "str"},
+            {"name": "plane", "description": "Orients and positions the lattice. Defaults to world XY.", "typeHintID": "plane"}
+        ],
+        "outputParameters": [
+            {"name": "vol", "description": "A volumetric object, to combine or to mesh."}
+        ]
+    }
+}

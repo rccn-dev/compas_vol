@@ -1,0 +1,22 @@
+{
+    "name": "Volumetric Mesh",
+    "nickname": "VolMesh",
+    "category": "COMPAS Vol",
+    "subcategory": "Meshing",
+    "description": "Sample a volumetric object over a box and build the surface as a Rhino mesh.",
+    "exposure": 8,
+    "instanceGuid": "9a3288a7-8888-4488-97f7-aa489a55c240",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The object to mesh."},
+            {"name": "bounds", "description": "The box to sample over. Only its axis-aligned extent is used.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64.", "typeHintID": "int"},
+            {"name": "level", "description": "Iso-value. 0 is the surface; positive offsets outward.", "typeHintID": "float"}
+        ],
+        "outputParameters": [
+            {"name": "mesh", "description": "A Rhino mesh."},
+            {"name": "seconds", "description": "How long it took, to calibrate the resolution."}
+        ]
+    }
+}

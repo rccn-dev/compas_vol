@@ -1,0 +1,59 @@
+name: grasshopper components
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # The bundles are checked on every platform by the ordinary test job; this
+  # one turns them into the .ghuser files Grasshopper actually loads. The
+  # componentizer drives GH_IO.dll through pythonnet, so it needs Windows.
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Rhino 8 embeds CPython 3.9.10, and the components are compiled for
+      # whatever interpreter builds them, so this version is not incidental.
+      - name: Set up Python 3.9.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9.10"
+
+      - name: Install pythonnet
+        run: python -m pip install pythonnet==3.0.3
+
+      - name: Componentize
+        uses: compas-dev/compas-actions.ghpython_components@v5
+        with:
+          source: src/compas_vol/ghpython/components
+          target: build/components
+          interpreter: cpython
+
+      # Read-back verification lives in ghuser-builder (scripts/ghuser), whose
+      # image is on the lab registry and not reachable from GitHub. Until it is
+      # mirrored to ghcr.io, this job only proves the components compile;
+      # tests/test_ghpython.py checks the sources on every platform.
+
+      # The .ghuser files exist only inside this runner, so without this step
+      # the build proves they compile and then throws them away.
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: compas-vol-ghuser
+          path: build/components/*.ghuser
+          if-no-files-found: error
+
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/components/*.ghuser

@@ -1,0 +1,20 @@
+{
+    "name": "Volumetric Boolean",
+    "nickname": "VolBool",
+    "category": "COMPAS Vol",
+    "subcategory": "Operations",
+    "description": "Combine volumetric objects, optionally with a smooth blend at the seam.",
+    "exposure": 4,
+    "instanceGuid": "041f098d-bc75-4d7e-a84e-a71f6de779d7",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vols", "description": "Two or more volumetric objects.", "scriptParamAccess": "list"},
+            {"name": "operation", "description": "\"union\", \"intersection\" or \"difference\". Defaults to union.", "typeHintID": "str"},
+            {"name": "blend", "description": "Fillet radius at the seam, in model units. 0 is a hard boolean.", "typeHintID": "float"}
+        ],
+        "outputParameters": [
+            {"name": "vol", "description": "A volumetric object, to combine further or to mesh."}
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "name": "Volumetric Shell",
+    "nickname": "VolShell",
+    "category": "COMPAS Vol",
+    "subcategory": "Operations",
+    "description": "Hollow a volumetric object out into a shell of even thickness.",
+    "exposure": 4,
+    "instanceGuid": "dc7dbc59-2cf3-459c-8961-1cbb17bc6d09",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The object to hollow."},
+            {"name": "thickness", "description": "Wall thickness, in model units.", "typeHintID": "float"}
+        ],
+        "outputParameters": [
+            {"name": "shell", "description": "A volumetric object, to combine or to mesh."}
+        ]
+    }
+}

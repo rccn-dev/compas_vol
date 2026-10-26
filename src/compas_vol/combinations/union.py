@@ -1,5 +1,5 @@
 from compas_vol.base import VolObject
-from compas_vol.base import broadcast_distances
+from compas_vol.base import reduce_distances
 
 
 class Union(VolObject):
@@ -57,5 +57,4 @@ class Union(VolObject):
     def get_distance_numpy(self, x, y, z):
         import numpy as np
 
-        distances = [o.get_distance_numpy(x, y, z) for o in self.objs]
-        return np.minimum.reduce(broadcast_distances(distances, x, y, z))
+        return reduce_distances(np.minimum, self.objs, x, y, z)

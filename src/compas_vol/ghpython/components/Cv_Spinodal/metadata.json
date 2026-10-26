@@ -1,0 +1,25 @@
+{
+    "name": "Volumetric Spinodal",
+    "nickname": "VolFoam",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "A bicontinuous foam by phase separation: a TPMS without the unit cell.",
+    "exposure": 8,
+    "instanceGuid": "f92a30bd-48ff-48ae-a66c-bafd47360f7c",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "bounds", "description": "The box to fill. Required: there is no starting shape.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64.", "typeHintID": "int"},
+            {"name": "feature", "description": "Wall and pore size, in mm. Defaults to 8.", "typeHintID": "float"},
+            {"name": "fraction", "description": "Solid fraction, 0 to 1. Below 0.3 the solid falls into islands. Defaults to 0.45.", "typeHintID": "float"},
+            {"name": "steps", "description": "Longer coarsens and smooths the structure. Defaults to 400.", "typeHintID": "int"},
+            {"name": "seed", "description": "Which variation. Change it for another result with the same character.", "typeHintID": "int"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

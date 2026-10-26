@@ -1,0 +1,25 @@
+{
+    "name": "Volumetric Accretion",
+    "nickname": "VolAccrete",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "Growth that fills hollows: deposition settling where it is sheltered.",
+    "exposure": 4,
+    "instanceGuid": "018e71c6-4176-4b4d-845d-95c5fc245616",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The starting solid. A process result runs on its own grid when bounds is unwired."},
+            {"name": "bounds", "description": "The box to sample vol over. Leave unwired to run on a process result's own grid.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64. Sets the finest feature: below two voxels, nothing survives.", "typeHintID": "int"},
+            {"name": "height", "description": "Millimetres deposited in the most sheltered places. Defaults to 4.", "typeHintID": "float"},
+            {"name": "reach", "description": "How far around each point shelter is measured, in mm. Defaults to 8.", "typeHintID": "float"},
+            {"name": "shelter", "description": "How strongly deposition prefers hollows. 0 coats evenly. Defaults to 1.6.", "typeHintID": "float"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

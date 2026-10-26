@@ -1,0 +1,26 @@
+{
+    "name": "Volumetric Fingering",
+    "nickname": "VolFold",
+    "category": "COMPAS Vol",
+    "subcategory": "Processes",
+    "description": "Growth that folds into lobes and valleys: the brain-coral mechanism.",
+    "exposure": 4,
+    "instanceGuid": "c15d89bd-a706-4750-ac07-cf727b475038",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "vol", "description": "The starting solid. A process result runs on its own grid when bounds is unwired."},
+            {"name": "bounds", "description": "The box to sample vol over. Leave unwired to run on a process result's own grid.", "typeHintID": "box"},
+            {"name": "resolution", "description": "Samples per axis. Defaults to 64. Sets the finest feature: below two voxels, nothing survives.", "typeHintID": "int"},
+            {"name": "height", "description": "Millimetres the fastest part of the surface advances. Defaults to 30.", "typeHintID": "float"},
+            {"name": "length", "description": "Length curvature is measured against, in mm. Defaults to 9.", "typeHintID": "float"},
+            {"name": "gain", "description": "Strength of the folding. 0 grows evenly; past 1.5 lobes pinch off. Defaults to 1.4.", "typeHintID": "float"},
+            {"name": "wavelength", "description": "Roughly the width of a fold, in mm. Defaults to 4.", "typeHintID": "float"},
+            {"name": "run", "description": "False holds the last result while you change things upstream. Unwired, it runs.", "typeHintID": "bool"}
+        ],
+        "outputParameters": [
+            {"name": "result", "description": "The result: a volumetric object to combine, run another process on, or mesh."},
+            {"name": "history", "description": "How it was made, one operation per line."}
+        ]
+    }
+}

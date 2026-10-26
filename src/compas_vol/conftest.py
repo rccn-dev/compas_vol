@@ -13,6 +13,8 @@ conftest files along the collected path.
 
 import importlib.util
 
+import pytest
+
 
 def _available(name):
     return importlib.util.find_spec(name) is not None
@@ -23,6 +25,23 @@ def _available(name):
 OPTIONAL_MODULES = {
     ("scene", "volobject.py"): "compas_viewer",
     ("meshing", "marching.py"): "skimage",
+    ("meshing", "stl.py"): "skimage",
+    ("processes", "field.py"): "skfmm",
+    ("processes", "evolve.py"): "skfmm",
+    ("processes", "generators.py"): "skfmm",
+    ("processes", "growth.py"): "skfmm",
+    ("processes", "morphology.py"): "skfmm",
+    ("fabrication", "repair.py"): "skfmm",
+    ("processes", "weathering.py"): "skfmm",
+}
+
+
+#: Single doctests that need an extra, in modules that otherwise do not. Keyed
+#: by the doctest's name, as pytest reports it.
+OPTIONAL_DOCTESTS = {
+    "compas_vol.nodes.abrasion": "skfmm",
+    "compas_vol.nodes.strata": "skfmm",
+    "compas_vol.nodes.spinodal": "skfmm",
 }
 
 
@@ -31,3 +50,10 @@ def pytest_ignore_collect(collection_path, config):
     if requirement and not _available(requirement):
         return True
     return None
+
+
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        requirement = OPTIONAL_DOCTESTS.get(item.name)
+        if requirement and not _available(requirement):
+            item.add_marker(pytest.mark.skip(reason="needs {}".format(requirement)))

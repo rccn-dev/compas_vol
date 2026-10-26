@@ -24,7 +24,7 @@ jobs:
         run: uv python install 3.13
 
       - name: Install
-        run: uv sync --extra meshing --group docs
+        run: uv sync --extra meshing --extra processes --group docs
 
       # -W turns warnings into errors, so a broken reference fails the build
       # rather than silently shipping.

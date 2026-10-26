@@ -2,21 +2,14 @@
 Porting from COMPAS 1
 ********************************************************************************
 
-This page records how this fork differs from the original
-`dbt-ethz/compas_vol <https://github.com/dbt-ethz/compas_vol>`_. It is intended
-both as a migration guide for existing scripts and as an honest account of what
-was changed and why.
-
-The differences fall into three groups: changes forced by COMPAS 2, defects that
-were present in the original independently of the COMPAS version, and stubs that
-have been filled in.
+How this fork differs from
+`dbt-ethz/compas_vol <https://github.com/dbt-ethz/compas_vol>`_: changes forced
+by COMPAS 2, defects fixed, and stubs filled in. Use it to migrate scripts.
 
 API changes forced by COMPAS 2
 ==============================
 
-COMPAS 2 reorganized geometry constructors and the serialization protocol. The
-following table maps old to new. Where the old spelling could be kept as an
-alias without ambiguity, it was.
+Old spellings are kept as aliases where that is unambiguous.
 
 .. list-table::
    :header-rows: 1
@@ -54,35 +47,29 @@ alias without ambiguity, it was.
 Transformations
 ---------------
 
-The original applied transformation matrices to grids using
-``np.array([x, y, z, 1], dtype=object)``. That has been replaced throughout by
-an explicit matrix-vector expansion, :func:`compas_vol.base.transform_numpy`.
-
-The object-dtype version was slow. More importantly, the variants written
-*without* ``dtype=object`` — in ``VolEllipsoid``, ``VolTorus`` and ``Twist`` —
-raise outright on NumPy 2.
+``np.array([x, y, z, 1], dtype=object)`` is replaced throughout by
+:func:`compas_vol.base.transform_numpy`. The object-dtype version was slow, and
+the variants without ``dtype=object`` (``VolEllipsoid``, ``VolTorus``,
+``Twist``) raise on NumPy 2.
 
 Serialization
 -------------
 
-COMPAS 1 shipped objects between processes by ``eval``-ing their ``repr``
-string. That path is gone. :func:`compas_vol.utilities.dumps_tree` and
-:func:`compas_vol.utilities.loads_tree` use COMPAS JSON instead.
+The ``eval(repr(obj))`` transport is gone;
+:func:`compas_vol.utilities.dumps_tree` and
+:func:`compas_vol.utilities.loads_tree` use COMPAS JSON.
 
 Visualization
 -------------
 
-The original drew through ``ipyvolume`` and ``meshplot`` in notebooks, neither
-of which works on current Python. Drawing is now handled by scene object
-registration (:mod:`compas_vol.scene`), following the COMPAS 2 pattern: the
-volumetric classes know nothing about drawing, and each context declares
-separately how to draw them.
+``ipyvolume`` and ``meshplot`` no longer work on current Python. Drawing is
+scene-object registration (:mod:`compas_vol.scene`), the COMPAS 2 pattern.
 
 Correctness fixes
 =================
 
-The following were broken in the original, independently of the COMPAS version.
-Each has a regression test in ``tests/test_regressions.py``.
+Broken in the original regardless of COMPAS version; each has a regression
+test in ``tests/test_regressions.py``.
 
 Query points were mutated in place
     Every object working in a local frame called ``point.transform(...)`` on the
@@ -153,15 +140,3 @@ Stubs filled in
     Was a partial copy of :class:`~compas_vol.microstructures.TPMS` with its
     attractor logic left commented out as Rhino-specific code. It now grades
     wavelength by distance to any volumetric object.
-
-Testing
-=======
-
-The suite parametrizes every volumetric class over shared checks:
-
-* the two distance methods must agree on a grid,
-* queries must not mutate their input,
-* every object must survive a JSON round trip.
-
-Analytic cases pin the geometry itself — a radius-5 sphere has mean curvature
-0.2, a unit box corner is ``sqrt(3)`` away, and so on.

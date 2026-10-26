@@ -1,0 +1,22 @@
+{
+    "name": "Volumetric Box",
+    "nickname": "VolBox",
+    "category": "COMPAS Vol",
+    "subcategory": "Primitives",
+    "description": "A box as a signed distance field, with optionally rounded edges.",
+    "exposure": 2,
+    "instanceGuid": "b69fcee4-7aaa-4ac8-9a04-2a43031b4c15",
+    "ghpython": {
+        "iconDisplay": 2,
+        "inputParameters": [
+            {"name": "plane", "description": "The box's frame, at its centre. Defaults to world XY.", "typeHintID": "plane"},
+            {"name": "xsize", "description": "Size along the frame's X axis.", "typeHintID": "float"},
+            {"name": "ysize", "description": "Size along Y. Defaults to xsize.", "typeHintID": "float"},
+            {"name": "zsize", "description": "Size along Z. Defaults to xsize.", "typeHintID": "float"},
+            {"name": "radius", "description": "Edge fillet radius. 0 leaves the edges sharp.", "typeHintID": "float"}
+        ],
+        "outputParameters": [
+            {"name": "vol", "description": "A volumetric object, to combine or to mesh."}
+        ]
+    }
+}

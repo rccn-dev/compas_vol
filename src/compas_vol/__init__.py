@@ -20,12 +20,14 @@ updated for COMPAS 2, NumPy 2 and Python 3.13.
     compas_vol.microstructures
     compas_vol.analysis
     compas_vol.meshing
+    compas_vol.assembly
     compas_vol.scene
+    compas_vol.nodes
+    compas_vol.ghpython
+    compas_vol.runtime
     compas_vol.utilities
 
 """
-
-import os
 
 from .base import VolObject
 from .base import format_number
@@ -49,17 +51,7 @@ __version__ = "0.2.0"
 #: importing any viewer itself.
 __all_plugins__ = ["compas_vol.scene"]
 
-HERE = os.path.dirname(__file__)
-HOME = os.path.abspath(os.path.join(HERE, "../../"))
-DATA = os.path.abspath(os.path.join(HOME, "data"))
-DOCS = os.path.abspath(os.path.join(HOME, "docs"))
-TEMP = os.path.abspath(os.path.join(HOME, "temp"))
-
 __all__ = [
-    "HOME",
-    "DATA",
-    "DOCS",
-    "TEMP",
     "VolObject",
     "format_number",
     "inverse_matrix_from_frame",
