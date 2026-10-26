@@ -91,82 +91,80 @@
         
         <section id="introduction">
 <h1>Introduction</h1>
-<p>Volumetric modelling represents geometry as a <em>field</em> rather than as a
-boundary. Instead of storing vertices, edges and faces, an object is a function</p>
+<p>A volumetric object is a function</p>
 <div class="math notranslate nohighlight">
 \[f : \mathbb{R}^3 \rightarrow \mathbb{R}\]</div>
-<p>that returns, for any point in space, the <strong>signed distance</strong> to the surface of
-the object: negative inside, zero on the surface, positive outside. The surface
-itself is the zero level set of that function, and it is only ever computed when
-something actually needs to be drawn or fabricated.</p>
+<p>returning the <strong>signed distance</strong> to its surface: negative inside, zero on the
+surface, positive outside. The surface is computed only when something has to
+be drawn or made.</p>
 <section id="why-signed-distance-functions">
 <h2>Why signed distance functions</h2>
-<p>Because the representation is a function, operations on it are function
-composition, and they are exact, cheap and always well defined:</p>
+<p>Operations on the object are operations on the function:</p>
 <ul class="simple">
-<li><p><strong>Booleans</strong> are <code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code>. A union never produces a self-
-intersection, a subtraction never leaves a sliver, and neither can fail on
-degenerate input — the failure modes of mesh and B-rep booleans simply do not
-exist here.</p></li>
-<li><p><strong>Fillets and blends</strong> come free. Replacing <code class="docutils literal notranslate"><span class="pre">min</span></code> with a smooth minimum
-rounds the seam, with a radius you choose, at no modelling cost.</p></li>
-<li><p><strong>Offsets and shells</strong> are arithmetic on the distance value itself.</p></li>
-<li><p><strong>Infinite and periodic structures</strong> — lattices, triply periodic minimal
-surfaces — are just functions, so they cost nothing to define and are only
-ever evaluated inside the region you care about.</p></li>
-<li><p><strong>Graded structures</strong> follow directly. Any parameter of the function may vary
-continuously through space, so wall thickness, cell size or even cell <em>type</em>
-can be driven by a field rather than tiled uniformly.</p></li>
+<li><p><strong>Booleans</strong> are <code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code>. They cannot fail on degenerate input
+or leave slivers.</p></li>
+<li><p><strong>Fillets and blends</strong> use a smooth minimum, with a chosen radius.</p></li>
+<li><p><strong>Offsets and shells</strong> are arithmetic on the distance.</p></li>
+<li><p><strong>Lattices and TPMS</strong> are periodic functions, evaluated only where needed.</p></li>
+<li><p><strong>Grading</strong> is a parameter that varies through space: wall thickness, cell
+size, even cell type.</p></li>
 </ul>
-<p>The last point is what makes the approach interesting for additive
-manufacturing, where the fabrication process imposes no penalty for a part whose
-internal structure varies everywhere.</p>
-<p>The trade-off is that an implicit surface has to be sampled on a grid and
-polygonized before it can be viewed or exported, and the cost of that scales
-with the cube of the resolution. Modelling stays exact; only the final
-extraction is approximate.</p>
+<p>The cost is meshing: a field is sampled on a grid and polygonised, which
+scales with the cube of the resolution. Modelling is exact; only the final
+surface is approximate.</p>
 </section>
-<section id="how-this-package-is-organized">
-<h2>How this package is organized</h2>
-<p>Every object subclasses <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_vol.base.VolObject</span></code> and exposes the same
-two methods:</p>
+<section id="how-the-package-is-organised">
+<h2>How the package is organised</h2>
+<p>Every object subclasses <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_vol.base.VolObject</span></code> and has two methods,
+tested to agree for every class:</p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">get_distance(point)</span></code></dt><dd><p>The signed distance at a single point, as a float.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">get_distance(point)</span></code></dt><dd><p>The distance at one point.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">get_distance_numpy(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code></dt><dd><p>The signed distance over a whole grid at once, given <code class="docutils literal notranslate"><span class="pre">np.ogrid</span></code> arrays.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">get_distance_numpy(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code></dt><dd><p>The distance over a grid of <code class="docutils literal notranslate"><span class="pre">np.ogrid</span></code> arrays. Meshing and viewing use
+this one.</p>
 </dd>
 </dl>
-<p>The two are tested to agree to machine precision for every class in the package.
-The single-point form is for inspection and for embedding in other code; the
-vectorized form is what meshing and viewing actually use, and it is several
-orders of magnitude faster.</p>
-<p>From there the package divides into:</p>
-<dl class="simple">
-<dt><a class="reference internal" href="api/compas_vol.primitives.html#module-compas_vol.primitives" title="compas_vol.primitives"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.primitives</span></code></a></dt><dd><p>Base shapes — boxes, spheres, cylinders, tori, platonic solids, extrusions.</p>
-</dd>
-<dt><a class="reference internal" href="api/compas_vol.combinations.html#module-compas_vol.combinations" title="compas_vol.combinations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.combinations</span></code></a></dt><dd><p>Ways of putting two or more objects together — booleans, smooth booleans,
-morphs and field arithmetic.</p>
-</dd>
-<dt><a class="reference internal" href="api/compas_vol.modifications.html#module-compas_vol.modifications" title="compas_vol.modifications"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.modifications</span></code></a></dt><dd><p>Operations on a single object — shells, twists, sine displacement, blur.</p>
-</dd>
-<dt><a class="reference internal" href="api/compas_vol.microstructures.html#module-compas_vol.microstructures" title="compas_vol.microstructures"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.microstructures</span></code></a></dt><dd><p>Periodic and stochastic infill — lattices, TPMS, Voronoi.</p>
-</dd>
-<dt><a class="reference internal" href="api/compas_vol.analysis.html#module-compas_vol.analysis" title="compas_vol.analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.analysis</span></code></a></dt><dd><p>Fields derived from a field — gradient and curvature.</p>
-</dd>
-<dt><a class="reference internal" href="api/compas_vol.meshing.html#module-compas_vol.meshing" title="compas_vol.meshing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.meshing</span></code></a></dt><dd><p>Sampling and iso-surfacing, plus an adaptive octree.</p>
-</dd>
-<dt><a class="reference internal" href="api/compas_vol.scene.html#module-compas_vol.scene" title="compas_vol.scene"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.scene</span></code></a></dt><dd><p>COMPAS 2 scene object registration, so volumetric objects can be added to a
-scene like any other COMPAS geometry.</p>
-</dd>
-</dl>
-</section>
-<section id="relation-to-the-original">
-<h2>Relation to the original</h2>
-<p>The original <code class="docutils literal notranslate"><span class="pre">compas_vol</span></code> came out of research at Digital Building
-Technologies, ETH Zurich, alongside the Grasshopper plugin <em>Axolotl</em>. It targets
-COMPAS 1 and does not import against the current stack. This fork keeps the
-architecture and the API shape, and updates the implementation. <a class="reference internal" href="porting.html"><span class="doc">Porting from COMPAS 1</span></a>
-lists every behavioural difference.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/compas_vol.primitives.html#module-compas_vol.primitives" title="compas_vol.primitives"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.primitives</span></code></a></p></td>
+<td><p>boxes, spheres, cylinders, extrusions, platonic solids, sampled grids</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/compas_vol.combinations.html#module-compas_vol.combinations" title="compas_vol.combinations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.combinations</span></code></a></p></td>
+<td><p>booleans, smooth booleans, morphs, field arithmetic</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/compas_vol.modifications.html#module-compas_vol.modifications" title="compas_vol.modifications"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.modifications</span></code></a></p></td>
+<td><p>shells, offsets, twists, remaps, blur</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/compas_vol.microstructures.html#module-compas_vol.microstructures" title="compas_vol.microstructures"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.microstructures</span></code></a></p></td>
+<td><p>lattices, TPMS, Voronoi</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/compas_vol.analysis.html#module-compas_vol.analysis" title="compas_vol.analysis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.analysis</span></code></a></p></td>
+<td><p>gradient and curvature</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/compas_vol.meshing.html#module-compas_vol.meshing" title="compas_vol.meshing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.meshing</span></code></a></p></td>
+<td><p>sampling, iso-surfacing, STL export, octree</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/compas_vol.processes.html#module-compas_vol.processes" title="compas_vol.processes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.processes</span></code></a></p></td>
+<td><p>erosion, growth, phase separation: see <a class="reference internal" href="processes.html"><span class="doc">Processes</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/compas_vol.fabrication.html#module-compas_vol.fabrication" title="compas_vol.fabrication"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.fabrication</span></code></a></p></td>
+<td><p>printability checks and repairs: see <a class="reference internal" href="fabrication.html"><span class="doc">Fabrication</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/compas_vol.assembly.html#module-compas_vol.assembly" title="compas_vol.assembly"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.assembly</span></code></a></p></td>
+<td><p>cutting a model into pieces: see <a class="reference internal" href="assembly.html"><span class="doc">Assembly</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/compas_vol.nodes.html#module-compas_vol.nodes" title="compas_vol.nodes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.nodes</span></code></a>, <a class="reference internal" href="api/compas_vol.ghpython.html#module-compas_vol.ghpython" title="compas_vol.ghpython"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.ghpython</span></code></a></p></td>
+<td><p>the Grasshopper components: see <a class="reference internal" href="grasshopper.html"><span class="doc">Grasshopper</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/compas_vol.scene.html#module-compas_vol.scene" title="compas_vol.scene"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.scene</span></code></a>, <a class="reference internal" href="api/compas_vol.runtime.html#module-compas_vol.runtime" title="compas_vol.runtime"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.runtime</span></code></a></p></td>
+<td><p>viewer integration and context checks: see <a class="reference internal" href="contexts.html"><span class="doc">Contexts</span></a></p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 
@@ -186,7 +184,8 @@ lists every behavioural difference.</p>
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item active"><a class="nav-link active reference internal" href="#">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="gettingstarted/installation.html">Installation</a></li>
@@ -194,6 +193,18 @@ lists every behavioural difference.</p>
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="api.html">API Reference</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.html">compas_vol</a></li>
@@ -203,6 +214,12 @@ lists every behavioural difference.</p>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>
@@ -220,8 +237,7 @@ lists every behavioural difference.</p>
         <ul class="nav flex-column" id="compas-toc">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Introduction</a><ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="#why-signed-distance-functions">Why signed distance functions</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#how-this-package-is-organized">How this package is organized</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#relation-to-the-original">Relation to the original</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#how-the-package-is-organised">How the package is organised</a></li>
 </ul>
 </li>
 </ul>

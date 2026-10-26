@@ -24,7 +24,7 @@
   
 
   
-  <link rel="prev" title="Examples" href="examples.html" />
+  <link rel="prev" title="Development" href="development.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -91,18 +91,12 @@
         
         <section id="porting-from-compas-1">
 <h1>Porting from COMPAS 1</h1>
-<p>This page records how this fork differs from the original
-<a class="reference external" href="https://github.com/dbt-ethz/compas_vol">dbt-ethz/compas_vol</a>. It is intended
-both as a migration guide for existing scripts and as an honest account of what
-was changed and why.</p>
-<p>The differences fall into three groups: changes forced by COMPAS 2, defects that
-were present in the original independently of the COMPAS version, and stubs that
-have been filled in.</p>
+<p>How this fork differs from
+<a class="reference external" href="https://github.com/dbt-ethz/compas_vol">dbt-ethz/compas_vol</a>: changes forced
+by COMPAS 2, defects fixed, and stubs filled in. Use it to migrate scripts.</p>
 <section id="api-changes-forced-by-compas-2">
 <h2>API changes forced by COMPAS 2</h2>
-<p>COMPAS 2 reorganized geometry constructors and the serialization protocol. The
-following table maps old to new. Where the old spelling could be kept as an
-alias without ambiguity, it was.</p>
+<p>Old spellings are kept as aliases where that is unambiguous.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 50.0%" />
@@ -157,32 +151,27 @@ alias without ambiguity, it was.</p>
 </table>
 <section id="transformations">
 <h3>Transformations</h3>
-<p>The original applied transformation matrices to grids using
-<code class="docutils literal notranslate"><span class="pre">np.array([x,</span> <span class="pre">y,</span> <span class="pre">z,</span> <span class="pre">1],</span> <span class="pre">dtype=object)</span></code>. That has been replaced throughout by
-an explicit matrix-vector expansion, <code class="xref py py-func docutils literal notranslate"><span class="pre">compas_vol.base.transform_numpy()</span></code>.</p>
-<p>The object-dtype version was slow. More importantly, the variants written
-<em>without</em> <code class="docutils literal notranslate"><span class="pre">dtype=object</span></code> — in <code class="docutils literal notranslate"><span class="pre">VolEllipsoid</span></code>, <code class="docutils literal notranslate"><span class="pre">VolTorus</span></code> and <code class="docutils literal notranslate"><span class="pre">Twist</span></code> —
-raise outright on NumPy 2.</p>
+<p><code class="docutils literal notranslate"><span class="pre">np.array([x,</span> <span class="pre">y,</span> <span class="pre">z,</span> <span class="pre">1],</span> <span class="pre">dtype=object)</span></code> is replaced throughout by
+<code class="xref py py-func docutils literal notranslate"><span class="pre">compas_vol.base.transform_numpy()</span></code>. The object-dtype version was slow, and
+the variants without <code class="docutils literal notranslate"><span class="pre">dtype=object</span></code> (<code class="docutils literal notranslate"><span class="pre">VolEllipsoid</span></code>, <code class="docutils literal notranslate"><span class="pre">VolTorus</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Twist</span></code>) raise on NumPy 2.</p>
 </section>
 <section id="serialization">
 <h3>Serialization</h3>
-<p>COMPAS 1 shipped objects between processes by <code class="docutils literal notranslate"><span class="pre">eval</span></code>-ing their <code class="docutils literal notranslate"><span class="pre">repr</span></code>
-string. That path is gone. <a class="reference internal" href="api/generated/compas_vol.utilities.dumps_tree.html#compas_vol.utilities.dumps_tree" title="compas_vol.utilities.dumps_tree"><code class="xref py py-func docutils literal notranslate"><span class="pre">compas_vol.utilities.dumps_tree()</span></code></a> and
-<a class="reference internal" href="api/generated/compas_vol.utilities.loads_tree.html#compas_vol.utilities.loads_tree" title="compas_vol.utilities.loads_tree"><code class="xref py py-func docutils literal notranslate"><span class="pre">compas_vol.utilities.loads_tree()</span></code></a> use COMPAS JSON instead.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">eval(repr(obj))</span></code> transport is gone;
+<a class="reference internal" href="api/generated/compas_vol.utilities.dumps_tree.html#compas_vol.utilities.dumps_tree" title="compas_vol.utilities.dumps_tree"><code class="xref py py-func docutils literal notranslate"><span class="pre">compas_vol.utilities.dumps_tree()</span></code></a> and
+<a class="reference internal" href="api/generated/compas_vol.utilities.loads_tree.html#compas_vol.utilities.loads_tree" title="compas_vol.utilities.loads_tree"><code class="xref py py-func docutils literal notranslate"><span class="pre">compas_vol.utilities.loads_tree()</span></code></a> use COMPAS JSON.</p>
 </section>
 <section id="visualization">
 <h3>Visualization</h3>
-<p>The original drew through <code class="docutils literal notranslate"><span class="pre">ipyvolume</span></code> and <code class="docutils literal notranslate"><span class="pre">meshplot</span></code> in notebooks, neither
-of which works on current Python. Drawing is now handled by scene object
-registration (<a class="reference internal" href="api/compas_vol.scene.html#module-compas_vol.scene" title="compas_vol.scene"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.scene</span></code></a>), following the COMPAS 2 pattern: the
-volumetric classes know nothing about drawing, and each context declares
-separately how to draw them.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ipyvolume</span></code> and <code class="docutils literal notranslate"><span class="pre">meshplot</span></code> no longer work on current Python. Drawing is
+scene-object registration (<a class="reference internal" href="api/compas_vol.scene.html#module-compas_vol.scene" title="compas_vol.scene"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.scene</span></code></a>), the COMPAS 2 pattern.</p>
 </section>
 </section>
 <section id="correctness-fixes">
 <h2>Correctness fixes</h2>
-<p>The following were broken in the original, independently of the COMPAS version.
-Each has a regression test in <code class="docutils literal notranslate"><span class="pre">tests/test_regressions.py</span></code>.</p>
+<p>Broken in the original regardless of COMPAS version; each has a regression
+test in <code class="docutils literal notranslate"><span class="pre">tests/test_regressions.py</span></code>.</p>
 <dl class="simple">
 <dt>Query points were mutated in place</dt><dd><p>Every object working in a local frame called <code class="docutils literal notranslate"><span class="pre">point.transform(...)</span></code> on the
 caller’s own <a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.geometry.Point.html#compas.geometry.Point" title="(in COMPAS latest)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Point</span></code></a>, so calling <code class="docutils literal notranslate"><span class="pre">get_distance(p)</span></code>
@@ -241,17 +230,6 @@ wavelength by distance to any volumetric object.</p>
 </dd>
 </dl>
 </section>
-<section id="testing">
-<h2>Testing</h2>
-<p>The suite parametrizes every volumetric class over shared checks:</p>
-<ul class="simple">
-<li><p>the two distance methods must agree on a grid,</p></li>
-<li><p>queries must not mutate their input,</p></li>
-<li><p>every object must survive a JSON round trip.</p></li>
-</ul>
-<p>Analytic cases pin the geometry itself — a radius-5 sphere has mean curvature
-0.2, a unit box corner is <code class="docutils literal notranslate"><span class="pre">sqrt(3)</span></code> away, and so on.</p>
-</section>
 </section>
 
         
@@ -270,7 +248,8 @@ wavelength by distance to any volumetric object.</p>
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="gettingstarted/installation.html">Installation</a></li>
@@ -278,6 +257,18 @@ wavelength by distance to any volumetric object.</p>
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item active"><a class="nav-link active reference internal" href="#">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="api.html">API Reference</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.html">compas_vol</a></li>
@@ -287,6 +278,12 @@ wavelength by distance to any volumetric object.</p>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>
@@ -311,7 +308,6 @@ wavelength by distance to any volumetric object.</p>
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="#correctness-fixes">Correctness fixes</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#stubs-filled-in">Stubs filled in</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#testing">Testing</a></li>
 </ul>
 </li>
 </ul>
@@ -325,11 +321,11 @@ wavelength by distance to any volumetric object.</p>
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-      <a href="examples.html" title="Examples" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+      <a href="development.html" title="Development" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
         <div class="nav-title flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Previous</div>
-          Examples
+          Development
         </div>
       </a>
       

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <title>compas_vol - Development</title>
+  
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <meta name="author" content="Mathias Bernhard, ChiaChing-Yen" />
+  <meta name="description" content="" />
+
+  <link rel="shortcut icon" href="_static/images/compas.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/mono-blue.min.css">
+  <link rel="stylesheet" type="text/css" href="_static/css/compas.css" />
+  <link rel="stylesheet" type="text/css" href="_static/css/compas-reference.css" />
+
+  
+  <link rel="next" title="Porting from COMPAS 1" href="porting.html" />
+  
+
+  
+  <link rel="prev" title="Grasshopper" href="grasshopper.html" />
+  
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+
+<body data-spy="scroll" data-target="#compas-toc">
+  <!-- header -->
+  <header id="header" class="compas-header d-flex align-items-center">
+    <nav class="navbar navbar-expand navbar-dark col flex-column flex-md-row text-center">
+      <!-- brand -->
+      <a class="navbar-brand" href="https://rccn-dev.github.io/compas_vol/">
+        <img src="_static/images/compas_icon_white.png" alt="compas_vol" width="48px" height="48px" />
+      </a>
+      <!-- brand -->
+      <!-- primary -->
+      <ul class="navbar-nav">
+        <li class="nav-item active"><a class="nav-link" href="https://rccn-dev.github.io/compas_vol/">compas_vol</a></li>
+      </ul>
+      <!-- primary -->
+      <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        <!-- version -->
+        
+        <meta id="doc_versions" data-url="https://rccn-dev.github.io/compas_vol/doc_versions.txt" data-docs="https://rccn-dev.github.io/compas_vol/">
+        <li class="nav-item nav-versions dropdown">
+          <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            0.2.0
+          </a>
+          <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
+        </li>
+        
+        <!-- version -->
+        <!-- social -->
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/rccn-dev/compas_vol" target="_blank">
+            <span class="fab fa-github fa-1x"></span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://forum.compas-framework.org" target="_blank">
+            <span class="fab fa-discourse fa-1x"></span>
+          </a>
+        </li>
+        <!-- social -->
+      </ul>
+    </nav>
+  </header>
+  <!-- header -->
+  <!-- main -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- main -->
+      <main class="col-12 col-md-9 col-xl-7 px-4 px-md-5 pt-2 pb-5 compas-content" role="main">
+        
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-3 bg-white px-0">
+            <li class="breadcrumb-item"><a href="index.html">compas_vol</a></li>
+            
+            <!-- <li class="breadcrumb-item active" aria-current="page">Development</li> -->
+          </ol>
+        </nav>
+        
+
+        
+        
+        <section id="development">
+<h1>Development</h1>
+<section id="tests-and-docs">
+<h2>Tests and docs</h2>
+<div class="language-bash notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>meshing<span class="w"> </span>--group<span class="w"> </span>dev
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w">                     </span><span class="c1"># the suite, with doctests</span>
+uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span>check<span class="w"> </span>.
+uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>docs<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>sphinx-build<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>-W<span class="w"> </span>docs<span class="w"> </span>docs/_build/html
+</code></pre></div>
+</div>
+<p>Every volumetric class runs through shared checks: the two distance methods
+agree, queries do not mutate their input, and objects survive a JSON round
+trip. Analytic cases pin the geometry (a radius-5 sphere has mean curvature
+0.2). Bug fixes get a regression test in <code class="docutils literal notranslate"><span class="pre">tests/test_regressions.py</span></code>.
+<code class="docutils literal notranslate"><span class="pre">tests/test_examples.py</span></code> keeps the examples parsing and importing.</p>
+</section>
+<section id="building-the-components">
+<h2>Building the components</h2>
+<p>Each component is a folder under <code class="docutils literal notranslate"><span class="pre">src/compas_vol/ghpython/components</span></code>:
+<code class="docutils literal notranslate"><span class="pre">code.py</span></code>, <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> and a 24x24 <code class="docutils literal notranslate"><span class="pre">icon.png</span></code>, drawn from a text
+sketch by <code class="docutils literal notranslate"><span class="pre">scripts/make_icons.py</span></code>. <code class="docutils literal notranslate"><span class="pre">scripts/ghuser</span></code> compiles them into
+<code class="docutils literal notranslate"><span class="pre">.ghuser</span></code> files with <a class="reference external" href="https://git.rccn.dev/libs/ghuser-builder">ghuser-builder</a>, cloned next to this repository or
+wherever <code class="docutils literal notranslate"><span class="pre">GHUSER_BUILDER</span></code> points:</p>
+<div class="language-bash notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>scripts/ghuser<span class="w"> </span>dev<span class="w">             </span><span class="c1"># Mac with Rhino 8: build, link into Grasshopper, check, reload</span>
+scripts/ghuser<span class="w"> </span>dev<span class="w"> </span>status<span class="w">      </span><span class="c1"># what Grasshopper will load, and what is wrong</span>
+scripts/ghuser<span class="w"> </span>dev<span class="w"> </span>uninstall
+scripts/ghuser<span class="w">                 </span><span class="c1"># Docker, as CI: dist/ghuser/, with icons</span>
+</code></pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">dev</span></code> is the everyday loop:</p>
+<ol class="arabic simple">
+<li><p>It builds with Rhino’s own .NET, adds <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">env:</span> <span class="pre">&lt;checkout&gt;/src</span></code> so
+components import the working copy, and verifies every file.</p></li>
+<li><p>It links <code class="docutils literal notranslate"><span class="pre">build/ghuser-dev</span></code> into Grasshopper’s User Object folder as
+<code class="docutils literal notranslate"><span class="pre">compas_vol-dev</span></code>. Older copies of the same components move to
+<code class="docutils literal notranslate"><span class="pre">~/.cache/ghuser-builder/backups</span></code>.</p></li>
+<li><p>It checks the <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">r:</span></code> requirements and <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">compas_vol</span></code> in Rhino’s
+Python.</p></li>
+<li><p>If Rhino is running, it reloads <code class="docutils literal notranslate"><span class="pre">compas_vol</span></code> there and lists components
+on the canvas that carry older code. New components appear after
+restarting Grasshopper.</p></li>
+</ol>
+<p>Rebuild when a <code class="docutils literal notranslate"><span class="pre">code.py</span></code> or <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> changes; library edits need
+only a recompute. Dev builds have no canvas icon (a macOS limitation) and only
+work on this machine. Both build paths read every file back with <code class="docutils literal notranslate"><span class="pre">GH_IO</span></code> and
+compare it with its source.</p>
+</section>
+<section id="adding-a-component">
+<h2>Adding a component</h2>
+<ol class="arabic simple">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">something(...)</span></code> to <a class="reference internal" href="api/compas_vol.nodes.html#module-compas_vol.nodes" title="compas_vol.nodes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.nodes</span></code></a>, taking the component’s
+inputs by name and returning COMPAS or NumPy types.</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">components/Cv_Something/</span></code> with <code class="docutils literal notranslate"><span class="pre">code.py</span></code> (convert, call
+<code class="docutils literal notranslate"><span class="pre">nodes.something</span></code>, convert back) and <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code>.</p></li>
+<li><p>Keep <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">System</span></code> and <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">Rhino</span></code> at the top of <code class="docutils literal notranslate"><span class="pre">code.py</span></code>.
+Rhino 8 evaluates the input type annotations it adds to <code class="docutils literal notranslate"><span class="pre">RunScript</span></code>;
+without them Grasshopper reports <em>Error getting GH_ScriptInstance
+instance</em>.</p></li>
+<li><p>Give it a fresh <code class="docutils literal notranslate"><span class="pre">instanceGuid</span></code>: two components with one GUID are one
+component to Grasshopper.</p></li>
+<li><p>Add a 12x12 sketch to <code class="docutils literal notranslate"><span class="pre">scripts/make_icons.py</span></code> and run it.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">tests/test_ghpython.py</span></code>. It checks that input names agree
+across <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code>, <code class="docutils literal notranslate"><span class="pre">RunScript</span></code>, the node and the tooltip.</p></li>
+</ol>
+</section>
+</section>
+
+        
+      </main>
+      <!-- content -->
+      <!-- sidebar -->
+      <div class="col-12 col-md-3 compas-sidebar" role="navigation">
+        <form id="search" class="d-flex align-items-center compas-searchbox" action="search.html" method="get">
+          <input class="form-control" type="text" name="q" placeholder="Search docs" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </form>
+        
+        
+        <div id="compas-navigation" class="collapse compas-navigation">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="gettingstarted/installation.html">Installation</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="gettingstarted/firststeps.html">First Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse show active">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item active"><a class="nav-link active reference internal" href="#">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="porting.html">Porting from COMPAS 1</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="api.html">API Reference</a><ul class="nav flex-column collapse">
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.html">compas_vol</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.primitives.html">compas_vol.primitives</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.combinations.html">compas_vol.combinations</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.modifications.html">compas_vol.modifications</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.microstructures.html">compas_vol.microstructures</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.analysis.html">compas_vol.analysis</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.runtime.html">compas_vol.runtime</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.scene.html">compas_vol.scene</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.utilities.html">compas_vol.utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="license.html">License</a></li>
+</ul>
+
+        </div>
+        
+      </div>
+      <!-- sidebar -->
+      <!-- toc -->
+      <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+        
+        <ul class="nav flex-column" id="compas-toc">
+<li class="nav-item"><a class="nav-link reference internal" href="#">Development</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#tests-and-docs">Tests and docs</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#building-the-components">Building the components</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#adding-a-component">Adding a component</a></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+      <!-- toc -->
+    </div>
+  </div>
+  <!-- main -->
+  <!-- footer -->
+  <footer class="compas-footer">
+    <nav class="nav p-2">
+      
+      <a href="grasshopper.html" title="Grasshopper" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
+        <div class="nav-title flex-grow-1 align-self-center">
+          <div class="nav-direction small font-weight-light">Previous</div>
+          Grasshopper
+        </div>
+      </a>
+      
+
+      
+      <a href="porting.html" title="Porting from COMPAS 1" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <div class="nav-title footer-link flex-grow-1 align-self-center">
+          <div class="nav-direction small font-weight-light">Next</div>
+          Porting from COMPAS 1
+        </div>
+        <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
+      </a>
+      
+    </nav>
+  </footer>
+  <!-- footer -->
+  <!-- below -->
+  <div class="below py-5" style="background-color: #222;">
+    <div class="container">
+      <div class="row flex-column">
+        <div class="col-12 col-md-6 mx-md-auto text-center">
+          <h4 class="pb-3 below-text">COMPAS</h4>
+          <p class="below-text">
+            A computational framework for collaboration and research
+            in Architecture, Engineering, Fabrication, and Construction.
+          </p>
+          <nav class="nav justify-content-center pb-3">
+            <a class="nav-link mx-2 px-0 below-link" href="http://github.com/compas-dev" target="_blank">
+              <span class="fab fa-github fa-1x"></span>
+            </a>
+            <a class="nav-link mx-2 px-0 below-link" href="http://forum.compas-framework.org" target="_blank">
+              <span class="fab fa-discourse fa-1x"></span>
+            </a>
+            <a class="nav-link mx-2 px-0 below-link" href="https://pypi.org/project/COMPAS/" target="_blank">
+              <span class="fab fa-python fa-1x"></span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <p class="p-0 m-0 below-text">Copyright &copy; 2017-2021 compas-dev</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- below -->
+  <!-- scripts -->
+  <script id="documentation_options" data-url_root="" src="_static/documentation_options.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+
+  <script src="_static/underscore.js"></script>
+  <script src="_static/doctools.js"></script>
+  <script src="_static/searchtools.js"></script>
+  <script src="_static/language_data.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $(".language-default code").addClass("python");
+      $(".language-python code").addClass("python");
+      $(".language-bash code").addClass("bash");
+      $(".language-cpp code").addClass("cpp");
+      $(".language-json code").addClass("json");
+      $(".language-none code").addClass("plaintext");
+
+      hljs.initHighlighting();
+      anchors.add();
+
+      new ClipboardJS(".btn.copy", {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+
+      $("#compas-navigation li.active > ul").each(function() {
+        var ul = $(this);
+        if (! ul.hasClass("show")) {
+          ul.addClass("show");
+        }
+      });
+
+      $("#compas-navigation li.toctree-l1").has("ul").each(function() {
+        var li = $(this);
+        li.addClass("has-children");
+        if (li.hasClass("active")) {
+          li.prepend('<span class="menu-toggle"><i class="fas fa-chevron-up"></i></span>');
+        }
+        else {
+          li.prepend('<span class="menu-toggle"><i class="fas fa-chevron-down"></i></span>');
+        }
+      });
+
+      $(".menu-toggle").click(function() {
+        var toggle = $(this);
+        toggle.siblings("ul").toggleClass("show");
+      });
+
+    });
+
+
+    var url = $("#doc_versions").data("url");
+    var docs_site = $("#doc_versions").data("docs");
+
+    if (url) {
+      $.get(url, res => {
+        var lines = res.match(/[^\r\n]+/g);
+        lines.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+        lines.reverse();
+        lines.forEach(version => {
+          $("#doc_version_list").append("<a class=\"dropdown-item\" href=\"" + docs_site + version + "\">" + version + "</a>");
+        });
+
+        var selected_version = $('.nav-versions .dropdown-item').filter(function (i, ver) {
+          return window.location.href.startsWith(ver.href);
+        });
+        selected_version.addClass('active');
+        $("#bd-versions").text(selected_version.text());
+
+      })
+    }
+  </script>
+  <!-- scripts -->
+  
+  
+</body>
+
+</html>

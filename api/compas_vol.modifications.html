@@ -100,25 +100,34 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Blur.html#compas_vol.modifications.Blur" title="compas_vol.modifications.Blur"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Blur</span></code></a></p></td>
 <td><p>Gaussian blur of a sampled distance matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Factor.html#compas_vol.modifications.Factor" title="compas_vol.modifications.Factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Factor</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Conform.html#compas_vol.modifications.Conform" title="compas_vol.modifications.Conform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Conform</span></code></a></p></td>
+<td><p>Evaluate an object in a coordinate built from another object's field.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Factor.html#compas_vol.modifications.Factor" title="compas_vol.modifications.Factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Factor</span></code></a></p></td>
 <td><p>Scale the scalar field of a volumetric object by a constant.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.modifications.MultiShell.html#compas_vol.modifications.MultiShell" title="compas_vol.modifications.MultiShell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiShell</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.modifications.MultiShell.html#compas_vol.modifications.MultiShell" title="compas_vol.modifications.MultiShell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiShell</span></code></a></p></td>
 <td><p>A nested set of concentric shells offset from a volumetric object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Offset.html#compas_vol.modifications.Offset" title="compas_vol.modifications.Offset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Offset</span></code></a></p></td>
+<td><p>Grow or shrink an object by a distance, which may vary through space.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Overlay.html#compas_vol.modifications.Overlay" title="compas_vol.modifications.Overlay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Overlay</span></code></a></p></td>
 <td><p>Add a scaled copy of one object's field on top of another's.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Shell.html#compas_vol.modifications.Shell" title="compas_vol.modifications.Shell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Shell</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Remap.html#compas_vol.modifications.Remap" title="compas_vol.modifications.Remap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Remap</span></code></a></p></td>
+<td><p>Map the field of an object from one value range into another.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Shell.html#compas_vol.modifications.Shell" title="compas_vol.modifications.Shell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Shell</span></code></a></p></td>
 <td><p>Convert a solid volumetric object into a boundary shell of constant thickness.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Sine.html#compas_vol.modifications.Sine" title="compas_vol.modifications.Sine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sine</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Sine.html#compas_vol.modifications.Sine" title="compas_vol.modifications.Sine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sine</span></code></a></p></td>
 <td><p>Apply a sine wave to the scalar field of a volumetric object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Twist.html#compas_vol.modifications.Twist" title="compas_vol.modifications.Twist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Twist</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.modifications.Twist.html#compas_vol.modifications.Twist" title="compas_vol.modifications.Twist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Twist</span></code></a></p></td>
 <td><p>Twist a volumetric object around the normal axis of a frame.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.modifications.VolTransformation.html#compas_vol.modifications.VolTransformation" title="compas_vol.modifications.VolTransformation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VolTransformation</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.modifications.VolTransformation.html#compas_vol.modifications.VolTransformation" title="compas_vol.modifications.VolTransformation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VolTransformation</span></code></a></p></td>
 <td><p>Relocate a volumetric object into the coordinate system of a frame.</p></td>
 </tr>
 </tbody>
@@ -141,7 +150,8 @@
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../gettingstarted/installation.html">Installation</a></li>
@@ -149,6 +159,18 @@
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="compas_vol.html">compas_vol</a></li>
@@ -158,6 +180,12 @@
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>

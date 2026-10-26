@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <title>compas_vol - Assembly</title>
+  
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <meta name="author" content="Mathias Bernhard, ChiaChing-Yen" />
+  <meta name="description" content="" />
+
+  <link rel="shortcut icon" href="../../_static/images/compas.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/mono-blue.min.css">
+  <link rel="stylesheet" type="text/css" href="../../_static/css/compas.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
+
+  
+  <link rel="next" title="Assembly.build" href="compas_vol.assembly.Assembly.build.html" />
+  
+
+  
+  <link rel="prev" title="section_cost" href="compas_vol.assembly.section_cost.html" />
+  
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+
+<body data-spy="scroll" data-target="#compas-toc">
+  <!-- header -->
+  <header id="header" class="compas-header d-flex align-items-center">
+    <nav class="navbar navbar-expand navbar-dark col flex-column flex-md-row text-center">
+      <!-- brand -->
+      <a class="navbar-brand" href="https://rccn-dev.github.io/compas_vol/">
+        <img src="../../_static/images/compas_icon_white.png" alt="compas_vol" width="48px" height="48px" />
+      </a>
+      <!-- brand -->
+      <!-- primary -->
+      <ul class="navbar-nav">
+        <li class="nav-item active"><a class="nav-link" href="https://rccn-dev.github.io/compas_vol/">compas_vol</a></li>
+      </ul>
+      <!-- primary -->
+      <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        <!-- version -->
+        
+        <meta id="doc_versions" data-url="https://rccn-dev.github.io/compas_vol/doc_versions.txt" data-docs="https://rccn-dev.github.io/compas_vol/">
+        <li class="nav-item nav-versions dropdown">
+          <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            0.2.0
+          </a>
+          <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
+        </li>
+        
+        <!-- version -->
+        <!-- social -->
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/rccn-dev/compas_vol" target="_blank">
+            <span class="fab fa-github fa-1x"></span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://forum.compas-framework.org" target="_blank">
+            <span class="fab fa-discourse fa-1x"></span>
+          </a>
+        </li>
+        <!-- social -->
+      </ul>
+    </nav>
+  </header>
+  <!-- header -->
+  <!-- main -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- main -->
+      <main class="col-12 col-md-9 col-xl-7 px-4 px-md-5 pt-2 pb-5 compas-content" role="main">
+        
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-3 bg-white px-0">
+            <li class="breadcrumb-item"><a href="../../index.html">compas_vol</a></li>
+            
+            <li class="breadcrumb-item"><a href="../../api.html">API Reference</a></li>
+            
+            <li class="breadcrumb-item"><a href="../compas_vol.html">compas_vol</a></li>
+            
+            <li class="breadcrumb-item"><a href="../compas_vol.assembly.html">compas_vol.assembly</a></li>
+            
+            <!-- <li class="breadcrumb-item active" aria-current="page">Assembly</li> -->
+          </ol>
+        </nav>
+        
+
+        
+        
+        <section class="detail" id="assembly">
+<h1>Assembly</h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="compas_vol.assembly.Assembly">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compas_vol.assembly.</span></span><span class="sig-name descname"><span class="pre">Assembly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pieces</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clearance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interfaces</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rccn-dev/compas_vol/blob/main/src/compas_vol/assembly/partition.py#L226"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A model cut into pieces, and the record of how they go back together.</p>
+<p>Iterate it to get <a class="reference internal" href="compas_vol.assembly.Piece.html#compas_vol.assembly.Piece" title="compas_vol.assembly.Piece"><code class="xref py py-class docutils literal notranslate"><span class="pre">Piece</span></code></a> objects. Nothing is sampled until you ask
+for it, so building the assembly of a whole pavilion costs almost nothing
+– it is the pieces that cost, and only the ones you build.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="compas_vol.assembly.Assembly.pieces">
+<span class="sig-name descname"><span class="pre">pieces</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="compas_vol.assembly.Piece.html#compas_vol.assembly.Piece" title="compas_vol.assembly.Piece"><code class="xref py py-class docutils literal notranslate"><span class="pre">Piece</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="compas_vol.assembly.Assembly.shape">
+<span class="sig-name descname"><span class="pre">shape</span></span></dt>
+<dd><p>How many pieces along each axis, for a grid; <code class="docutils literal notranslate"><span class="pre">None</span></code> for pieces cut
+from a list of cells.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a>] | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="compas_vol.assembly.Assembly.bounds">
+<span class="sig-name descname"><span class="pre">bounds</span></span></dt>
+<dd><p>The whole model’s bounds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>, …]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="compas_vol.assembly.Assembly.clearance">
+<span class="sig-name descname"><span class="pre">clearance</span></span></dt>
+<dd><p>The gap left between neighbours, in model units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="compas_vol.assembly.Assembly.interfaces">
+<span class="sig-name descname"><span class="pre">interfaces</span></span></dt>
+<dd><p>Every face two pieces share: <code class="docutils literal notranslate"><span class="pre">low</span></code> and <code class="docutils literal notranslate"><span class="pre">high</span></code> (the pieces below
+and above it), <code class="docutils literal notranslate"><span class="pre">axis</span></code>, <code class="docutils literal notranslate"><span class="pre">position</span></code> along that axis, and <code class="docutils literal notranslate"><span class="pre">rect</span></code>,
+the shared rectangle as <code class="docutils literal notranslate"><span class="pre">(lo_a,</span> <span class="pre">lo_b,</span> <span class="pre">hi_a,</span> <span class="pre">hi_b)</span></code> over the other
+two axes in order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)">dict</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.assembly.Assembly.build.html#compas_vol.assembly.Assembly.build" title="compas_vol.assembly.Assembly.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a></p></td>
+<td><p>Build pieces one at a time: process each with its halo, then finish it.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_vol.assembly.Assembly.check.html#compas_vol.assembly.Assembly.check" title="compas_vol.assembly.Assembly.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a></p></td>
+<td><p>Inspect every piece, and say which ones will not build.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.assembly.Assembly.cost.html#compas_vol.assembly.Assembly.cost" title="compas_vol.assembly.Assembly.cost"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cost</span></code></a></p></td>
+<td><p>What it would take to build every piece at this resolution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_vol.assembly.Assembly.find.html#compas_vol.assembly.Assembly.find" title="compas_vol.assembly.Assembly.find"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find</span></code></a></p></td>
+<td><p>The piece with this name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_vol.assembly.Assembly.manifest.html#compas_vol.assembly.Assembly.manifest" title="compas_vol.assembly.Assembly.manifest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">manifest</span></code></a></p></td>
+<td><p>A bill of pieces, as text.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_vol.assembly.Assembly.neighbours.html#compas_vol.assembly.Assembly.neighbours" title="compas_vol.assembly.Assembly.neighbours"><code class="xref py py-obj docutils literal notranslate"><span class="pre">neighbours</span></code></a></p></td>
+<td><p>The pieces sharing a face with this one.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+        
+      </main>
+      <!-- content -->
+      <!-- sidebar -->
+      <div class="col-12 col-md-3 compas-sidebar" role="navigation">
+        <form id="search" class="d-flex align-items-center compas-searchbox" action="../../search.html" method="get">
+          <input class="form-control" type="text" name="q" placeholder="Search docs" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </form>
+        
+        
+        <div id="compas-navigation" class="collapse compas-navigation">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../../gettingstarted/installation.html">Installation</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../../gettingstarted/firststeps.html">First Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../porting.html">Porting from COMPAS 1</a></li>
+<li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column collapse show active">
+<li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.html">compas_vol</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.primitives.html">compas_vol.primitives</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.combinations.html">compas_vol.combinations</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.modifications.html">compas_vol.modifications</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.microstructures.html">compas_vol.microstructures</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.analysis.html">compas_vol.analysis</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.runtime.html">compas_vol.runtime</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.scene.html">compas_vol.scene</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.utilities.html">compas_vol.utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+        
+      </div>
+      <!-- sidebar -->
+      <!-- toc -->
+      <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+        
+        <ul class="nav flex-column" id="compas-toc">
+<li class="nav-item"><a class="nav-link reference internal" href="#">Assembly</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_vol.assembly.Assembly"><code class="docutils literal notranslate"><span class="pre">Assembly</span></code></a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_vol.assembly.Assembly.pieces"><code class="docutils literal notranslate"><span class="pre">Assembly.pieces</span></code></a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_vol.assembly.Assembly.shape"><code class="docutils literal notranslate"><span class="pre">Assembly.shape</span></code></a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_vol.assembly.Assembly.bounds"><code class="docutils literal notranslate"><span class="pre">Assembly.bounds</span></code></a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_vol.assembly.Assembly.clearance"><code class="docutils literal notranslate"><span class="pre">Assembly.clearance</span></code></a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_vol.assembly.Assembly.interfaces"><code class="docutils literal notranslate"><span class="pre">Assembly.interfaces</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+      <!-- toc -->
+    </div>
+  </div>
+  <!-- main -->
+  <!-- footer -->
+  <footer class="compas-footer">
+    <nav class="nav p-2">
+      
+      <a href="compas_vol.assembly.section_cost.html" title="section_cost" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
+        <div class="nav-title flex-grow-1 align-self-center">
+          <div class="nav-direction small font-weight-light">Previous</div>
+          section_cost
+        </div>
+      </a>
+      
+
+      
+      <a href="compas_vol.assembly.Assembly.build.html" title="Assembly.build" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <div class="nav-title footer-link flex-grow-1 align-self-center">
+          <div class="nav-direction small font-weight-light">Next</div>
+          Assembly.build
+        </div>
+        <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
+      </a>
+      
+    </nav>
+  </footer>
+  <!-- footer -->
+  <!-- below -->
+  <div class="below py-5" style="background-color: #222;">
+    <div class="container">
+      <div class="row flex-column">
+        <div class="col-12 col-md-6 mx-md-auto text-center">
+          <h4 class="pb-3 below-text">COMPAS</h4>
+          <p class="below-text">
+            A computational framework for collaboration and research
+            in Architecture, Engineering, Fabrication, and Construction.
+          </p>
+          <nav class="nav justify-content-center pb-3">
+            <a class="nav-link mx-2 px-0 below-link" href="http://github.com/compas-dev" target="_blank">
+              <span class="fab fa-github fa-1x"></span>
+            </a>
+            <a class="nav-link mx-2 px-0 below-link" href="http://forum.compas-framework.org" target="_blank">
+              <span class="fab fa-discourse fa-1x"></span>
+            </a>
+            <a class="nav-link mx-2 px-0 below-link" href="https://pypi.org/project/COMPAS/" target="_blank">
+              <span class="fab fa-python fa-1x"></span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <p class="p-0 m-0 below-text">Copyright &copy; 2017-2021 compas-dev</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- below -->
+  <!-- scripts -->
+  <script id="documentation_options" data-url_root="" src="../../_static/documentation_options.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+
+  <script src="../../_static/underscore.js"></script>
+  <script src="../../_static/doctools.js"></script>
+  <script src="../../_static/searchtools.js"></script>
+  <script src="../../_static/language_data.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $(".language-default code").addClass("python");
+      $(".language-python code").addClass("python");
+      $(".language-bash code").addClass("bash");
+      $(".language-cpp code").addClass("cpp");
+      $(".language-json code").addClass("json");
+      $(".language-none code").addClass("plaintext");
+
+      hljs.initHighlighting();
+      anchors.add();
+
+      new ClipboardJS(".btn.copy", {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+
+      $("#compas-navigation li.active > ul").each(function() {
+        var ul = $(this);
+        if (! ul.hasClass("show")) {
+          ul.addClass("show");
+        }
+      });
+
+      $("#compas-navigation li.toctree-l1").has("ul").each(function() {
+        var li = $(this);
+        li.addClass("has-children");
+        if (li.hasClass("active")) {
+          li.prepend('<span class="menu-toggle"><i class="fas fa-chevron-up"></i></span>');
+        }
+        else {
+          li.prepend('<span class="menu-toggle"><i class="fas fa-chevron-down"></i></span>');
+        }
+      });
+
+      $(".menu-toggle").click(function() {
+        var toggle = $(this);
+        toggle.siblings("ul").toggleClass("show");
+      });
+
+    });
+
+
+    var url = $("#doc_versions").data("url");
+    var docs_site = $("#doc_versions").data("docs");
+
+    if (url) {
+      $.get(url, res => {
+        var lines = res.match(/[^\r\n]+/g);
+        lines.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+        lines.reverse();
+        lines.forEach(version => {
+          $("#doc_version_list").append("<a class=\"dropdown-item\" href=\"" + docs_site + version + "\">" + version + "</a>");
+        });
+
+        var selected_version = $('.nav-versions .dropdown-item').filter(function (i, ver) {
+          return window.location.href.startsWith(ver.href);
+        });
+        selected_version.addClass('active');
+        $("#bd-versions").text(selected_version.text());
+
+      })
+    }
+  </script>
+  <!-- scripts -->
+  
+  
+</body>
+
+</html>

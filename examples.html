@@ -20,7 +20,7 @@
   <link rel="stylesheet" type="text/css" href="_static/css/compas-reference.css" />
 
   
-  <link rel="next" title="Porting from COMPAS 1" href="porting.html" />
+  <link rel="next" title="Processes" href="processes.html" />
   
 
   
@@ -91,100 +91,146 @@
         
         <section id="examples">
 <h1>Examples</h1>
-<p>All examples live in the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> directory of the repository and are
-runnable as-is:</p>
+<p>The examples are in <code class="docutils literal notranslate"><span class="pre">examples/</span></code>, one idea per script, in reading order. Each
+opens the COMPAS viewer on its result, then a slice through the field:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>$ uv sync --extra examples
+$ uv run python examples/02_booleans.py
 </code></pre></div>
 </div>
-<section id="single-operations">
-<h2>Single operations</h2>
-<p><code class="docutils literal notranslate"><span class="pre">examples/*.py</span></code> are short ports of the original scripts, one idea each —
-extrusion, the four booleans, smooth booleans, morph, lattice, TPMS, Voronoi,
-gradient and octree:</p>
-<div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>$ uv run --extra all python examples/example_tpms.py
-</code></pre></div>
-</div>
-</section>
-<section id="modelling-studies">
-<h2>Modelling studies</h2>
-<p><code class="docutils literal notranslate"><span class="pre">examples/vol_mesh_examples/</span></code> holds fuller studies. Each opens the viewer with
-the meshed result; closing it opens an interactive slice through the signed
-distance field, where a slider moves the cutting plane — blue is inside, red is
-outside, and the black contour is the surface that gets meshed:</p>
-<div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>$ uv run python examples/vol_mesh_examples/8_morphing_microstructure.py
-</code></pre></div>
-</div>
+<section id="modelling">
+<h2>Modelling</h2>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 32.0%" />
-<col style="width: 48.0%" />
-<col style="width: 20.0%" />
+<col style="width: 34.0%" />
+<col style="width: 66.0%" />
 </colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Script</p></th>
-<th class="head"><p>What it shows</p></th>
-<th class="head"><p>Theme</p></th>
-</tr>
-</thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">template.py</span></code></p></td>
-<td><p>the full pipeline written out step by step, no helpers</p></td>
-<td><p>reference</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">01_extrusion.py</span></code></p></td>
+<td><p>a polygon extruded along a tilted frame</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">1_extrusion.py</span></code></p></td>
-<td><p>a star polygon extruded along a tilted frame</p></td>
-<td><p>primitives</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">02_booleans.py</span></code></p></td>
+<td><p>union, intersection and difference, hard and smooth</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2_intersection.py</span></code></p></td>
-<td><p>sphere ∩ filleted box</p></td>
-<td><p>CSG</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">03_blending.py</span></code></p></td>
+<td><p>morph, blend and offset</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">3_union.py</span></code></p></td>
-<td><p>sphere ∪ box, with the hard seam a union leaves</p></td>
-<td><p>CSG</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">04_field_math.py</span></code></p></td>
+<td><p>arithmetic on fields</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">4_smooth_union.py</span></code></p></td>
-<td><p>the same pair blended</p></td>
-<td><p>CSG</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">05_twisted_lattice.py</span></code></p></td>
+<td><p>domain warping: a lattice twisted into a helix</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">5_lattice.py</span></code></p></td>
-<td><p>a periodic strut lattice trimmed to a cube</p></td>
-<td><p>microstructure</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">06_gradient.py</span></code></p></td>
+<td><p>the gradient of a field, as colour</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">6_tpms.py</span></code></p></td>
-<td><p>a TPMS shell with thickness graded by a plane</p></td>
-<td><p>microstructure</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">7_graded_tpms.py</span></code></p></td>
-<td><p><strong>cell size</strong> driven by distance to an attractor</p></td>
-<td><p>graded</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">8_morphing_microstructure.py</span></code></p></td>
-<td><p><strong>cell type</strong> morphing gyroid → Schwartz-P across the part</p></td>
-<td><p>graded</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">9_twisted_lattice.py</span></code></p></td>
-<td><p>a lattice sheared into a helix by warping the domain</p></td>
-<td><p>non-linear</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">10_graded_shell.py</span></code></p></td>
-<td><p>wall density graded radially, ~25% at the core to ~12% at the rim</p></td>
-<td><p>graded</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">11_graded_voronoi.py</span></code></p></td>
-<td><p>aperiodic cells with a seed-density gradient</p></td>
-<td><p>stochastic</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">12_field_math.py</span></code></p></td>
-<td><p>arithmetic on fields, producing surfaces CSG cannot</p></td>
-<td><p>non-linear</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">07_octree.py</span></code></p></td>
+<td><p>adaptive refinement around the surface</p></td>
 </tr>
 </tbody>
 </table>
-<p>The first six are ordinary constructive modelling. The last six are the ones
-worth reading if you already know CSG: none of them is a boolean of two finished
-shapes, and each varies a property continuously through space rather than tiling
-one unit cell.</p>
+</section>
+<section id="microstructures">
+<h2>Microstructures</h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34.0%" />
+<col style="width: 66.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">08_lattice.py</span></code></p></td>
+<td><p>a strut lattice trimmed to a cube</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">09_polar.py</span></code></p></td>
+<td><p>a lattice and a TPMS wrapped around an axis</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">10_tpms.py</span></code></p></td>
+<td><p>a graded TPMS shell, with the low-level <code class="docutils literal notranslate"><span class="pre">TPMS</span></code>, <code class="docutils literal notranslate"><span class="pre">Shell</span></code>, <code class="docutils literal notranslate"><span class="pre">Overlay</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">11_tpms_catalogue.py</span></code></p></td>
+<td><p>every TPMS type with <code class="docutils literal notranslate"><span class="pre">TPMSSolid</span></code>, dimensioned in millimetres</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">12_sheet_vs_network.py</span></code></p></td>
+<td><p>one surface, three solids, with volume fractions</p></td>
+</tr>
+</tbody>
+</table>
+<p>Start TPMS design with <code class="docutils literal notranslate"><span class="pre">11</span></code>.</p>
+</section>
+<section id="grading">
+<h2>Grading</h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34.0%" />
+<col style="width: 66.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">13_graded_tpms.py</span></code></p></td>
+<td><p>cell size driven by an attractor</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">14_morphing_microstructure.py</span></code></p></td>
+<td><p>cell type morphing from gyroid to Schwarz P</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">15_graded_shell.py</span></code></p></td>
+<td><p>wall density graded radially</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">16_graded_voronoi.py</span></code></p></td>
+<td><p>an aperiodic Voronoi foam with graded cells</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">17_attractor_graded_wall.py</span></code></p></td>
+<td><p>wall thickness in millimetres, driven through <code class="docutils literal notranslate"><span class="pre">Remap</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">18_cell_size_grading.py</span></code></p></td>
+<td><p>warping versus blending to grade cell size</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">19_porous_rock.py</span></code></p></td>
+<td><p>massing, skin, graded interior and niches in one field</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="processes">
+<h2>Processes</h2>
+<p>Need the <code class="docutils literal notranslate"><span class="pre">processes</span></code> extra; they take seconds to minutes.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34.0%" />
+<col style="width: 66.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">20_weathered_rock.py</span></code></p></td>
+<td><p>strata, jointing, pitting and abrasion in sequence</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">21_spinodal_foam.py</span></code></p></td>
+<td><p>a bicontinuous foam by phase separation</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">22_coral_growth.py</span></code></p></td>
+<td><p>differential growth, folding and uniform</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">23_constraints.py</span></code></p></td>
+<td><p>weathering that leaves a rib intact</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">24_process_to_print.py</span></code></p></td>
+<td><p>a weathered mass, skinned, filled, exported</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="assembly">
+<h2>Assembly</h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34.0%" />
+<col style="width: 66.0%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">25_pavilion_assembly.py</span></code></p></td>
+<td><p>a 6 m canopy cut into pinned pieces</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">26_piece_by_piece.py</span></code></p></td>
+<td><p>a processed model built one piece at a time</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 
@@ -204,7 +250,8 @@ one unit cell.</p>
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="gettingstarted/installation.html">Installation</a></li>
@@ -212,6 +259,18 @@ one unit cell.</p>
 </ul>
 </li>
 <li class="toctree-l1 nav-item active"><a class="nav-link active reference internal" href="#">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="api.html">API Reference</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.html">compas_vol</a></li>
@@ -221,6 +280,12 @@ one unit cell.</p>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>
@@ -237,8 +302,11 @@ one unit cell.</p>
         
         <ul class="nav flex-column" id="compas-toc">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Examples</a><ul class="nav flex-column">
-<li class="nav-item"><a class="nav-link reference internal" href="#single-operations">Single operations</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#modelling-studies">Modelling studies</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#modelling">Modelling</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#microstructures">Microstructures</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#grading">Grading</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#processes">Processes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#assembly">Assembly</a></li>
 </ul>
 </li>
 </ul>
@@ -262,10 +330,10 @@ one unit cell.</p>
       
 
       
-      <a href="porting.html" title="Porting from COMPAS 1" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+      <a href="processes.html" title="Processes" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
         <div class="nav-title footer-link flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Next</div>
-          Porting from COMPAS 1
+          Processes
         </div>
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
       </a>

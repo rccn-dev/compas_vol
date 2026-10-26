@@ -24,7 +24,7 @@
   
 
   
-  <link rel="prev" title="Octree.to_boxes" href="compas_vol.meshing.Octree.to_boxes.html" />
+  <link rel="prev" title="export_stl" href="compas_vol.meshing.export_stl.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -99,7 +99,7 @@
 <h1>generate_mesh</h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compas_vol.meshing.generate_mesh">
-<span class="sig-prename descclassname"><span class="pre">compas_vol.meshing.</span></span><span class="sig-name descname"><span class="pre">generate_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rccn-dev/compas_vol/blob/main/src/compas_vol/meshing/marching.py#L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">compas_vol.meshing.</span></span><span class="sig-name descname"><span class="pre">generate_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rccn-dev/compas_vol/blob/main/src/compas_vol/meshing/marching.py#L272"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Iso-surface an object into a COMPAS mesh.</p>
 <p>Requires the <code class="docutils literal notranslate"><span class="pre">meshing</span></code> extra (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">compas-vol[meshing]</span></code>).</p>
 <dl class="field-list simple">
@@ -109,12 +109,19 @@
 <li><p><strong>bounds</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.geometry.Box.html#compas.geometry.Box" title="(in COMPAS latest)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Box</span></code></a> | float | sequence) – The sampling domain. See <a class="reference internal" href="compas_vol.meshing.normalize_bounds.html#compas_vol.meshing.normalize_bounds" title="compas_vol.meshing.normalize_bounds"><code class="xref py py-func docutils literal notranslate"><span class="pre">normalize_bounds()</span></code></a>.</p></li>
 <li><p><strong>resolution</strong> (<em>int | tuple[int, int, int]</em>) – The number of samples along each axis.</p></li>
 <li><p><strong>level</strong> (<em>float</em>) – The iso-value to extract.</p></li>
+<li><p><strong>workers</strong> (<em>int, optional</em>) – Threads used for sampling. See <a class="reference internal" href="compas_vol.meshing.sample.html#compas_vol.meshing.sample" title="compas_vol.meshing.sample"><code class="xref py py-func docutils literal notranslate"><span class="pre">sample()</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://compas.dev/compas/latest/api/compas.datastructures.Mesh.html#compas.datastructures.Mesh" title="(in COMPAS latest)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.datastructures.Mesh</span></code></a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>Building a COMPAS mesh from millions of triangles costs more than the
+sampling and the iso-surfacing together, because it is a Python-level
+data structure. To write a file for printing, use
+<a class="reference internal" href="compas_vol.meshing.export_stl.html#compas_vol.meshing.export_stl" title="compas_vol.meshing.export_stl"><code class="xref py py-func docutils literal notranslate"><span class="pre">compas_vol.meshing.export_stl()</span></code></a> instead, which goes from the field
+to the file through arrays only.</p>
 <p class="rubric">Examples</p>
 <div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">compas.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Sphere</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">compas_vol.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">VolSphere</span>
@@ -144,7 +151,8 @@
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../../gettingstarted/installation.html">Installation</a></li>
@@ -152,6 +160,18 @@
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.html">compas_vol</a></li>
@@ -161,6 +181,12 @@
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>
@@ -191,11 +217,11 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-      <a href="compas_vol.meshing.Octree.to_boxes.html" title="Octree.to_boxes" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+      <a href="compas_vol.meshing.export_stl.html" title="export_stl" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
         <div class="nav-title flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Previous</div>
-          Octree.to_boxes
+          export_stl
         </div>
       </a>
       

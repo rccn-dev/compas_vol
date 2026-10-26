@@ -20,11 +20,11 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
 
   
-  <link rel="next" title="bbox_edges" href="generated/compas_vol.utilities.bbox_edges.html" />
+  <link rel="next" title="dumps_tree" href="generated/compas_vol.utilities.dumps_tree.html" />
   
 
   
-  <link rel="prev" title="VolObjectSceneObject.regenerate" href="generated/compas_vol.scene.VolObjectSceneObject.regenerate.html" />
+  <link rel="prev" title="report" href="generated/compas_vol.runtime.report.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -95,44 +95,27 @@
         
         <section id="compas-vol-utilities">
 <span id="module-compas_vol.utilities"></span><h1>compas_vol.utilities</h1>
+<p>What is left of the COMPAS 1 interface: iso-surfacing that accepts the old
+<code class="docutils literal notranslate"><span class="pre">[(min,</span> <span class="pre">max,</span> <span class="pre">n),</span> <span class="pre">...]</span></code> bounds, and sending a tree between processes as JSON.
+Everything here has a better equivalent in <a class="reference internal" href="compas_vol.meshing.html#module-compas_vol.meshing" title="compas_vol.meshing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.meshing</span></code></a>; these
+exist so that scripts written against the original package keep running.</p>
 <section id="functions">
 <h2>Functions</h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.utilities.bbox_edges.html#compas_vol.utilities.bbox_edges" title="compas_vol.utilities.bbox_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bbox_edges</span></code></a></p></td>
-<td><p>The twelve edges of an axis-aligned bounding box, as start/end lists.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.utilities.dumps_tree.html#compas_vol.utilities.dumps_tree" title="compas_vol.utilities.dumps_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dumps_tree</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.utilities.dumps_tree.html#compas_vol.utilities.dumps_tree" title="compas_vol.utilities.dumps_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dumps_tree</span></code></a></p></td>
 <td><p>Serialise a volumetric object tree to a JSON string.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.utilities.export_ipv_mesh.html#compas_vol.utilities.export_ipv_mesh" title="compas_vol.utilities.export_ipv_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_ipv_mesh</span></code></a></p></td>
-<td><p>Export an <code class="docutils literal notranslate"><span class="pre">ipyvolume.widgets.Mesh</span></code> to an OBJ file.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.utilities.export_layer.html#compas_vol.utilities.export_layer" title="compas_vol.utilities.export_layer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_layer</span></code></a></p></td>
-<td><p>Export a horizontal slice through a distance field as an image.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.utilities.export_ski_mesh.html#compas_vol.utilities.export_ski_mesh" title="compas_vol.utilities.export_ski_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_ski_mesh</span></code></a></p></td>
-<td><p>Write vertices, faces and optional normals to an OBJ file.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.utilities.get_compas_mesh.html#compas_vol.utilities.get_compas_mesh" title="compas_vol.utilities.get_compas_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_compas_mesh</span></code></a></p></td>
-<td><p>Build a COMPAS mesh from vertices and faces.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.utilities.get_iso_mesh.html#compas_vol.utilities.get_iso_mesh" title="compas_vol.utilities.get_iso_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iso_mesh</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.utilities.get_iso_mesh.html#compas_vol.utilities.get_iso_mesh" title="compas_vol.utilities.get_iso_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iso_mesh</span></code></a></p></td>
 <td><p>Iso-surface an object into a COMPAS mesh.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.utilities.get_iso_vfs.html#compas_vol.utilities.get_iso_vfs" title="compas_vol.utilities.get_iso_vfs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iso_vfs</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.utilities.get_iso_vfs.html#compas_vol.utilities.get_iso_vfs" title="compas_vol.utilities.get_iso_vfs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_iso_vfs</span></code></a></p></td>
 <td><p>Iso-surface an object into vertices and faces.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.utilities.get_random_vector_2D.html#compas_vol.utilities.get_random_vector_2D" title="compas_vol.utilities.get_random_vector_2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_random_vector_2D</span></code></a></p></td>
-<td><p>A random unit vector in the XY plane.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.utilities.get_random_vector_3D.html#compas_vol.utilities.get_random_vector_3D" title="compas_vol.utilities.get_random_vector_3D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_random_vector_3D</span></code></a></p></td>
-<td><p>A random vector of length <code class="docutils literal notranslate"><span class="pre">r</span></code>, uniformly distributed on the sphere.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.utilities.get_vfs_from_tree.html#compas_vol.utilities.get_vfs_from_tree" title="compas_vol.utilities.get_vfs_from_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vfs_from_tree</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.utilities.get_vfs_from_tree.html#compas_vol.utilities.get_vfs_from_tree" title="compas_vol.utilities.get_vfs_from_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vfs_from_tree</span></code></a></p></td>
 <td><p>Mesh a serialised object tree, for use over COMPAS RPC.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.utilities.loads_tree.html#compas_vol.utilities.loads_tree" title="compas_vol.utilities.loads_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loads_tree</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.utilities.loads_tree.html#compas_vol.utilities.loads_tree" title="compas_vol.utilities.loads_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loads_tree</span></code></a></p></td>
 <td><p>Rebuild a volumetric object tree from a JSON string.</p></td>
 </tr>
 </tbody>
@@ -161,7 +144,8 @@
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../gettingstarted/installation.html">Installation</a></li>
@@ -169,6 +153,18 @@
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="compas_vol.html">compas_vol</a></li>
@@ -178,6 +174,12 @@
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item active"><a class="nav-link active reference internal" href="#">compas_vol.utilities</a></li>
 </ul>
@@ -208,20 +210,20 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-      <a href="generated/compas_vol.scene.VolObjectSceneObject.regenerate.html" title="VolObjectSceneObject.regenerate" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+      <a href="generated/compas_vol.runtime.report.html" title="report" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
         <div class="nav-title flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Previous</div>
-          VolObjectSceneObject.regenerate
+          report
         </div>
       </a>
       
 
       
-      <a href="generated/compas_vol.utilities.bbox_edges.html" title="bbox_edges" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+      <a href="generated/compas_vol.utilities.dumps_tree.html" title="dumps_tree" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
         <div class="nav-title footer-link flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Next</div>
-          bbox_edges
+          dumps_tree
         </div>
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
       </a>

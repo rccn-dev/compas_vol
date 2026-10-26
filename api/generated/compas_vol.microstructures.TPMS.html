@@ -99,17 +99,21 @@
 <h1>TPMS</h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="compas_vol.microstructures.TPMS">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compas_vol.microstructures.</span></span><span class="sig-name descname"><span class="pre">TPMS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tpmstype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rccn-dev/compas_vol/blob/main/src/compas_vol/microstructures/tpms.py#L71"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">compas_vol.microstructures.</span></span><span class="sig-name descname"><span class="pre">TPMS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tpmstype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wavelength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rccn-dev/compas_vol/blob/main/src/compas_vol/microstructures/tpms.py#L113"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">VolObject</span></code></p>
 <p>A triply periodic minimal surface, defined by a type and a wavelength.</p>
-<p>The field is a trigonometric approximation of the surface, not a metric
-distance field.</p>
+<p>The field is a trigonometric (nodal) approximation of the surface, not a
+metric distance field, and it describes a surface with no thickness. For a
+printable solid with a wall thickness in model units, and a period given
+as the actual unit cell size, use <a class="reference internal" href="compas_vol.microstructures.TPMSSolid.html#compas_vol.microstructures.TPMSSolid" title="compas_vol.microstructures.TPMSSolid"><code class="xref py py-class docutils literal notranslate"><span class="pre">TPMSSolid</span></code></a> instead.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">wavelength</span></code> is <em>half</em> the unit cell size: the field has
+period <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">wavelength</span></code> along each axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tpmstype</strong> (<em>int | str</em>) – The surface type, as an index into <code class="xref py py-data docutils literal notranslate"><span class="pre">TPMSTYPES</span></code> or as a name.
-One of Gyroid, SchwartzP, Diamond, Neovius, Lidinoid, FischerKoch.</p></li>
-<li><p><strong>wavelength</strong> (<em>float</em>) – The wavelength of the trigonometric function.</p></li>
+One of Gyroid, SchwarzP, Diamond, Neovius, Lidinoid, FischerKoch, IWP.</p></li>
+<li><p><strong>wavelength</strong> (<em>float</em>) – Half the period of the field along each axis.</p></li>
 </ul>
 </dd>
 </dl>
@@ -182,7 +186,8 @@ One of Gyroid, SchwartzP, Diamond, Neovius, Lidinoid, FischerKoch.</p></li>
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../../gettingstarted/installation.html">Installation</a></li>
@@ -190,6 +195,18 @@ One of Gyroid, SchwartzP, Diamond, Neovius, Lidinoid, FischerKoch.</p></li>
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.html">compas_vol</a></li>
@@ -199,6 +216,12 @@ One of Gyroid, SchwartzP, Diamond, Neovius, Lidinoid, FischerKoch.</p></li>
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>

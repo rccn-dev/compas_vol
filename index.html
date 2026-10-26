@@ -90,119 +90,78 @@
         <section id="compas-vol">
 <h1>compas_vol</h1>
 <p>Volumetric modelling with signed distance functions, for <strong>COMPAS 2</strong>.</p>
-<p>This is a fork of <a class="reference external" href="https://github.com/dbt-ethz/compas_vol">dbt-ethz/compas_vol</a>,
-originally written by Mathias Bernhard at Digital Building Technologies, ETH
-Zurich. It updates the package to COMPAS 2, NumPy 2 and Python 3.13, and fixes a
-number of defects carried by the original. See <a class="reference internal" href="porting.html"><span class="doc">Porting from COMPAS 1</span></a> for the details.</p>
+<p>A fork of <a class="reference external" href="https://github.com/dbt-ethz/compas_vol">dbt-ethz/compas_vol</a> by
+Mathias Bernhard (Digital Building Technologies, ETH Zurich), ported to COMPAS 2
+and NumPy 2 and extended with processes, fabrication checks, assembly and
+Grasshopper components. <a class="reference internal" href="porting.html"><span class="doc">Porting from COMPAS 1</span></a> lists the differences.</p>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#why-signed-distance-functions">Why signed distance functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#how-the-package-is-organised">How the package is organised</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gettingstarted/installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gettingstarted/firststeps.html">First Steps</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#modelling">Modelling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#microstructures">Microstructures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#grading">Grading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#processes">Processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#assembly">Assembly</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="processes.html">Processes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="processes.html#one-operator">One operator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html#invariants">Invariants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html#constraints">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html#approximations">Approximations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html#accuracy-and-cost">Accuracy and cost</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html#unstable-growth">Unstable growth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processes.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fabrication.html">Fabrication</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assembly.html">Assembly</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="assembly.html#cutting">Cutting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assembly.html#building-piece-by-piece">Building piece by piece</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contexts.html">Contexts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contexts.html#which-context-am-i-in">Which context am I in?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contexts.html#headless">Headless</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contexts.html#with-compas-viewer">With compas_viewer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="grasshopper.html">Grasshopper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="grasshopper.html#installing">Installing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grasshopper.html#components">Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grasshopper.html#processes">Processes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grasshopper.html#from-canvas-to-script">From canvas to script</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="development.html#tests-and-docs">Tests and docs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#building-the-components">Building the components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development.html#adding-a-component">Adding a component</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="porting.html">Porting from COMPAS 1</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/compas_vol.html">compas_vol</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/compas_vol.primitives.html">compas_vol.primitives</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/compas_vol.combinations.html">compas_vol.combinations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/compas_vol.modifications.html">compas_vol.modifications</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/compas_vol.microstructures.html">compas_vol.microstructures</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/compas_vol.analysis.html">compas_vol.analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/compas_vol.meshing.html">compas_vol.meshing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/compas_vol.scene.html">compas_vol.scene</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/compas_vol.utilities.html">compas_vol.utilities</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/compas_vol.primitives.html">compas_vol.primitives</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.GDF.html">GDF</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.Heart.html">Heart</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.PlatonicSolid.html">PlatonicSolid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolBox.html">VolBox</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolCapsule.html">VolCapsule</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolCone.html">VolCone</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolCylinder.html">VolCylinder</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolEgg.html">VolEgg</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolEllipsoid.html">VolEllipsoid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolExtrusion.html">VolExtrusion</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolPlane.html">VolPlane</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolPolyhedron.html">VolPolyhedron</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolSphere.html">VolSphere</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.primitives.VolTorus.html">VolTorus</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/compas_vol.combinations.html">compas_vol.combinations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.Addition.html">Addition</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.Blend.html">Blend</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.Division.html">Division</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.Intersection.html">Intersection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.Morph.html">Morph</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.Multiplication.html">Multiplication</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.SmoothIntersection.html">SmoothIntersection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.SmoothSubtraction.html">SmoothSubtraction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.SmoothUnion.html">SmoothUnion</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.SmoothUnionList.html">SmoothUnionList</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.Subtraction.html">Subtraction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.combinations.Union.html">Union</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/compas_vol.modifications.html">compas_vol.modifications</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.modifications.Blur.html">Blur</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.modifications.Factor.html">Factor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.modifications.MultiShell.html">MultiShell</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.modifications.Overlay.html">Overlay</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.modifications.Shell.html">Shell</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.modifications.Sine.html">Sine</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.modifications.Twist.html">Twist</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.modifications.VolTransformation.html">VolTransformation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/compas_vol.microstructures.html">compas_vol.microstructures</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.microstructures.Lattice.html">Lattice</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.microstructures.LatticePolar.html">LatticePolar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.microstructures.TPMS.html">TPMS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.microstructures.TPMSAttractor.html">TPMSAttractor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.microstructures.TPMSPolar.html">TPMSPolar</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.microstructures.Voronoi.html">Voronoi</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/compas_vol.analysis.html">compas_vol.analysis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.analysis.Curvature.html">Curvature</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.analysis.Gradient.html">Gradient</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/compas_vol.meshing.html">compas_vol.meshing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.meshing.OctNode.html">OctNode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.meshing.Octree.html">Octree</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.meshing.generate_mesh.html">generate_mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.meshing.generate_vertices_and_faces.html">generate_vertices_and_faces</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.meshing.normalize_bounds.html">normalize_bounds</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.meshing.sample.html">sample</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/compas_vol.scene.html">compas_vol.scene</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.scene.VolObjectSceneObject.html">VolObjectSceneObject</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/compas_vol.utilities.html">compas_vol.utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.bbox_edges.html">bbox_edges</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.dumps_tree.html">dumps_tree</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.export_ipv_mesh.html">export_ipv_mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.export_layer.html">export_layer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.export_ski_mesh.html">export_ski_mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.get_compas_mesh.html">get_compas_mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.get_iso_mesh.html">get_iso_mesh</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.get_iso_vfs.html">get_iso_vfs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.get_random_vector_2D.html">get_random_vector_2D</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.get_random_vector_3D.html">get_random_vector_3D</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.get_vfs_from_tree.html">get_vfs_from_tree</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/generated/compas_vol.utilities.loads_tree.html">loads_tree</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 </div>
@@ -224,7 +183,8 @@ number of defects carried by the original. See <a class="reference internal" hre
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="gettingstarted/installation.html">Installation</a></li>
@@ -232,6 +192,18 @@ number of defects carried by the original. See <a class="reference internal" hre
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="api.html">API Reference</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.html">compas_vol</a></li>
@@ -241,6 +213,12 @@ number of defects carried by the original. See <a class="reference internal" hre
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="api/compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>
@@ -256,7 +234,9 @@ number of defects carried by the original. See <a class="reference internal" hre
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">compas_vol</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">compas_vol</a><ul class="nav flex-column">
+</ul>
+</li>
 </ul>
 
       </div>

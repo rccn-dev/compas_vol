@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <title>compas_vol - compas_vol.nodes</title>
+  
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <meta name="author" content="Mathias Bernhard, ChiaChing-Yen" />
+  <meta name="description" content="" />
+
+  <link rel="shortcut icon" href="../_static/images/compas.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/mono-blue.min.css">
+  <link rel="stylesheet" type="text/css" href="../_static/css/compas.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/compas-reference.css" />
+
+  
+  <link rel="next" title="sphere" href="generated/compas_vol.nodes.sphere.html" />
+  
+
+  
+  <link rel="prev" title="VolObjectSceneObject.regenerate" href="generated/compas_vol.scene.VolObjectSceneObject.regenerate.html" />
+  
+
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</head>
+
+<body data-spy="scroll" data-target="#compas-toc">
+  <!-- header -->
+  <header id="header" class="compas-header d-flex align-items-center">
+    <nav class="navbar navbar-expand navbar-dark col flex-column flex-md-row text-center">
+      <!-- brand -->
+      <a class="navbar-brand" href="https://rccn-dev.github.io/compas_vol/">
+        <img src="../_static/images/compas_icon_white.png" alt="compas_vol" width="48px" height="48px" />
+      </a>
+      <!-- brand -->
+      <!-- primary -->
+      <ul class="navbar-nav">
+        <li class="nav-item active"><a class="nav-link" href="https://rccn-dev.github.io/compas_vol/">compas_vol</a></li>
+      </ul>
+      <!-- primary -->
+      <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        <!-- version -->
+        
+        <meta id="doc_versions" data-url="https://rccn-dev.github.io/compas_vol/doc_versions.txt" data-docs="https://rccn-dev.github.io/compas_vol/">
+        <li class="nav-item nav-versions dropdown">
+          <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            0.2.0
+          </a>
+          <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
+        </li>
+        
+        <!-- version -->
+        <!-- social -->
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/rccn-dev/compas_vol" target="_blank">
+            <span class="fab fa-github fa-1x"></span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://forum.compas-framework.org" target="_blank">
+            <span class="fab fa-discourse fa-1x"></span>
+          </a>
+        </li>
+        <!-- social -->
+      </ul>
+    </nav>
+  </header>
+  <!-- header -->
+  <!-- main -->
+  <div class="container-fluid">
+    <div class="row">
+      <!-- main -->
+      <main class="col-12 col-md-9 col-xl-7 px-4 px-md-5 pt-2 pb-5 compas-content" role="main">
+        
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-3 bg-white px-0">
+            <li class="breadcrumb-item"><a href="../index.html">compas_vol</a></li>
+            
+            <li class="breadcrumb-item"><a href="../api.html">API Reference</a></li>
+            
+            <li class="breadcrumb-item"><a href="compas_vol.html">compas_vol</a></li>
+            
+            <!-- <li class="breadcrumb-item active" aria-current="page">compas_vol.nodes</li> -->
+          </ol>
+        </nav>
+        
+
+        
+        
+        <section id="compas-vol-nodes">
+<span id="module-compas_vol.nodes"></span><h1>compas_vol.nodes</h1>
+<p>The Grasshopper components, without Grasshopper.</p>
+<p>Every component in <code class="docutils literal notranslate"><span class="pre">compas_vol/ghpython/components/</span></code> is a thin wrapper of
+one function here: <code class="docutils literal notranslate"><span class="pre">Cv_Box</span></code> calls <a class="reference internal" href="generated/compas_vol.nodes.box.html#compas_vol.nodes.box" title="compas_vol.nodes.box"><code class="xref py py-func docutils literal notranslate"><span class="pre">box()</span></code></a>, <code class="docutils literal notranslate"><span class="pre">Cv_Boolean</span></code> calls
+<a class="reference internal" href="generated/compas_vol.nodes.boolean.html#compas_vol.nodes.boolean" title="compas_vol.nodes.boolean"><code class="xref py py-func docutils literal notranslate"><span class="pre">boolean()</span></code></a>, and so on. Each function takes the component’s inputs by the
+same names, with the same defaults, and returns its outputs in the same order
+– but in COMPAS and NumPy types instead of Rhino ones. The component only
+converts on the way in and out (<a class="reference internal" href="compas_vol.ghpython.html#module-compas_vol.ghpython" title="compas_vol.ghpython"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.ghpython</span></code></a>).</p>
+<p>That has two uses. A definition worked out on the canvas can be rewritten as a
+plain script, node for node, and run headless: no canvas, no Rhino geometry in
+between, sampling on every core, and the final model written with
+<a class="reference internal" href="generated/compas_vol.meshing.export_stl.html#compas_vol.meshing.export_stl" title="compas_vol.meshing.export_stl"><code class="xref py py-func docutils literal notranslate"><span class="pre">compas_vol.meshing.export_stl()</span></code></a> at a resolution Grasshopper could not
+draw. And everything a component does can be tested here, where pytest runs,
+rather than only inside Rhino. <code class="docutils literal notranslate"><span class="pre">tests/test_ghpython.py</span></code> checks that every
+node’s signature still matches its component.</p>
+<p>Inputs follow Grasshopper’s conventions, because that is where they are wired
+up: an input left unconnected arrives as <code class="docutils literal notranslate"><span class="pre">None</span></code> and falls back to its
+default, and a node whose required input is missing returns <code class="docutils literal notranslate"><span class="pre">None</span></code> rather
+than raising, the way an unwired component stays empty.</p>
+<p>The same model as a canvas of five components:</p>
+<div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">compas.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">compas_vol</span><span class="w"> </span><span class="kn">import</span> <span class="n">nodes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ball</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">sphere</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">12.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cube</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">body</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">boolean</span><span class="p">([</span><span class="n">cube</span><span class="p">,</span> <span class="n">ball</span><span class="p">],</span> <span class="s2">&quot;intersection&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">body</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">boolean</span><span class="p">([</span><span class="n">body</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">tpms</span><span class="p">(</span><span class="s2">&quot;Gyroid&quot;</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)],</span> <span class="s2">&quot;intersection&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+</div>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.sphere.html#compas_vol.nodes.sphere" title="compas_vol.nodes.sphere"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sphere</span></code></a></p></td>
+<td><p>A sphere as a signed distance field.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.box.html#compas_vol.nodes.box" title="compas_vol.nodes.box"><code class="xref py py-obj docutils literal notranslate"><span class="pre">box</span></code></a></p></td>
+<td><p>A box as a signed distance field, with optionally rounded edges.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.cylinder.html#compas_vol.nodes.cylinder" title="compas_vol.nodes.cylinder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cylinder</span></code></a></p></td>
+<td><p>A cylinder as a signed distance field.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.tpms.html#compas_vol.nodes.tpms" title="compas_vol.nodes.tpms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tpms</span></code></a></p></td>
+<td><p>A triply periodic minimal surface, thickened into a printable solid.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.boolean.html#compas_vol.nodes.boolean" title="compas_vol.nodes.boolean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">boolean</span></code></a></p></td>
+<td><p>Combine volumetric objects, optionally with a smooth blend at the seam.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.shell.html#compas_vol.nodes.shell" title="compas_vol.nodes.shell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shell</span></code></a></p></td>
+<td><p>Hollow a volumetric object out into a shell of even thickness.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.abrasion.html#compas_vol.nodes.abrasion" title="compas_vol.nodes.abrasion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abrasion</span></code></a></p></td>
+<td><p>Weathering that rounds: what sticks out wears first.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.differential.html#compas_vol.nodes.differential" title="compas_vol.nodes.differential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">differential</span></code></a></p></td>
+<td><p>Weathering by hardness: soft rock retreats, hard rock stands proud.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.pitting.html#compas_vol.nodes.pitting" title="compas_vol.nodes.pitting"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pitting</span></code></a></p></td>
+<td><p>Weathering into hollows that deepen themselves: tafoni, honeycombing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.strata.html#compas_vol.nodes.strata" title="compas_vol.nodes.strata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strata</span></code></a></p></td>
+<td><p>Bedding: hard and soft layers weathering into ledges and overhangs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.runoff.html#compas_vol.nodes.runoff" title="compas_vol.nodes.runoff"><code class="xref py py-obj docutils literal notranslate"><span class="pre">runoff</span></code></a></p></td>
+<td><p>Rain: water gathers downhill over the top of the model and cuts gullies.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.jointing.html#compas_vol.nodes.jointing" title="compas_vol.nodes.jointing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jointing</span></code></a></p></td>
+<td><p>Joints: the mass breaks into blocks, the seams opening from outside in.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.fingering.html#compas_vol.nodes.fingering" title="compas_vol.nodes.fingering"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fingering</span></code></a></p></td>
+<td><p>Growth that folds into lobes and valleys: the brain-coral mechanism.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.accretion.html#compas_vol.nodes.accretion" title="compas_vol.nodes.accretion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accretion</span></code></a></p></td>
+<td><p>Growth that fills hollows: deposition settling where it is sheltered.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.branching.html#compas_vol.nodes.branching" title="compas_vol.nodes.branching"><code class="xref py py-obj docutils literal notranslate"><span class="pre">branching</span></code></a></p></td>
+<td><p>A branching network grown by space colonization, drawn as a solid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.spinodal.html#compas_vol.nodes.spinodal" title="compas_vol.nodes.spinodal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spinodal</span></code></a></p></td>
+<td><p>A bicontinuous foam by phase separation: an aperiodic TPMS.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.reactiondiffusion.html#compas_vol.nodes.reactiondiffusion" title="compas_vol.nodes.reactiondiffusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reactiondiffusion</span></code></a></p></td>
+<td><p>Gray-Scott reaction-diffusion, set solid: spots, worms and labyrinths.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.morphology.html#compas_vol.nodes.morphology" title="compas_vol.nodes.morphology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">morphology</span></code></a></p></td>
+<td><p>Enforce a minimum feature size: remove what is too thin, or fill what is too narrow.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.mesh.html#compas_vol.nodes.mesh" title="compas_vol.nodes.mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh</span></code></a></p></td>
+<td><p>Sample a volumetric object over a box and extract its surface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.nodes.inspect.html#compas_vol.nodes.inspect" title="compas_vol.nodes.inspect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inspect</span></code></a></p></td>
+<td><p>Check a volumetric object for the things that stop a model printing.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.nodes.info.html#compas_vol.nodes.info" title="compas_vol.nodes.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a></p></td>
+<td><p>Report what compas_vol can do here, and what is missing.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The process nodes – erosion, growth, phase separation – are simulations on a
+sampled grid rather than expressions, and each returns its result as a
+<a class="reference internal" href="generated/compas_vol.primitives.VolGrid.html#compas_vol.primitives.VolGrid" title="compas_vol.primitives.VolGrid"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_vol.primitives.VolGrid</span></code></a>, so it combines, shells and meshes like
+anything else. Handed a grid with no <code class="docutils literal notranslate"><span class="pre">bounds</span></code>, a process runs on that grid
+as it is, which is how processes chain without resampling; and the mesh and
+inspect nodes, handed a grid with no <code class="docutils literal notranslate"><span class="pre">bounds</span></code>, read the domain off it:</p>
+<div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">body</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">worn</span><span class="p">,</span> <span class="n">history</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">abrasion</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pitted</span><span class="p">,</span> <span class="n">history</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">pitting</span><span class="p">(</span><span class="n">worn</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">mesh</span><span class="p">(</span><span class="n">pitted</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+</div>
+</section>
+
+        
+      </main>
+      <!-- content -->
+      <!-- sidebar -->
+      <div class="col-12 col-md-3 compas-sidebar" role="navigation">
+        <form id="search" class="d-flex align-items-center compas-searchbox" action="../search.html" method="get">
+          <input class="form-control" type="text" name="q" placeholder="Search docs" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+          <button class="navbar-toggler d-md-none" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </form>
+        
+        
+        <div id="compas-navigation" class="collapse compas-navigation">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../gettingstarted/installation.html">Installation</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../gettingstarted/firststeps.html">First Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../porting.html">Porting from COMPAS 1</a></li>
+<li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../api.html">API Reference</a><ul class="nav flex-column collapse show active">
+<li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="compas_vol.html">compas_vol</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.primitives.html">compas_vol.primitives</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.combinations.html">compas_vol.combinations</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.modifications.html">compas_vol.modifications</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.microstructures.html">compas_vol.microstructures</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.analysis.html">compas_vol.analysis</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item active"><a class="nav-link active reference internal" href="#">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.runtime.html">compas_vol.runtime</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.scene.html">compas_vol.scene</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.utilities.html">compas_vol.utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../license.html">License</a></li>
+</ul>
+
+        </div>
+        
+      </div>
+      <!-- sidebar -->
+      <!-- toc -->
+      <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+        
+        <ul class="nav flex-column" id="compas-toc">
+<li class="nav-item"><a class="nav-link reference internal" href="#">compas_vol.nodes</a></li>
+</ul>
+
+      </div>
+      <!-- toc -->
+    </div>
+  </div>
+  <!-- main -->
+  <!-- footer -->
+  <footer class="compas-footer">
+    <nav class="nav p-2">
+      
+      <a href="generated/compas_vol.scene.VolObjectSceneObject.regenerate.html" title="VolObjectSceneObject.regenerate" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
+        <div class="nav-title flex-grow-1 align-self-center">
+          <div class="nav-direction small font-weight-light">Previous</div>
+          VolObjectSceneObject.regenerate
+        </div>
+      </a>
+      
+
+      
+      <a href="generated/compas_vol.nodes.sphere.html" title="sphere" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <div class="nav-title footer-link flex-grow-1 align-self-center">
+          <div class="nav-direction small font-weight-light">Next</div>
+          sphere
+        </div>
+        <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
+      </a>
+      
+    </nav>
+  </footer>
+  <!-- footer -->
+  <!-- below -->
+  <div class="below py-5" style="background-color: #222;">
+    <div class="container">
+      <div class="row flex-column">
+        <div class="col-12 col-md-6 mx-md-auto text-center">
+          <h4 class="pb-3 below-text">COMPAS</h4>
+          <p class="below-text">
+            A computational framework for collaboration and research
+            in Architecture, Engineering, Fabrication, and Construction.
+          </p>
+          <nav class="nav justify-content-center pb-3">
+            <a class="nav-link mx-2 px-0 below-link" href="http://github.com/compas-dev" target="_blank">
+              <span class="fab fa-github fa-1x"></span>
+            </a>
+            <a class="nav-link mx-2 px-0 below-link" href="http://forum.compas-framework.org" target="_blank">
+              <span class="fab fa-discourse fa-1x"></span>
+            </a>
+            <a class="nav-link mx-2 px-0 below-link" href="https://pypi.org/project/COMPAS/" target="_blank">
+              <span class="fab fa-python fa-1x"></span>
+            </a>
+          </nav>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <p class="p-0 m-0 below-text">Copyright &copy; 2017-2021 compas-dev</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- below -->
+  <!-- scripts -->
+  <script id="documentation_options" data-url_root="" src="../_static/documentation_options.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+
+  <script src="../_static/underscore.js"></script>
+  <script src="../_static/doctools.js"></script>
+  <script src="../_static/searchtools.js"></script>
+  <script src="../_static/language_data.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $(".language-default code").addClass("python");
+      $(".language-python code").addClass("python");
+      $(".language-bash code").addClass("bash");
+      $(".language-cpp code").addClass("cpp");
+      $(".language-json code").addClass("json");
+      $(".language-none code").addClass("plaintext");
+
+      hljs.initHighlighting();
+      anchors.add();
+
+      new ClipboardJS(".btn.copy", {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+
+      $("#compas-navigation li.active > ul").each(function() {
+        var ul = $(this);
+        if (! ul.hasClass("show")) {
+          ul.addClass("show");
+        }
+      });
+
+      $("#compas-navigation li.toctree-l1").has("ul").each(function() {
+        var li = $(this);
+        li.addClass("has-children");
+        if (li.hasClass("active")) {
+          li.prepend('<span class="menu-toggle"><i class="fas fa-chevron-up"></i></span>');
+        }
+        else {
+          li.prepend('<span class="menu-toggle"><i class="fas fa-chevron-down"></i></span>');
+        }
+      });
+
+      $(".menu-toggle").click(function() {
+        var toggle = $(this);
+        toggle.siblings("ul").toggleClass("show");
+      });
+
+    });
+
+
+    var url = $("#doc_versions").data("url");
+    var docs_site = $("#doc_versions").data("docs");
+
+    if (url) {
+      $.get(url, res => {
+        var lines = res.match(/[^\r\n]+/g);
+        lines.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+        lines.reverse();
+        lines.forEach(version => {
+          $("#doc_version_list").append("<a class=\"dropdown-item\" href=\"" + docs_site + version + "\">" + version + "</a>");
+        });
+
+        var selected_version = $('.nav-versions .dropdown-item').filter(function (i, ver) {
+          return window.location.href.startsWith(ver.href);
+        });
+        selected_version.addClass('active');
+        $("#bd-versions").text(selected_version.text());
+
+      })
+    }
+  </script>
+  <!-- scripts -->
+  
+  
+</body>
+
+</html>

@@ -20,7 +20,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-  <link rel="next" title="normalize_bounds" href="compas_vol.meshing.normalize_bounds.html" />
+  <link rel="next" title="iso_surface" href="compas_vol.meshing.iso_surface.html" />
   
 
   
@@ -99,8 +99,8 @@
 <h1>generate_vertices_and_faces</h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compas_vol.meshing.generate_vertices_and_faces">
-<span class="sig-prename descclassname"><span class="pre">compas_vol.meshing.</span></span><span class="sig-name descname"><span class="pre">generate_vertices_and_faces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rccn-dev/compas_vol/blob/main/src/compas_vol/meshing/marching.py#L95"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Iso-surface an object, returning raw vertices and triangular faces.</p>
+<span class="sig-prename descclassname"><span class="pre">compas_vol.meshing.</span></span><span class="sig-name descname"><span class="pre">generate_vertices_and_faces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rccn-dev/compas_vol/blob/main/src/compas_vol/meshing/marching.py#L243"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Sample an object and iso-surface it, returning vertices and faces.</p>
 <p>Requires the <code class="docutils literal notranslate"><span class="pre">meshing</span></code> extra (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">compas-vol[meshing]</span></code>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -110,10 +110,12 @@
 <li><p><strong>resolution</strong> (<em>int | tuple[int, int, int]</em>) – The number of samples along each axis.</p></li>
 <li><p><strong>level</strong> (<em>float</em>) – The iso-value to extract. <code class="docutils literal notranslate"><span class="pre">0.0</span></code> is the surface of the object;
 negative values shrink it, positive values grow it.</p></li>
+<li><p><strong>workers</strong> (<em>int, optional</em>) – Threads used for sampling. See <a class="reference internal" href="compas_vol.meshing.sample.html#compas_vol.meshing.sample" title="compas_vol.meshing.sample"><code class="xref py py-func docutils literal notranslate"><span class="pre">sample()</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>] – Vertices in world coordinates, and triangular faces.</p>
+<dd class="field-even"><p>tuple[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>] – Vertices in world coordinates, and triangular faces, wound so that
+their normals point out of the solid.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -136,7 +138,8 @@ negative values shrink it, positive values grow it.</p></li>
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../../gettingstarted/installation.html">Installation</a></li>
@@ -144,6 +147,18 @@ negative values shrink it, positive values grow it.</p></li>
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.html">compas_vol</a></li>
@@ -153,6 +168,12 @@ negative values shrink it, positive values grow it.</p></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>
@@ -193,10 +214,10 @@ negative values shrink it, positive values grow it.</p></li>
       
 
       
-      <a href="compas_vol.meshing.normalize_bounds.html" title="normalize_bounds" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+      <a href="compas_vol.meshing.iso_surface.html" title="iso_surface" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
         <div class="nav-title footer-link flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Next</div>
-          normalize_bounds
+          iso_surface
         </div>
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
       </a>

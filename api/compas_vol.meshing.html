@@ -112,17 +112,29 @@
 <h2>Functions</h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.meshing.generate_mesh.html#compas_vol.meshing.generate_mesh" title="compas_vol.meshing.generate_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_mesh</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.meshing.export_stl.html#compas_vol.meshing.export_stl" title="compas_vol.meshing.export_stl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_stl</span></code></a></p></td>
+<td><p>Sample, iso-surface and write a volumetric object as a binary STL.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.meshing.generate_mesh.html#compas_vol.meshing.generate_mesh" title="compas_vol.meshing.generate_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_mesh</span></code></a></p></td>
 <td><p>Iso-surface an object into a COMPAS mesh.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.meshing.generate_vertices_and_faces.html#compas_vol.meshing.generate_vertices_and_faces" title="compas_vol.meshing.generate_vertices_and_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_vertices_and_faces</span></code></a></p></td>
-<td><p>Iso-surface an object, returning raw vertices and triangular faces.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.meshing.generate_vertices_and_faces.html#compas_vol.meshing.generate_vertices_and_faces" title="compas_vol.meshing.generate_vertices_and_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_vertices_and_faces</span></code></a></p></td>
+<td><p>Sample an object and iso-surface it, returning vertices and faces.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.meshing.normalize_bounds.html#compas_vol.meshing.normalize_bounds" title="compas_vol.meshing.normalize_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_bounds</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.meshing.iso_surface.html#compas_vol.meshing.iso_surface" title="compas_vol.meshing.iso_surface"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iso_surface</span></code></a></p></td>
+<td><p>Iso-surface a grid of values that has already been sampled.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.meshing.is_watertight.html#compas_vol.meshing.is_watertight" title="compas_vol.meshing.is_watertight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_watertight</span></code></a></p></td>
+<td><p>Whether a triangle mesh is closed and manifold once written as STL and read back.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.meshing.normalize_bounds.html#compas_vol.meshing.normalize_bounds" title="compas_vol.meshing.normalize_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_bounds</span></code></a></p></td>
 <td><p>Coerce a bounds specification to <code class="docutils literal notranslate"><span class="pre">(xmin,</span> <span class="pre">ymin,</span> <span class="pre">zmin,</span> <span class="pre">xmax,</span> <span class="pre">ymax,</span> <span class="pre">zmax)</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.meshing.sample.html#compas_vol.meshing.sample" title="compas_vol.meshing.sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/compas_vol.meshing.sample.html#compas_vol.meshing.sample" title="compas_vol.meshing.sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample</span></code></a></p></td>
 <td><p>Sample the distance field of an object on a regular grid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/compas_vol.meshing.write_stl.html#compas_vol.meshing.write_stl" title="compas_vol.meshing.write_stl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_stl</span></code></a></p></td>
+<td><p>Write a triangle mesh to a binary STL file.</p></td>
 </tr>
 </tbody>
 </table>
@@ -145,7 +157,8 @@
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../gettingstarted/installation.html">Installation</a></li>
@@ -153,6 +166,18 @@
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="compas_vol.html">compas_vol</a></li>
@@ -162,6 +187,12 @@
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item active"><a class="nav-link active reference internal" href="#">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>

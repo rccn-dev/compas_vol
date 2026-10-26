@@ -20,7 +20,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-  <link rel="next" title="compas_vol.scene" href="../compas_vol.scene.html" />
+  <link rel="next" title="write_stl" href="compas_vol.meshing.write_stl.html" />
   
 
   
@@ -99,14 +99,21 @@
 <h1>sample</h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="compas_vol.meshing.sample">
-<span class="sig-prename descclassname"><span class="pre">compas_vol.meshing.</span></span><span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rccn-dev/compas_vol/blob/main/src/compas_vol/meshing/marching.py#L60"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">compas_vol.meshing.</span></span><span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/rccn-dev/compas_vol/blob/main/src/compas_vol/meshing/marching.py#L74"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Sample the distance field of an object on a regular grid.</p>
+<p>The grid is evaluated in slabs along X, in parallel. NumPy releases the
+GIL inside its own operations, so threads give real parallelism here:
+about 5x on ten cores for an analytic field, 3x for one whose Python-level
+loop is the cost. Slabs are independent and each writes its own rows, so
+the result is identical to the serial one, bit for bit.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">compas_vol.base.VolObject</span></code>) – The object to sample.</p></li>
 <li><p><strong>bounds</strong> (<a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.geometry.Box.html#compas.geometry.Box" title="(in COMPAS latest)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Box</span></code></a> | float | sequence) – The sampling domain. See <a class="reference internal" href="compas_vol.meshing.normalize_bounds.html#compas_vol.meshing.normalize_bounds" title="compas_vol.meshing.normalize_bounds"><code class="xref py py-func docutils literal notranslate"><span class="pre">normalize_bounds()</span></code></a>.</p></li>
 <li><p><strong>resolution</strong> (<em>int | tuple[int, int, int]</em>) – The number of samples along each axis.</p></li>
+<li><p><strong>workers</strong> (<em>int, optional</em>) – Threads to use. Defaults to the number of cores; pass <code class="docutils literal notranslate"><span class="pre">1</span></code> to sample
+serially.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -114,6 +121,15 @@
 the spacing between samples along each axis.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">compas.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Sphere</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">compas_vol.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">VolSphere</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">compas_vol.meshing</span><span class="w"> </span><span class="kn">import</span> <span class="n">sample</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dm</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">spacing</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">VolSphere</span><span class="p">(</span><span class="n">Sphere</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))),</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dm</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(32, 32, 32)</span>
+</code></pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -134,7 +150,8 @@ the spacing between samples along each axis.</p>
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../../gettingstarted/installation.html">Installation</a></li>
@@ -142,6 +159,18 @@ the spacing between samples along each axis.</p>
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../../porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.html">compas_vol</a></li>
@@ -151,6 +180,12 @@ the spacing between samples along each axis.</p>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item active"><a class="nav-link reference internal" href="../compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>
@@ -191,10 +226,10 @@ the spacing between samples along each axis.</p>
       
 
       
-      <a href="../compas_vol.scene.html" title="compas_vol.scene" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+      <a href="compas_vol.meshing.write_stl.html" title="write_stl" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
         <div class="nav-title footer-link flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Next</div>
-          compas_vol.scene
+          write_stl
         </div>
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
       </a>

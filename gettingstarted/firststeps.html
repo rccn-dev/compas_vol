@@ -95,7 +95,8 @@
 <h1>First Steps</h1>
 <section id="building-a-shape">
 <h2>Building a shape</h2>
-<p>Volumetric objects wrap COMPAS geometry and compose with each other:</p>
+<p>Volumetric objects wrap COMPAS geometry and compose with each other. Nothing
+is evaluated until it is asked for:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compas.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Box</span><span class="p">,</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Sphere</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas_vol.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">VolBox</span><span class="p">,</span> <span class="n">VolSphere</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">compas_vol.combinations</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subtraction</span>
@@ -106,38 +107,36 @@
 <span class="p">)</span>
 </code></pre></div>
 </div>
-<p>Nothing has been evaluated yet. <code class="docutils literal notranslate"><span class="pre">shape</span></code> is a function; it describes the
-geometry without sampling it.</p>
 </section>
 <section id="evaluating-the-field">
 <h2>Evaluating the field</h2>
-<div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="n">shape</span><span class="o">.</span><span class="n">get_distance</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>     <span class="c1"># -&gt; float, signed distance at one point</span>
-</code></pre></div>
-</div>
-<p>For anything more than a handful of points, use the vectorized form, which
-evaluates a whole grid at once:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+<span class="n">shape</span><span class="o">.</span><span class="n">get_distance</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>                        <span class="c1"># one point</span>
 <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ogrid</span><span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">100</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">100</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">:</span><span class="mi">20</span><span class="p">:</span><span class="mi">100</span><span class="n">j</span><span class="p">]</span>
-<span class="n">field</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">get_distance_numpy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">get_distance_numpy</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>            <span class="c1"># a whole grid</span>
 </code></pre></div>
 </div>
 </section>
-<section id="meshing">
-<h2>Meshing</h2>
-<div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compas_vol.meshing</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_mesh</span>
+<section id="meshing-and-export">
+<h2>Meshing and export</h2>
+<div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compas_vol.meshing</span><span class="w"> </span><span class="kn">import</span> <span class="n">export_stl</span><span class="p">,</span> <span class="n">generate_mesh</span><span class="p">,</span> <span class="n">iso_surface</span><span class="p">,</span> <span class="n">sample</span>
 
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">generate_mesh</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>   <span class="c1"># -&gt; compas Mesh</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">generate_mesh</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>     <span class="c1"># a COMPAS Mesh</span>
+<span class="n">export_stl</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;part.stl&quot;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>   <span class="c1"># straight to a file</span>
+
+<span class="n">values</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">spacing</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span> <span class="o">=</span> <span class="n">iso_surface</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>       <span class="c1"># a grid you already have</span>
 </code></pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">bounds</span></code> accepts a <a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.geometry.Box.html#compas.geometry.Box" title="(in COMPAS latest)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Box</span></code></a>, a scalar <code class="docutils literal notranslate"><span class="pre">s</span></code> for the cube
-<code class="docutils literal notranslate"><span class="pre">[-s,</span> <span class="pre">s]</span></code>, a 6-sequence <code class="docutils literal notranslate"><span class="pre">(xmin,</span> <span class="pre">ymin,</span> <span class="pre">zmin,</span> <span class="pre">xmax,</span> <span class="pre">ymax,</span> <span class="pre">zmax)</span></code>, or three
-<code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs.</p>
+<p><code class="docutils literal notranslate"><span class="pre">bounds</span></code> is a <a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.geometry.Box.html#compas.geometry.Box" title="(in COMPAS latest)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Box</span></code></a>, a scalar <code class="docutils literal notranslate"><span class="pre">s</span></code> for the cube
+<code class="docutils literal notranslate"><span class="pre">[-s,</span> <span class="pre">s]</span></code>, <code class="docutils literal notranslate"><span class="pre">(xmin,</span> <span class="pre">ymin,</span> <span class="pre">zmin,</span> <span class="pre">xmax,</span> <span class="pre">ymax,</span> <span class="pre">zmax)</span></code>, or three <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code>
+pairs. Use <a class="reference internal" href="../api/generated/compas_vol.meshing.export_stl.html#compas_vol.meshing.export_stl" title="compas_vol.meshing.export_stl"><code class="xref py py-func docutils literal notranslate"><span class="pre">export_stl()</span></code></a> for files: building a COMPAS
+mesh of a few million triangles costs more than sampling and meshing together.</p>
 </section>
 <section id="viewing">
 <h2>Viewing</h2>
-<p>Volumetric objects are registered COMPAS 2 scene objects, so they go into a
-scene next to any other geometry:</p>
+<p>Volumetric objects are COMPAS scene objects:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compas_viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Viewer</span>
 
 <span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">()</span>
@@ -145,32 +144,20 @@ scene next to any other geometry:</p>
 <span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
 </div>
-<p>An implicit surface has to be sampled before it can be drawn, so the sampling
-parameters ride along on the <code class="docutils literal notranslate"><span class="pre">scene.add</span></code> call, exactly as <code class="docutils literal notranslate"><span class="pre">u</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code> do
-for a <a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.geometry.Sphere.html#compas.geometry.Sphere" title="(in COMPAS latest)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.geometry.Sphere</span></code></a>.</p>
-<p>Unlike <code class="docutils literal notranslate"><span class="pre">u</span></code>/<code class="docutils literal notranslate"><span class="pre">v</span></code>, <strong>there is no sensible default for</strong> <code class="docutils literal notranslate"><span class="pre">bounds</span></code>, and it is
-required. A <a class="reference internal" href="../api/generated/compas_vol.microstructures.TPMS.html#compas_vol.microstructures.TPMS" title="compas_vol.microstructures.TPMS"><code class="xref py py-class docutils literal notranslate"><span class="pre">TPMS</span></code></a> or
-<a class="reference internal" href="../api/generated/compas_vol.microstructures.Lattice.html#compas_vol.microstructures.Lattice" title="compas_vol.microstructures.Lattice"><code class="xref py py-class docutils literal notranslate"><span class="pre">Lattice</span></code></a> is infinite, and an
-<a class="reference internal" href="../api/generated/compas_vol.combinations.Intersection.html#compas_vol.combinations.Intersection" title="compas_vol.combinations.Intersection"><code class="xref py py-class docutils literal notranslate"><span class="pre">Intersection</span></code></a> cannot report an extent, so the
-caller has to say where to look. Omitting it raises with an explanatory message.</p>
+<p><code class="docutils literal notranslate"><span class="pre">bounds</span></code> is required, because a field has no extent of its own: a TPMS is
+infinite, and an intersection cannot report one.</p>
 </section>
-<section id="serialization">
-<h2>Serialization</h2>
-<p>Every volumetric object is a <a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS latest)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a> subclass, so whole CSG
-trees round-trip through COMPAS JSON, children included:</p>
+<section id="saving">
+<h2>Saving</h2>
+<p>Every object is a <a class="reference external" href="https://compas.dev/compas/latest/api/generated/compas.data.Data.html#compas.data.Data" title="(in COMPAS latest)"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code></a>, so a whole tree round-trips
+through COMPAS JSON:</p>
 <div class="language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">compas.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">json_dumps</span><span class="p">,</span> <span class="n">json_loads</span>
 
 <span class="n">restored</span> <span class="o">=</span> <span class="n">json_loads</span><span class="p">(</span><span class="n">json_dumps</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span>
 </code></pre></div>
 </div>
-</section>
-<section id="where-next">
-<h2>Where next</h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="../examples.html"><span class="doc">Examples</span></a> — runnable scripts, from single operations to graded
-microstructures.</p></li>
-<li><p><a class="reference internal" href="../api.html"><span class="doc">API Reference</span></a> — the full API reference.</p></li>
-</ul>
+<p>Next: <a class="reference internal" href="../examples.html"><span class="doc">Examples</span></a>, or <a class="reference internal" href="../processes.html"><span class="doc">Processes</span></a> for geometry made by
+erosion and growth.</p>
 </section>
 </section>
 
@@ -190,7 +177,8 @@ microstructures.</p></li>
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="installation.html">Installation</a></li>
@@ -198,6 +186,18 @@ microstructures.</p></li>
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../api.html">API Reference</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.html">compas_vol</a></li>
@@ -207,6 +207,12 @@ microstructures.</p></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>
@@ -225,10 +231,9 @@ microstructures.</p></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#">First Steps</a><ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="#building-a-shape">Building a shape</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#evaluating-the-field">Evaluating the field</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#meshing">Meshing</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#meshing-and-export">Meshing and export</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#viewing">Viewing</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#serialization">Serialization</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#where-next">Where next</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#saving">Saving</a></li>
 </ul>
 </li>
 </ul>

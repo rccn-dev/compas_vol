@@ -93,33 +93,21 @@
         
         <section id="installation">
 <h1>Installation</h1>
-<section id="requirements">
-<h2>Requirements</h2>
-<ul class="simple">
-<li><p>Python 3.13 or newer</p></li>
-<li><p>COMPAS 2.15 or newer</p></li>
-<li><p>NumPy 2.0 or newer</p></li>
-</ul>
-<p>The COMPAS 1 releases of this package will not work here, and this release will
-not work on COMPAS 1. See <a class="reference internal" href="../porting.html"><span class="doc">Porting from COMPAS 1</span></a>.</p>
-</section>
-<section id="from-the-repository">
-<h2>From the repository</h2>
-<p>This fork is not on PyPI. Install it from GitHub:</p>
+<p>Requires Python 3.9 or newer (Rhino 8 embeds 3.9), COMPAS 2.15 or newer and
+NumPy 2. It does not work with COMPAS 1; see <a class="reference internal" href="../porting.html"><span class="doc">Porting from COMPAS 1</span></a>.</p>
+<p>The fork is not on PyPI. Install it from GitHub:</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/rccn-dev/compas_vol
 </code></pre></div>
 </div>
-<p>Or, for a checkout you intend to work on, using <a class="reference external" href="https://docs.astral.sh/uv/">uv</a>:</p>
+<p>or, to work on it, with <a class="reference external" href="https://docs.astral.sh/uv/">uv</a>:</p>
 <div class="language-bash notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/rccn-dev/compas_vol
 $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>compas_vol
 $<span class="w"> </span>uv<span class="w"> </span>sync
 </code></pre></div>
 </div>
-</section>
-<section id="optional-extras">
-<h2>Optional extras</h2>
-<p>The core install depends only on <code class="docutils literal notranslate"><span class="pre">compas</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy</span></code>. Everything heavier is
-optional:</p>
+<section id="extras">
+<h2>Extras</h2>
+<p>The core depends only on <code class="docutils literal notranslate"><span class="pre">compas</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy</span></code>.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 20.0%" />
@@ -129,48 +117,37 @@ optional:</p>
 <thead>
 <tr class="row-odd"><th class="head"><p>Extra</p></th>
 <th class="head"><p>Adds</p></th>
-<th class="head"><p>Needed for</p></th>
+<th class="head"><p>For</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">meshing</span></code></p></td>
 <td><p>scikit-image, scipy</p></td>
-<td><p>Iso-surfacing (<a class="reference internal" href="../api/compas_vol.meshing.html#module-compas_vol.meshing" title="compas_vol.meshing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.meshing</span></code></a>) and <a class="reference internal" href="../api/generated/compas_vol.modifications.Blur.html#compas_vol.modifications.Blur" title="compas_vol.modifications.Blur"><code class="xref py py-class docutils literal notranslate"><span class="pre">Blur</span></code></a></p></td>
+<td><p><a class="reference internal" href="../api/compas_vol.meshing.html#module-compas_vol.meshing" title="compas_vol.meshing"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.meshing</span></code></a>, <a class="reference internal" href="../api/generated/compas_vol.modifications.Blur.html#compas_vol.modifications.Blur" title="compas_vol.modifications.Blur"><code class="xref py py-class docutils literal notranslate"><span class="pre">Blur</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">viewer</span></code></p></td>
-<td><p>compas_viewer</p></td>
-<td><p>The standalone OpenGL viewer</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">processes</span></code></p></td>
+<td><p>scikit-fmm</p></td>
+<td><p><a class="reference internal" href="../api/compas_vol.processes.html#module-compas_vol.processes" title="compas_vol.processes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.processes</span></code></a>, the repairs in <a class="reference internal" href="../api/compas_vol.fabrication.html#module-compas_vol.fabrication" title="compas_vol.fabrication"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_vol.fabrication</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">examples</span></code></p></td>
-<td><p>the above, plus matplotlib</p></td>
-<td><p>Everything in <code class="docutils literal notranslate"><span class="pre">examples/</span></code>, including the field slice inspector</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">viewer</span></code></p></td>
+<td><p>compas_viewer (and PySide6, a large download)</p></td>
+<td><p>the standalone viewer</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">all</span></code></p></td>
-<td><p>all of the above</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">examples</span></code></p></td>
+<td><p>all of the above, plus matplotlib</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">examples/</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">all</span></code></p></td>
+<td><p>everything</p></td>
 <td></td>
 </tr>
 </tbody>
 </table>
 <div class="language-bash notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>$<span class="w"> </span>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>meshing
-$<span class="w"> </span>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>viewer
-$<span class="w"> </span>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>all
+$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;compas_vol[all] @ git+https://github.com/rccn-dev/compas_vol&quot;</span>
 </code></pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">viewer</span></code> extra pulls in PySide6, which is a large download. It is kept
-optional so that using the package as a modelling library — or on a headless
-machine — does not require it.</p>
-<p>With pip, the same extras are available:</p>
-<div class="language-bash notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;compas_vol[all] @ git+https://github.com/rccn-dev/compas_vol&quot;</span>
-</code></pre></div>
-</div>
-</section>
-<section id="verifying-the-installation">
-<h2>Verifying the installation</h2>
-<div class="language-bash notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span>$<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>meshing<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pytest
-</code></pre></div>
-</div>
-<p>The test suite parametrizes every volumetric class over a shared set of checks,
-so a clean run is a reasonable statement that the install is sound.</p>
+<p>Check the install with <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">run</span> <span class="pre">--extra</span> <span class="pre">meshing</span> <span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>.</p>
 </section>
 </section>
 
@@ -190,7 +167,8 @@ so a clean run is a reasonable statement that the install is sound.</p>
         
         
         <div id="compas-navigation" class="collapse compas-navigation">
-          <ul class="nav flex-column collapse show active">
+          <p class="caption" role="heading"><span class="caption-text">Guide</span></p>
+<ul class="nav flex-column collapse show active">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../intro.html">Introduction</a></li>
 <li class="toctree-l1 nav-item active"><a class="nav-link reference internal" href="../gettingstarted.html">Getting Started</a><ul class="nav flex-column collapse show active">
 <li class="toctree-l2 nav-item active"><a class="nav-link active reference internal" href="#">Installation</a></li>
@@ -198,6 +176,18 @@ so a clean run is a reasonable statement that the install is sound.</p>
 </ul>
 </li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../processes.html">Processes</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../fabrication.html">Fabrication</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../assembly.html">Assembly</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contexts</span></p>
+<ul class="nav flex-column collapse">
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../contexts.html">Contexts</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../grasshopper.html">Grasshopper</a></li>
+<li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../development.html">Development</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav flex-column collapse">
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../porting.html">Porting from COMPAS 1</a></li>
 <li class="toctree-l1 nav-item"><a class="nav-link reference internal" href="../api.html">API Reference</a><ul class="nav flex-column collapse">
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.html">compas_vol</a></li>
@@ -207,6 +197,12 @@ so a clean run is a reasonable statement that the install is sound.</p>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.microstructures.html">compas_vol.microstructures</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.analysis.html">compas_vol.analysis</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.meshing.html">compas_vol.meshing</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.processes.html">compas_vol.processes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.fabrication.html">compas_vol.fabrication</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.assembly.html">compas_vol.assembly</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.nodes.html">compas_vol.nodes</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.ghpython.html">compas_vol.ghpython</a></li>
+<li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.runtime.html">compas_vol.runtime</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.scene.html">compas_vol.scene</a></li>
 <li class="toctree-l2 nav-item"><a class="nav-link reference internal" href="../api/compas_vol.utilities.html">compas_vol.utilities</a></li>
 </ul>
@@ -223,10 +219,7 @@ so a clean run is a reasonable statement that the install is sound.</p>
         
         <ul class="nav flex-column" id="compas-toc">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Installation</a><ul class="nav flex-column">
-<li class="nav-item"><a class="nav-link reference internal" href="#requirements">Requirements</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#from-the-repository">From the repository</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#optional-extras">Optional extras</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#verifying-the-installation">Verifying the installation</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#extras">Extras</a></li>
 </ul>
 </li>
 </ul>
