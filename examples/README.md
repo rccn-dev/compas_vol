@@ -72,4 +72,4 @@ Need the `processes` extra; they take seconds to minutes.
   `resolution=` to `demo()`, while iterating.
 - STL export is off by default: pass `export=True` to `demo()`.
 - Projects built with compas_vol live in their own repositories, such as
-  [grid-roof](https://github.com/rccn-dev/grid-roof).
+  [studio](https://github.com/rccn-dev/studio).

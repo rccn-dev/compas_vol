@@ -65,8 +65,8 @@ uv run python examples/02_booleans.py
 
 ## Related
 
-- [grid-roof](https://github.com/rccn-dev/grid-roof): an 18 × 12 m roof designed and built
-  in pieces with this package, as a notebook and as Grasshopper components.
+- [studio](https://github.com/rccn-dev/studio): workflows built with this package, including
+  an 18 × 12 m roof designed and built in pieces.
 - [designing-by-process](https://github.com/rccn-dev/designing-by-process): a five-day
   workshop on both.
 

@@ -16,7 +16,7 @@ version as well as the dependencies, so no separate virtualenv or conda step is
 needed.
 
 ```bash
-git clone https://github.com/<your-username>/compas_vol
+git clone https://github.com/rccn-dev/compas_vol
 cd compas_vol
 uv sync --extra meshing --group dev
 ```
@@ -37,9 +37,16 @@ uv run --extra meshing python -m pytest
 
 ## Making a change
 
-1. **Fork** this repository and clone your fork.
-2. **Branch off `main`.** There is no `master` branch. Name the branch for what
-   it does, e.g. `fix-twist-angle` or `add-voronoi-seeding`.
+CI also runs every project in [studio](https://github.com/rccn-dev/studio) against your
+branch. If one fails, either your change broke something people rely on, or the project
+needs updating, so ask its owner. Using AI is welcome: the
+[studio's guide](https://github.com/rccn-dev/studio/blob/main/CONTRIBUTING.md#using-ai)
+applies here too.
+
+1. **Studio members:** clone this repository. **Anyone else:** fork it and clone
+   your fork.
+2. **Branch off `main`.** There is no `master` branch. Name the branch for who you
+   are and what it does, e.g. `ana/fix-twist-angle`.
 3. Make your change, with tests (see below).
 4. Run the checks:
 
@@ -52,7 +59,7 @@ uv run --extra meshing python -m pytest
    view; [`changes/README.md`](changes/README.md) says how. This is not optional
    — CI fails a pull request without one. Don't edit `CHANGELOG.md`, which is
    compiled from these files at release.
-6. Commit, push to your fork, and open a
+6. Commit, push, and open a
    [pull request](https://help.github.com/articles/about-pull-requests/)
    against `main`.
 
