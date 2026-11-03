@@ -1,1 +1,1 @@
-CI now runs every project in `rccn-dev/studio` against each change.
+CI now runs every project in `rccn-dev/rcs26` against each change.

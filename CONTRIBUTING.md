@@ -37,10 +37,10 @@ uv run --extra meshing python -m pytest
 
 ## Making a change
 
-CI also runs every project in [studio](https://github.com/rccn-dev/studio) against your
+CI also runs every project in [rcs26](https://github.com/rccn-dev/rcs26) against your
 branch. If one fails, either your change broke something people rely on, or the project
 needs updating, so ask its owner. Using AI is welcome: the
-[studio's guide](https://github.com/rccn-dev/studio/blob/main/CONTRIBUTING.md#using-ai)
+[RCS26 guide](https://github.com/rccn-dev/rcs26/blob/main/CONTRIBUTING.md#using-ai)
 applies here too.
 
 1. **Studio members:** clone this repository. **Anyone else:** fork it and clone

@@ -43,7 +43,7 @@ jobs:
         run: uv run -p ${{ matrix.python-version }} --extra meshing --extra processes python -m pytest
 
   # compas_vol stays general, but real work depends on it: every project in the
-  # studio has to keep passing against this change, notebooks included.
+  # rcs26 has to keep passing against this change, notebooks included.
   downstream:
     runs-on: ubuntu-latest
     steps:
@@ -53,25 +53,25 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: rccn-dev/studio
-          path: studio
+          repository: rccn-dev/rcs26
+          path: rcs26
 
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
 
-      - name: Install the studio, with this compas_vol
-        working-directory: studio
+      - name: Install rcs26, with this compas_vol
+        working-directory: rcs26
         run: |
           uv sync --all-packages --locked
           uv pip install -e "../compas_vol[meshing,processes]"
 
       - name: Test every project
-        working-directory: studio
+        working-directory: rcs26
         run: uv run --no-sync python -m pytest
 
       - name: Run every notebook
-        working-directory: studio
+        working-directory: rcs26
         run: uv run --no-sync python scripts/run_notebooks.py
 
   # Proves the claim the package makes about itself: with nothing but compas

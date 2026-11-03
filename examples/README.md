@@ -72,4 +72,4 @@ Need the `processes` extra; they take seconds to minutes.
   `resolution=` to `demo()`, while iterating.
 - STL export is off by default: pass `export=True` to `demo()`.
 - Projects built with compas_vol live in their own repositories, such as
-  [studio](https://github.com/rccn-dev/studio).
+  [rcs26](https://github.com/rccn-dev/rcs26).

@@ -60,4 +60,4 @@ and the other void. :meth:`~compas_vol.assembly.Assembly.cost` quotes the whole
 model against the largest piece at a given voxel and halo.
 
 ``examples/26_piece_by_piece.py`` is a small case.
-The grid roof in `studio <https://github.com/rccn-dev/studio>`_ builds 53 pieces whose seams meet within about 2 mm at 40 mm voxels.
+The grid roof in `rcs26 <https://github.com/rccn-dev/rcs26>`_ builds 53 pieces whose seams meet within about 2 mm at 40 mm voxels.

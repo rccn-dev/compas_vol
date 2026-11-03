@@ -102,7 +102,7 @@ Optional-dependency imports are kept local so that `import compas_vol` works on 
 
 This package is for field/SDF modelling only. Mesh-based methods (minimal-surface relaxation, tessellation, panels, fabrication outlines) live in the sibling package `../compas_tess`; don't add them here.
 
-It is also general-purpose. A project built with it -- a brief, a drawing, its own checks, anything with a building type in its name -- lives in [rccn-dev/studio](https://github.com/rccn-dev/studio) as a project, like `projects/roof` (the grid roof: drainage in plan, a plan height field, a world-coherent foam, a beam-grid kit of parts, its walkthrough notebook and batch build). Add something to compas_vol only when it is general and more than one project would otherwise write it; `Assembly.build`, `Seams` and `meshing.is_watertight` came in that way. The roof's classes left this package on purpose; don't bring them back without that reason.
+It is also general-purpose. A project built with it -- a brief, a drawing, its own checks, anything with a building type in its name -- lives in [rccn-dev/rcs26](https://github.com/rccn-dev/rcs26) as a project, like `projects/roof` (the grid roof: drainage in plan, a plan height field, a world-coherent foam, a beam-grid kit of parts, its walkthrough notebook and batch build). Add something to compas_vol only when it is general and more than one project would otherwise write it; `Assembly.build`, `Seams` and `meshing.is_watertight` came in that way. The roof's classes left this package on purpose; don't bring them back without that reason.
 
 ## Examples
 

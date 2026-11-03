@@ -65,7 +65,7 @@ uv run python examples/02_booleans.py
 
 ## Related
 
-- [studio](https://github.com/rccn-dev/studio): workflows built with this package, including
+- [rcs26](https://github.com/rccn-dev/rcs26): workflows built with this package, including
   an 18 × 12 m roof designed and built in pieces.
 - [designing-by-process](https://github.com/rccn-dev/designing-by-process): a five-day
   workshop on both.
