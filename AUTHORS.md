@@ -27,4 +27,4 @@ Written at Digital Building Technologies, ETH Zurich.
 
 ### Contributors
 
-<!-- Add yourself here when you contribute. See CONTRIBUTING.md. -->
+<!-- The maintainer adds contributors at each release. See CONTRIBUTING.md. -->

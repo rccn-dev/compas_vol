@@ -48,11 +48,11 @@ uv run --extra meshing python -m pytest
    uv run --extra meshing python -m pytest
    ```
 
-5. **Add a `CHANGELOG.md` entry** under `## Unreleased`, in the appropriate
-   subsection. This is not optional — CI fails a pull request that does not
-   touch the changelog. Describe the change from a user's point of view.
-6. **Add yourself** to the *Contributors* section of `AUTHORS.md`.
-7. Commit, push to your fork, and open a
+5. **Add a file to `changes/`** describing the change from a user's point of
+   view; [`changes/README.md`](changes/README.md) says how. This is not optional
+   — CI fails a pull request without one. Don't edit `CHANGELOG.md`, which is
+   compiled from these files at release.
+6. Commit, push to your fork, and open a
    [pull request](https://help.github.com/articles/about-pull-requests/)
    against `main`.
 
@@ -128,6 +128,18 @@ uv run sphinx-build -b html -W docs docs/_build/html
 
 `-W` turns warnings into errors, which is how CI builds them. A broken cross
 reference will fail the build.
+
+## Releasing
+
+For maintainers, from an up-to-date `main`:
+
+```bash
+uv run --only-group changelog towncrier build --version X.Y.Z   # compile changes/ into CHANGELOG.md
+```
+
+Add new contributors to `AUTHORS.md` (`git log --format='%aN' vLAST..` lists them)
+and commit both. Then run `uvx bump2version patch` (or `minor`, `major`), which updates
+every version string, commits and tags. `tests/test_regressions.py` fails if the versions disagree.
 
 ## Reporting a bug
 

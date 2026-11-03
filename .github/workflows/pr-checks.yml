@@ -9,11 +9,16 @@ jobs:
   build:
     name: Check Actions
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'no changelog') }}
     steps:
-      - uses: actions/checkout@v1
-      - name: Changelog check
-        uses: Zomzog/changelog-checker@v1.1.0
+      # towncrier compares against main, so it needs the history.
+      - uses: actions/checkout@v4
         with:
-          fileName: CHANGELOG.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Changelog check
+        run: uv run --only-group changelog towncrier check --compare-with origin/${{ github.base_ref }}

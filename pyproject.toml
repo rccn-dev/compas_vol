@@ -97,6 +97,40 @@ docs = [
     "sphinx>=8; python_version >= '3.11'",
     "sphinx-compas-theme>=0.15.18; python_version >= '3.11'",
 ]
+# Compiles changes/ into CHANGELOG.md. A group of its own so the PR check needs
+# nothing else installed.
+changelog = [
+    "towncrier>=25.8",
+]
+
+[tool.towncrier]
+# One file per change, so pull requests never edit the same lines. See
+# changes/README.md.
+directory = "changes"
+filename = "CHANGELOG.md"
+start_string = "<!-- towncrier release notes start -->\n"
+title_format = "## [{version}] {project_date}"
+issue_format = "[#{issue}](https://github.com/rccn-dev/compas_vol/issues/{issue})"
+
+[[tool.towncrier.type]]
+directory = "added"
+name = "Added"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "changed"
+name = "Changed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "fixed"
+name = "Fixed"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "removed"
+name = "Removed"
+showcontent = true
 
 [tool.pytest.ini_options]
 # `--pyargs compas_vol` runs the doctests against the *installed* package, so

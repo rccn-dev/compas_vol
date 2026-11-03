@@ -18,7 +18,7 @@ copyright = (
     "2025-2026 compas_vol contributors"
 )
 author = "Mathias Bernhard (original), ChiaChing-Yen (COMPAS 2 fork)"
-release = "0.2.0"
+release = "0.3.0"
 version = ".".join(release.split(".")[0:2])
 
 # -- General configuration ---------------------------------------------------

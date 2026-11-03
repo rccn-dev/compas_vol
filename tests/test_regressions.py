@@ -286,3 +286,12 @@ def test_transformed_coordinates_do_not_broadcast_over_axes_they_ignore():
     xt, yt, zt = transform_numpy(identity, x, y, z)
     assert (xt.shape, yt.shape, zt.shape) == ((5, 1, 1), (1, 6, 1), (1, 1, 7))
     assert np.allclose(xt, x + 2)
+
+
+def test_the_version_strings_agree():
+    """pyproject.toml moved to 0.3.0 while __version__ and the docs stayed at 0.2.0."""
+    from importlib.metadata import version
+
+    import compas_vol
+
+    assert compas_vol.__version__ == version("compas-vol")

@@ -43,7 +43,7 @@ __copyright__ = (
     "2025-2026 compas_vol contributors"
 )
 __license__ = "MIT License"
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 #: Modules COMPAS scans for plugins. COMPAS walks installed top-level packages
 #: whose name starts with "compas" and reads this declaration, which is how the

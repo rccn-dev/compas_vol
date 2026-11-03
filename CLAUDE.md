@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 The project uses `uv`, which also manages the Python version.
 
 ```bash
-uv sync --extra meshing --group dev          # dev setup (scikit-image/scipy, pytest, ruff)
+uv sync --extra meshing --group dev          # dev setup (scikit-image, scikit-fmm, pytest, ruff)
 uv sync --extra all                          # + compas_viewer (PySide6) and matplotlib, for examples
 uv run ruff check .                          # lint (CI runs this)
 uv run --extra meshing python -m pytest      # full suite, including doctests in src/
@@ -91,9 +91,8 @@ Optional-dependency imports are kept local so that `import compas_vol` works on 
 
 ## PR requirements
 
-- CI fails a PR that doesn't touch `CHANGELOG.md`. Add an entry under `## Unreleased`.
-- Contributors add themselves to `AUTHORS.md`.
-- The version is bumped with bumpversion (`.bumpversion.cfg`), which updates `pyproject.toml`, `docs/conf.py`, `src/compas_vol/__init__.py` and the CHANGELOG heading together.
+- CI fails a PR without a new file in `changes/`, for example `changes/+vol-cone.added.md` (`added`, `changed`, `fixed` or `removed`). Don't edit `CHANGELOG.md`: towncrier compiles it at release, so PRs can't collide there. A PR labelled `no changelog` skips the check.
+- The maintainer adds contributors to `AUTHORS.md` and runs the release steps in `CONTRIBUTING.md`. bumpversion updates `pyproject.toml`, `docs/conf.py` and `src/compas_vol/__init__.py` together.
 
 ## Docs
 
@@ -103,7 +102,7 @@ Optional-dependency imports are kept local so that `import compas_vol` works on 
 
 This package is for field/SDF modelling only. Mesh-based methods (minimal-surface relaxation, tessellation, panels, fabrication outlines) live in the sibling package `../compas_tess`; don't add them here.
 
-It is also general-purpose. A project built with it -- a brief, a drawing, its own checks, anything with a building type in its name -- lives beside it as an application, like `../roof` (the grid roof: drainage in plan, a plan height field, a world-coherent foam, a beam-grid kit of parts, its walkthrough notebook and batch build) and `../prints`. Add something to compas_vol only when it is general and more than one project would otherwise write it; `Assembly.build`, `Seams` and `meshing.is_watertight` came in that way. The roof's classes left this package on purpose; don't bring them back without that reason.
+It is also general-purpose. A project built with it -- a brief, a drawing, its own checks, anything with a building type in its name -- lives beside it as an application, like `../grid-roof` (the grid roof: drainage in plan, a plan height field, a world-coherent foam, a beam-grid kit of parts, its walkthrough notebook and batch build). Add something to compas_vol only when it is general and more than one project would otherwise write it; `Assembly.build`, `Seams` and `meshing.is_watertight` came in that way. The roof's classes left this package on purpose; don't bring them back without that reason.
 
 ## Examples
 
